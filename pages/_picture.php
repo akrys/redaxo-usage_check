@@ -14,23 +14,17 @@ rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_images_subpagetitl
 $items = \akrys\redaxo\addon\UserCheck\Pictures::getPictures($showAll);
 
 
-if ($showAll) {
-	?>
 
-	<a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?>"><?php echo $I18N->msg('akrys_usagecheck_images_link_show_unused'); ?></a>
-
-	<?php
-} else {
-	?>
-
-	<a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?>&showall=true"><?php echo $I18N->msg('akrys_usagecheck_images_link_show_all'); ?></a>
-
-	<?php
+$showAllLinktext = $I18N->msg('akrys_usagecheck_images_link_show_unused');
+$showAllParam = '';
+if (!$showAll) {
+	$showAllLinktext = $I18N->msg('akrys_usagecheck_images_link_show_all');
+	$showAllParam = '&showall=true';
 }
 ?>
-<br /><br />
-<?php echo $I18N->msg('akrys_usagecheck_images_intro_text'); ?>
-<br /><br />
+<p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a>
+</a>
+<p class="rex-tx1"><?php echo $I18N->msg('akrys_usagecheck_images_intro_text'); ?></p>
 
 
 <table class = "rex-table">
@@ -56,8 +50,13 @@ if ($showAll) {
 
 						<?php
 					}
+					?>
 
-					echo $item['filename'];
+					<strong><?php echo $item['title']; ?></strong><br />
+
+					<?php
+					echo $item['filename'].' ('.akrys\redaxo\addon\UserCheck\Pictures::getSizeOut($item).')';
+
 					?>
 
 					<br />
@@ -94,16 +93,20 @@ if ($showAll) {
 
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
-							<a href="http://redaxo.arbeit.local/redaxo/index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit'); ?></a><br />
+							<a href="http://redaxo.arbeit.local/redaxo/index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>" target="_blank"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit'); ?></a><br />
 
 							<?php
-							if ($item['slice_id'] !== null) {
-								?>
+							/*
+							 * aktuell nicht möglich, da nur gezählt wird, wie die Datei verwendet wrude
+							 * sonst hätten wir jedes Bild hier x-mal vorliegen.
+							  if ($item['slice_id'] !== null) {
+							  ?>
 
-								<a href="index.php?page=content&article_id=<?php echo $item['article_id'] ?>&mode=edit&slice_id=<?php echo $item['slice_id'] ?>&clang=<?php echo $item['clang'] ?>&ctype=<?php echo $item['ctype'] ?>&function=edit#slice<?php echo $item['slice_id'] ?>"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit_in_slice'); ?></a>
+							  <a href="index.php?page=content&article_id=<?php echo $item['article_id'] ?>&mode=edit&slice_id=<?php echo $item['slice_id'] ?>&clang=<?php echo $item['clang'] ?>&ctype=<?php echo $item['ctype'] ?>&function=edit#slice<?php echo $item['slice_id'] ?>"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit_in_slice'); ?></a>
 
-								<?php
-							}
+							  <?php
+							  }
+							 */
 							?>
 						</span>
 					</div>

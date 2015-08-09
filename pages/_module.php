@@ -17,23 +17,16 @@ rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_module_subpagetitl
 $items = \akrys\redaxo\addon\UserCheck\Modules::getModules($showAll);
 
 
+$showAllParam = '&showall=true';
+$showAllLinktext = $I18N->msg('akrys_usagecheck_module_link_show_all');
 if ($showAll) {
-	?>
-
-	<a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?>"><?php echo $I18N->msg('akrys_usagecheck_module_link_show_unused'); ?></a>
-
-	<?php
-} else {
-	?>
-
-	<a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?>&showall=true"><?php echo $I18N->msg('akrys_usagecheck_module_link_show_all'); ?></a>
-
-	<?php
+	$showAllParam = '';
+	$showAllLinktext = $I18N->msg('akrys_usagecheck_module_link_show_unused');
 }
 ?>
-<br /><br />
-<?php echo $I18N->msg('akrys_usagecheck_module_intro_text'); ?>
-<br /><br />
+
+<p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
+<p class="rex-tx1"><?php echo $I18N->msg('akrys_usagecheck_module_intro_text');?></p>
 
 
 <table class = "rex-table">

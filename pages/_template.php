@@ -44,7 +44,7 @@ if (!$showInactive) {
 </div>
 <div style='clear:both'></div>
 
-<p>
+<p class="rex-tx1">
 	<?php echo $I18N->msg('akrys_usagecheck_template_intro_text'); ?><br />
 	<br />
 </p>

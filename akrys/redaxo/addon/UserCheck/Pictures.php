@@ -37,7 +37,7 @@ class Pictures
 	{
 		$rexSQL = new \rex_sql;
 		$sql = <<<SQL
-SELECT f.*, s.id as slice_id,s.article_id, s.clang, s.ctype
+SELECT f.*,count(s.id) as count, s.id as slice_id,s.article_id, s.clang, s.ctype
 FROM rex_file f
 left join `rex_article_slice` s on (
     s.file1=f.filename
@@ -64,9 +64,63 @@ left join `rex_article_slice` s on (
 
 SQL;
 		if (!$show_all) {
-			$sql.='where s.id is null';
+			$sql.='where s.id is null ';
 		}
 
+		$sql.='group by f.filename';
 		return $rexSQL->getArray($sql);
+	}
+
+	/**
+	 * Dateigröße ermitteln.
+	 *
+	 * Die Größe in Byte auszugeben ist nicht gerade übersichtlich. Daher wird
+	 * hier versucht den Wert in der größt-möglichen Einheit zu ermittln.
+	 *
+	 * @param array $item wichtige Indezes: filesize
+	 * @return string
+	 */
+	public static function getSizeOut($item)
+	{
+		$size = $item['filesize'];
+		$i = 0;
+
+		while ($size > 1024) {
+			$i++;
+			$size/=1024;
+			if ($i > 6) {
+				//WTF????
+				break;
+			}
+		}
+		$value = round($size, 2);
+		switch ($i) {
+			case 0:
+				$unit= 'B';
+				break;
+			case 1:
+				$unit= 'kB';
+				break;
+			case 2:
+				$unit= 'MB';
+				break;
+			case 3:
+				$unit= 'GB';
+				break;
+			case 4:
+				$unit= 'TB';
+				break;
+			case 5:
+				$unit= 'EB';
+				break;
+			case 6:
+				$unit= 'PB';
+				break;
+			default:
+				$unit= '????';
+				break;
+		}
+
+		return $value.' '.$unit;
 	}
 }
