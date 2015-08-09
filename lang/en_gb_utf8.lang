@@ -1,0 +1,27 @@
+akrys_usagecheck_overview = Overview
+akrys_usagecheck_picture = Pictures
+akrys_usagecheck_module = Modules
+akrys_usagecheck_templates = Templates
+akrys_usagecheck_changelog = Change log
+
+
+akrys_usagecheck_overview_subpagetitle = Overview
+
+
+akrys_usagecheck_images_subpagetitle = Images
+akrys_usagecheck_images_table_heading_name = Name
+akrys_usagecheck_images_table_heading_functions = Functions
+
+akrys_usagecheck_images_msg_not_used = not used
+akrys_usagecheck_images_msg_used = OK, this is used
+akrys_usagecheck_images_linktext_edit = edit
+akrys_usagecheck_images_linktext_edit_in_slice = edit in original slice
+
+
+akrys_usagecheck_module_subpagetitle = Modules
+
+
+akrys_usagecheck_template_subpagetitle = Templates
+
+
+akrys_usagecheck_changelog_subpagetitle = Changelog
