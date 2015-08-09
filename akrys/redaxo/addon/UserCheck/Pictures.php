@@ -34,7 +34,6 @@ class Pictures
 	 */
 	public static function getPictures($show_all = false)
 	{
-
 		$rexSQL = new rex_sql;
 		$sql = <<<SQL
 SELECT f.*, s.id as slice_id,s.article_id, s.clang, s.ctype
@@ -63,7 +62,7 @@ left join `rex_article_slice` s on (
 )
 
 SQL;
-		if (!$show_all == '') {
+		if (!$show_all) {
 			$sql.='where s.id is null';
 		}
 

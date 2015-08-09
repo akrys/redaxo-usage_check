@@ -12,6 +12,11 @@ akrys_usagecheck_images_subpagetitle = Bilder
 akrys_usagecheck_images_table_heading_name = Name
 akrys_usagecheck_images_table_heading_functions = Funktionen
 
+akrys_usagecheck_images_link_show_all = Zeige alle Dateien
+akrys_usagecheck_images_link_show_unused = Zeige nur ungenutzte Dateien
+
+akrys_usagecheck_images_intro_text = Im Medienpool können neben Bildern auch andere Dateien hochgeladen werden. Nur Für Bilder gibt es eine Vorschau.
+
 akrys_usagecheck_images_msg_not_used = nicht verwendet
 akrys_usagecheck_images_msg_used = OK, wird verwendet
 akrys_usagecheck_images_linktext_edit = bearbeiten

@@ -23,6 +23,9 @@ $page = rex_request('page', 'string');
 $subpage = rex_request('subpage', 'string');
 $func = rex_request('func', 'string');
 
+if($subpage === '') {
+	$subpage='overview';
+}
 include __DIR__.'/_'.$subpage.'.php';
 
 

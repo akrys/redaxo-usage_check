@@ -7,16 +7,37 @@ require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Config.php';
 use akrys\redaxo\addon\UserCheck\Config;
 require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Pictures.php';
 
-$showAll = rex_get('show_all', '');
+$showAll = rex_get('showall', 'string', "");
 
 rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_images_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
 
 $files = Pictures::getPictures($showAll);
+
+
+if ($showAll) {
+	?>
+
+	<a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?>"><?php echo $I18N->msg('akrys_usagecheck_images_link_show_unused'); ?></a>
+
+	<?php
+} else {
+	?>
+
+	<a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?>&showall=true"><?php echo $I18N->msg('akrys_usagecheck_images_link_show_all'); ?></a>
+
+	<?php
+}
 ?>
-<table class="rex-table">
+<br /><br />
+<?php echo $I18N->msg('akrys_usagecheck_images_intro_text'); ?>
+<br /><br />
+
+
+<table class = "rex-table">
 	<thead>
 		<tr>
-			<th><?php echo $I18N->msg('akrys_usagecheck_images_table_heading_name'); ?></th>
+			<th><?php echo $I18N->msg('akrys_usagecheck_images_table_heading_name');
+?></th>
 			<th><?php echo $I18N->msg('akrys_usagecheck_images_table_heading_name'); ?></th>
 		</tr>
 	</thead>
