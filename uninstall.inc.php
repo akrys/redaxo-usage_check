@@ -10,3 +10,4 @@ use akrys\redaxo\addon\UserCheck\Config;
 
 $REX['ADDON']['install'][Config::NAME] = 0;
 
+//$sql='ALTER TABLE rex_article_slice DROP INDEX modultyp_id;';

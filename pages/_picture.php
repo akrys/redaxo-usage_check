@@ -11,7 +11,7 @@ $showAll = rex_get('showall', 'string', "");
 
 rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_images_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
 
-$files = Pictures::getPictures($showAll);
+$items = Pictures::getPictures($showAll);
 
 
 if ($showAll) {
@@ -36,37 +36,36 @@ if ($showAll) {
 <table class = "rex-table">
 	<thead>
 		<tr>
-			<th><?php echo $I18N->msg('akrys_usagecheck_images_table_heading_name');
-?></th>
 			<th><?php echo $I18N->msg('akrys_usagecheck_images_table_heading_name'); ?></th>
+			<th><?php echo $I18N->msg('akrys_usagecheck_images_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
 
 		<?php
-		foreach ($files as $file) {
+		foreach ($items as $item) {
 			?>
 			<tr>
 				<td>
 					<?php
-					if (stristr($file['filetype'], 'image/')) {
+					if (stristr($item['filetype'], 'image/')) {
 						?>
 
-						<img alt="" src="../index.php?rex_img_type=rex_mediapool_detail&amp;rex_img_file=<?php echo $file['filename']; ?>" />
+						<img alt="" src="../index.php?rex_img_type=rex_mediapool_detail&amp;rex_img_file=<?php echo $item['filename']; ?>" />
 						<br /><br />
 
 						<?php
 					}
 
-					echo $file['filename'];
+					echo $item['filename'];
 					?>
 
 					<br />
-					<small style="font-size:0.875em;font-weight:bold;"><?php echo $file['filetype']; ?></small>
+					<small style="font-size:0.875em;font-weight:bold;"><?php echo $item['filetype']; ?></small>
 				</td>
 				<td>
 					<?php
-					if ($file['slice_id'] === null) {
+					if ($item['slice_id'] === null) {
 						?>
 
 						<div class="rex-message">
@@ -95,13 +94,13 @@ if ($showAll) {
 
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
-							<a href="http://redaxo.arbeit.local/redaxo/index.php?page=mediapool&subpage=detail&file_name=<?php echo $file['filename']; ?>"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit'); ?></a><br />
+							<a href="http://redaxo.arbeit.local/redaxo/index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit'); ?></a><br />
 
 							<?php
-							if ($file['slice_id'] !== null) {
+							if ($item['slice_id'] !== null) {
 								?>
 
-								<a href="index.php?page=content&article_id=<?php echo $file['article_id'] ?>&mode=edit&slice_id=<?php echo $file['slice_id'] ?>&clang=<?php echo $file['clang'] ?>&ctype=<?php echo $file['ctype'] ?>&function=edit#slice<?php echo $file['slice_id'] ?>"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit_in_slice'); ?></a>
+								<a href="index.php?page=content&article_id=<?php echo $item['article_id'] ?>&mode=edit&slice_id=<?php echo $item['slice_id'] ?>&clang=<?php echo $item['clang'] ?>&ctype=<?php echo $item['ctype'] ?>&function=edit#slice<?php echo $item['slice_id'] ?>"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit_in_slice'); ?></a>
 
 								<?php
 							}

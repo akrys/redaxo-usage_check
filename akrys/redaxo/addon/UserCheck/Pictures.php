@@ -30,7 +30,7 @@ class Pictures
 	 * @return array
 	 *
 	 * @todo bei Instanzen mit vielen Dateien im Medienpool testen. Die Query
-	 *       riecht nach Performance-Problemen
+	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
 	public static function getPictures($show_all = false)
 	{

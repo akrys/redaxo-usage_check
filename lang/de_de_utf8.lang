@@ -24,6 +24,13 @@ akrys_usagecheck_images_linktext_edit_in_slice = Im Slice bearbeiten
 
 
 akrys_usagecheck_module_subpagetitle = Module
+akrys_usagecheck_module_link_show_all = Zeige alle Module
+akrys_usagecheck_module_link_show_unused = Zeige nur ungenutzte Module
+
+akrys_usagecheck_module_intro_text =
+
+akrys_usagecheck_module_table_heading_name = Name
+akrys_usagecheck_module_table_heading_functions = Funktionen
 
 
 akrys_usagecheck_template_subpagetitle = Templates

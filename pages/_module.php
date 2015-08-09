@@ -1,5 +1,4 @@
 <?php
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,6 +8,82 @@
 require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Config.php';
 
 use akrys\redaxo\addon\UserCheck\Config;
-rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_module_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
+require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Modules.php';
 
-print __FILE__;
+$showAll = rex_get('showall', 'string', "");
+
+rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_images_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
+
+$items = Modules::getModules($showAll);
+
+
+if ($showAll) {
+	?>
+
+	<a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?>"><?php echo $I18N->msg('akrys_usagecheck_module_link_show_unused'); ?></a>
+
+	<?php
+} else {
+	?>
+
+	<a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?>&showall=true"><?php echo $I18N->msg('akrys_usagecheck_module_link_show_all'); ?></a>
+
+	<?php
+}
+?>
+<br /><br />
+<?php echo $I18N->msg('akrys_usagecheck_module_intro_text'); ?>
+<br /><br />
+
+
+<table class = "rex-table">
+	<thead>
+		<tr>
+			<th><?php echo $I18N->msg('akrys_usagecheck_module_table_heading_name'); ?></th>
+			<th><?php echo $I18N->msg('akrys_usagecheck_module_table_heading_functions'); ?></th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<?php
+		foreach ($items as $item) {
+			?>
+			<tr>
+				<td><?php echo $item['name']; ?></td>
+				<td>
+					<?php
+					if ($item['slice_id'] === null) {
+						?>
+
+						<div class="rex-message">
+							<div class="rex-warning">
+								<p>
+									<span><?php echo $I18N->msg('akrys_usagecheck_images_msg_not_used'); ?></span>
+								</p>
+							</div>
+						</div>
+
+						<?php
+					} else {
+						?>
+
+						<div class="rex-message">
+							<div class="rex-info">
+								<p>
+									<span><?php echo $I18N->msg('akrys_usagecheck_images_msg_used'); ?> (<?php echo $item['count']; ?>)</span>
+								</p>
+							</div>
+						</div>
+
+						<?php
+					}
+					?>
+
+				</td>
+
+				<?php
+			}
+			?>
+
+	</tbody>
+</table>

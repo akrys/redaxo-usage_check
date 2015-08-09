@@ -17,3 +17,8 @@ if ($error != '') {
 } else {
 	$REX['ADDON']['install'][Config::NAME] = 1;
 }
+
+
+
+//$sql='ALTER TABLE `rex_article_slice` ADD INDEX ix_usagecheck_modultypid (`modultyp_id`);';
+
