@@ -9,16 +9,13 @@ akrys_usagecheck_overview_subpagetitle = Overview
 
 
 akrys_usagecheck_images_subpagetitle = Images
-akrys_usagecheck_images_table_heading_name = Name
-akrys_usagecheck_images_table_heading_functions = Functions
-
 akrys_usagecheck_images_link_show_all = Show all files
 akrys_usagecheck_images_link_show_unused = Show unused files only
-
 akrys_usagecheck_images_intro_text = In Mediapool there are sometimes files other than images. These files aren't able to have a preview.
-
-akrys_usagecheck_images_msg_not_used = not used
+akrys_usagecheck_images_table_heading_name = Name
+akrys_usagecheck_images_table_heading_functions = Functions
 akrys_usagecheck_images_msg_used = OK, this is used
+akrys_usagecheck_images_msg_not_used = not used
 akrys_usagecheck_images_linktext_edit = edit
 akrys_usagecheck_images_linktext_edit_in_slice = edit in original slice
 
@@ -26,13 +23,28 @@ akrys_usagecheck_images_linktext_edit_in_slice = edit in original slice
 akrys_usagecheck_module_subpagetitle = Modules
 akrys_usagecheck_module_link_show_all = Show all modules
 akrys_usagecheck_module_link_show_unused = Show unused modules only
-akrys_usagecheck_module_intro_text =
-
+akrys_usagecheck_module_intro_text = [no text]
 akrys_usagecheck_module_table_heading_name = Name
 akrys_usagecheck_module_table_heading_functions = Functions
-
+akrys_usagecheck_module_msg_used = OK, this is used
+akrys_usagecheck_module_msg_not_used = not used
 
 akrys_usagecheck_template_subpagetitle = Templates
+akrys_usagecheck_template_intro_text = [no text]
+akrys_usagecheck_template_link_show_all = Show all templates
+akrys_usagecheck_template_link_show_unused = Show unused templates only
+akrys_usagecheck_template_link_show_active = Show active templates only
+akrys_usagecheck_template_link_show_active-inacitve = Show both (active and inactive) templates
+akrys_usagecheck_template_table_heading_name = Name
+akrys_usagecheck_template_table_heading_functions = Functions
+akrys_usagecheck_template_table_inactive = inactive
+akrys_usagecheck_template_msg_used = OK, this is used
+akrys_usagecheck_template_msg_not_used = not used
+akrys_usagecheck_template_detail_heading = Usage
+akrys_usagecheck_template_detail_column_article = Article
+akrys_usagecheck_template_detail_column_template = Templates
 
 
 akrys_usagecheck_changelog_subpagetitle = Changelog
+
+error_content_file_not_found = This file should be shown, but it wasn't found

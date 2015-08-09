@@ -12,9 +12,9 @@ require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Modules.php';
 
 $showAll = rex_get('showall', 'string', "");
 
-rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_images_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
+rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_module_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
 
-$items = Modules::getModules($showAll);
+$items = \akrys\redaxo\addon\UserCheck\Modules::getModules($showAll);
 
 
 if ($showAll) {
@@ -58,7 +58,7 @@ if ($showAll) {
 						<div class="rex-message">
 							<div class="rex-warning">
 								<p>
-									<span><?php echo $I18N->msg('akrys_usagecheck_images_msg_not_used'); ?></span>
+									<span><?php echo $I18N->msg('akrys_usagecheck_module_msg_not_used'); ?></span>
 								</p>
 							</div>
 						</div>
@@ -70,7 +70,7 @@ if ($showAll) {
 						<div class="rex-message">
 							<div class="rex-info">
 								<p>
-									<span><?php echo $I18N->msg('akrys_usagecheck_images_msg_used'); ?> (<?php echo $item['count']; ?>)</span>
+									<span><?php echo $I18N->msg('akrys_usagecheck_module_msg_used'); ?> (<?php echo $item['count']; ?>)</span>
 								</p>
 							</div>
 						</div>

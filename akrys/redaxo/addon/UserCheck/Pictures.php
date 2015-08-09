@@ -5,6 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+namespace akrys\redaxo\addon\UserCheck;
 
 /**
  * Datei für ...
@@ -34,7 +35,7 @@ class Pictures
 	 */
 	public static function getPictures($show_all = false)
 	{
-		$rexSQL = new rex_sql;
+		$rexSQL = new \rex_sql;
 		$sql = <<<SQL
 SELECT f.*, s.id as slice_id,s.article_id, s.clang, s.ctype
 FROM rex_file f

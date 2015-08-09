@@ -9,16 +9,13 @@ akrys_usagecheck_overview_subpagetitle = Übersicht
 
 
 akrys_usagecheck_images_subpagetitle = Bilder
-akrys_usagecheck_images_table_heading_name = Name
-akrys_usagecheck_images_table_heading_functions = Funktionen
-
 akrys_usagecheck_images_link_show_all = Zeige alle Dateien
 akrys_usagecheck_images_link_show_unused = Zeige nur ungenutzte Dateien
-
 akrys_usagecheck_images_intro_text = Im Medienpool können neben Bildern auch andere Dateien hochgeladen werden. Nur Für Bilder gibt es eine Vorschau.
-
-akrys_usagecheck_images_msg_not_used = nicht verwendet
+akrys_usagecheck_images_table_heading_name = Name
+akrys_usagecheck_images_table_heading_functions = Funktionen
 akrys_usagecheck_images_msg_used = OK, wird verwendet
+akrys_usagecheck_images_msg_not_used = nicht verwendet
 akrys_usagecheck_images_linktext_edit = bearbeiten
 akrys_usagecheck_images_linktext_edit_in_slice = Im Slice bearbeiten
 
@@ -26,14 +23,29 @@ akrys_usagecheck_images_linktext_edit_in_slice = Im Slice bearbeiten
 akrys_usagecheck_module_subpagetitle = Module
 akrys_usagecheck_module_link_show_all = Zeige alle Module
 akrys_usagecheck_module_link_show_unused = Zeige nur ungenutzte Module
-
-akrys_usagecheck_module_intro_text =
-
+akrys_usagecheck_module_intro_text = [kein Text]
 akrys_usagecheck_module_table_heading_name = Name
 akrys_usagecheck_module_table_heading_functions = Funktionen
+akrys_usagecheck_module_msg_used = OK, wird verwendet
+akrys_usagecheck_module_msg_not_used = nicht verwendet
 
 
 akrys_usagecheck_template_subpagetitle = Templates
+akrys_usagecheck_template_link_show_all = Alle Templates zeigen
+akrys_usagecheck_template_link_show_unused = Nur ungenutzte Templates zeigen
+akrys_usagecheck_template_link_show_active = Nur aktive Templates zeigen
+akrys_usagecheck_template_link_show_active_inactive = Aktive und inaktive Templates zeigen
+akrys_usagecheck_template_intro_text = [kein Text]
+akrys_usagecheck_template_table_heading_name = Name
+akrys_usagecheck_template_table_heading_functions = Funktionen
+akrys_usagecheck_template_table_inactive = Inaktiv
+akrys_usagecheck_template_msg_used = OK, wird verwendet
+akrys_usagecheck_template_msg_not_used = nicht verwendet
+akrys_usagecheck_template_detail_heading = Nutzung
+akrys_usagecheck_template_detail_column_article = Artikel
+akrys_usagecheck_template_detail_column_template = Templates
 
 
 akrys_usagecheck_changelog_subpagetitle = Changelog
+
+error_content_file_not_found = Diese Datei sollte angezeigt werden, sie wurde aber nicht gefunden.

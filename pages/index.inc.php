@@ -1,5 +1,4 @@
 <?php
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -21,12 +20,32 @@ require $REX['INCLUDE_PATH'].'/layout/top.php';
 
 $page = rex_request('page', 'string');
 $subpage = rex_request('subpage', 'string');
-$func = rex_request('func', 'string');
 
-if($subpage === '') {
-	$subpage='overview';
+if ($subpage === '') {
+	$subpage = 'overview';
 }
-include __DIR__.'/_'.$subpage.'.php';
+
+$contentFile = __DIR__.'/_'.$subpage.'.php';
+
+
+if (file_exists($contentFile)) {
+	include $contentFile;
+} else {
+	?>
+	<div class="rex-message">
+		<div class="rex-warning">
+			<p>
+				<span>
+					<?php echo $I18N->msg('error_content_file_not_found'); ?>:<br />
+					<?php echo $contentFile; ?>
+				</span>
+			</p>
+		</div>
+	</div>
+
+	<?php
+}
+
 
 
 require $REX['INCLUDE_PATH'].'/layout/bottom.php';

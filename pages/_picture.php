@@ -11,7 +11,7 @@ $showAll = rex_get('showall', 'string', "");
 
 rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_images_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
 
-$items = Pictures::getPictures($showAll);
+$items = \akrys\redaxo\addon\UserCheck\Pictures::getPictures($showAll);
 
 
 if ($showAll) {
