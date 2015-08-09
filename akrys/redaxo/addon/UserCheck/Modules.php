@@ -35,6 +35,12 @@ class Modules
 	public static function getModules($show_all = false)
 	{
 		$rexSQL = new rex_sql;
+
+		$where = '';
+		if (!$show_all) {
+			$where.='where s.id is null';
+		}
+
 		$sql = <<<SQL
 SELECT m.name,
 	count(s.id) as count,
@@ -43,12 +49,10 @@ SELECT m.name,
 	s.id as slice_id
 FROM `rex_module` m
 left join rex_article_slice s on s.modultyp_id=m.id
+$where
 group by m.id
 
 SQL;
-		if (!$show_all) {
-			$sql.='where s.id is null';
-		}
 
 		return $rexSQL->getArray($sql);
 	}
