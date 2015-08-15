@@ -22,6 +22,7 @@ if (stristr($REX['LANG'], 'de_')) {
 } else {
 	$dir = glob(__DIR__.'/release_notes/en/*_*.php');
 }
+rsort($dir);
 ?>
 
 
