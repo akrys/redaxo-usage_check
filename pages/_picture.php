@@ -4,6 +4,8 @@
  */
 require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Config.php';
 
+/* @var $I18N \i18n */
+
 use akrys\redaxo\addon\UserCheck\Config;
 require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Pictures.php';
 
@@ -56,7 +58,6 @@ if (!$showAll) {
 
 					<?php
 					echo $item['filename'].' ('.akrys\redaxo\addon\UserCheck\Pictures::getSizeOut($item).')';
-
 					?>
 
 					<br />

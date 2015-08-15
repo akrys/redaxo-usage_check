@@ -55,5 +55,8 @@ akrys_usagecheck_template_detail_column_template = Templates
 
 
 akrys_usagecheck_changelog_subpagetitle = Changelog
+akrys_usagecheck_changelog_header_version = Version
+akrys_usagecheck_changelog_header_date = Date
+akrys_usagecheck_changelog_header_changes = Changes
 
 akrys_usagecheck_error_content_file_not_found = This file should be shown, but it wasn't found

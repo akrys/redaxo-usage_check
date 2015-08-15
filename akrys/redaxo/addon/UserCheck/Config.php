@@ -14,7 +14,7 @@ class Config
 	 * @todo Addon registrieren um eine echte ID zu bekommen
 	 * @var int
 	 */
-	const ID = '679';
+	const ID = '000000';//noch kein offizielles Addon
 
 	/**
 	 * Technischer Name des Addons

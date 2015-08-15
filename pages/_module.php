@@ -7,6 +7,8 @@
 
 require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Config.php';
 
+/* @var $I18N \i18n */
+
 use akrys\redaxo\addon\UserCheck\Config;
 require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Modules.php';
 
@@ -26,7 +28,7 @@ if ($showAll) {
 ?>
 
 <p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
-<p class="rex-tx1"><?php echo $I18N->msg('akrys_usagecheck_module_intro_text');?></p>
+<p class="rex-tx1"><?php echo $I18N->msg('akrys_usagecheck_module_intro_text'); ?></p>
 
 
 <table class = "rex-table">

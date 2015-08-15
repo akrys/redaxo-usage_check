@@ -53,38 +53,3 @@ if (isset($I18N)) {
 	);
 }
 
-
-
-/*
-$REX["ADDON"][Config::NAME]["settings"] = array(
-	'version' => 'V 1.0 2013-12-04',
-	'links' => array(
-		'copyaa' => 'Daten kopierenaa',
-		'changelogaaa' => 'Changelogaa',
-	)
-);
-*/
-/*
-foreach ($REX["ADDON"][Config::NAME]["settings"]['links'] as $key => $value) {
-	$REX['ADDON'][Config::NAME]['SUBPAGES'][] = array($key, $value);
-}
-*/
-
-/*
-
-				rex_register_extension('PAGE_HEADER', 'a135_addAssets');
-				rex_register_extension('MEDIA_FORM_EDIT', 'a135_addLink2Media', $params);
-				rex_register_extension('MEDIA_LIST_FUNCTIONS', 'a135_addLink2Medialist');
-
-				rex_register_extension('OUTPUT_FILTER', 'a135_showCrop');
-// delete thumbnails on mediapool changes
-if (!function_exists('akrys_media_updated')) {
-	rex_register_extension('MEDIA_UPDATED', 'akrys_media_updated');
-
-	function akrys_media_updated($params)
-	{
-		//hier könnte man ein update machen mit den zusatzfeldern.
-	}
-}
- */
-
