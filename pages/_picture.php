@@ -39,7 +39,7 @@ if (!$showAll) {
 	<tbody>
 
 		<?php
-		foreach ($items as $item) {
+		foreach ($items['result'] as $item) {
 			?>
 			<tr>
 				<td>
@@ -65,7 +65,21 @@ if (!$showAll) {
 				</td>
 				<td>
 					<?php
-					if ($item['slice_id'] === null) {
+					$used = false;
+					if ($item['slice_id'] !== null) {
+						$used = true;
+					}
+
+					$table = '';
+					foreach ($items['fields'] as $tablename => $field) {
+						if ($item[$field] !== null) {
+							$used = true;
+							$table = $tablename;
+							break;
+						}
+					}
+
+					if ($used === false) {
 						?>
 
 						<div class="rex-message">
@@ -108,31 +122,37 @@ if (!$showAll) {
 							  <?php
 							  }
 							 */
-							?>
 
+							/* @var $medium OOMedia */
+							$medium = OOMedia::getMediaByFileName($item['filename']);
+							/* @var $cat OOMediaCategory */
+							$initCat = $medium->getCategory();
 
-							<small style="font-size:0.875em;">
-								<br />
-								<strong><?php echo $I18N->msg('akrys_usagecheck_images_category_header'); ?></strong>
-								<br />
-
-								<?php
-								/* @var $medium OOMedia */
-								$medium = OOMedia::getMediaByFileName($item['filename']);
-								/* @var $cat OOMediaCategory */
-								$initCat = $medium->getCategory();
-
-								$i = 0;
-								foreach ($initCat->getParentTree() as $category) {
-									?>
-									<a href="index.php?page=mediapool&rex_file_category=<?php echo $category->getId(); ?>"><?php echo $category->getName() ?></a>
-
-									/
-									<?php
-								}
+							if (isset($initCat)) {
 								?>
-								<a href="index.php?page=mediapool&rex_file_category=<?php echo $initCat->getId(); ?>"><?php echo $initCat->getName() ?></a>
-							</small>
+
+
+								<small style="font-size:0.875em;">
+									<br />
+									<strong><?php echo $I18N->msg('akrys_usagecheck_images_category_header'); ?></strong>
+									<br />
+
+									<?php
+									$i = 0;
+									foreach ($initCat->getParentTree() as $category) {
+										?>
+										<a href="index.php?page=mediapool&rex_file_category=<?php echo $category->getId(); ?>"><?php echo $category->getName() ?></a>
+
+										/
+										<?php
+									}
+									?>
+									<a href="index.php?page=mediapool&rex_file_category=<?php echo $initCat->getId(); ?>"><?php echo $initCat->getName() ?></a>
+
+								</small>
+								<?php
+							}
+							?>
 
 						</span>
 					</div>

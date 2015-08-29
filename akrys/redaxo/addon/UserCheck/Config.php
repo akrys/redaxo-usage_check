@@ -33,12 +33,12 @@ class Config
 	 *
 	 * @var string
 	 */
-	const VERSION = '0.1 DEVELOP';
+	const VERSION = '0.2 DEVELOP';
 
 	/**
 	 * Release-Datum zur Unterscheidung der Versionen
 	 * @var string
 	 */
-	const DATE = '2015-08-08';
+	const DATE = '2015-09-01';
 
 }

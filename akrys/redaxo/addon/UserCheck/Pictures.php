@@ -36,8 +36,67 @@ class Pictures
 	public static function getPictures($show_all = false)
 	{
 		$rexSQL = new \rex_sql;
+
+		$xformtable = $rexSQL->getArray("show table status like 'rex_xform_table'");
+		$xformfield = $rexSQL->getArray("show table status like 'rex_xform_field'");
+
+		$xformtableExists = count($xformfield) > 0;
+		$xformfieldExists = count($xformtable > 0);
+
+		if ($xformfieldExists && $xformtableExists) {
+
+			$additionalSelect = '';
+			$additionalJoins = '';
+
+			$sql = <<<SQL
+select table_name,f1,type_name
+from rex_xform_field f
+where type_name in ('be_mediapool','be_medialist','mediafile')
+SQL;
+			$tables = $rexSQL->getArray($sql);
+
+			$tableFields = array();
+
+			$xTables = array();
+			$havingClauses = array();
+			foreach ($tables as $table) {
+				$xTables[$table['table_name']][] = array('name' => $table['f1'], 'type' => $table['type_name']);
+			}
+
+			foreach ($xTables as $tableName => $fields) {
+				$additionalSelect.=', concat(';
+				$additionalJoins.='LEFT join '.$tableName.' on (';
+
+				foreach ($fields as $key => $field) {
+					if ($key > 0) {
+						$additionalJoins.=' OR ';
+						$additionalSelect.=',';
+					}
+					$additionalSelect.=$tableName.'.'.$field['name'];
+
+					switch ($field['type']) {
+						case 'be_mediapool':
+						case 'mediafile':
+							$additionalJoins.=$tableName.'.'.$field['name'].'= f.filename';
+							break;
+						case 'be_medialist':
+							$additionalJoins.='FIND_IN_SET(f.filename,'.$tableName.'.'.$field['name'].')';
+							break;
+					}
+				}
+
+				$tableFields[$tableName] = 'in_'.$tableName;
+				$additionalJoins.=')'.PHP_EOL;
+				$additionalSelect.=') <> "" as '.$tableFields[$tableName].PHP_EOL;
+				$havingClauses[] = $tableFields[$tableName].' IS NULL';
+			}
+		}
+
+
 		$sql = <<<SQL
 SELECT f.*,count(s.id) as count, s.id as slice_id,s.article_id, s.clang, s.ctype
+$additionalSelect
+
 FROM rex_file f
 left join `rex_article_slice` s on (
     s.file1=f.filename
@@ -62,13 +121,22 @@ left join `rex_article_slice` s on (
  OR find_in_set(f.filename, s.filelist10)
 )
 
+$additionalJoins
+
 SQL;
+
 		if (!$show_all) {
 			$sql.='where s.id is null ';
 		}
 
-		$sql.='group by f.filename';
-		return $rexSQL->getArray($sql);
+		$sql.='group by f.filename ';
+
+
+		if (!$show_all && isset($havingClauses)) {
+			$sql.='having '.implode(' and ', $havingClauses).' ';
+		}
+
+		return array('result' => $rexSQL->getArray($sql), 'fields' => $tableFields);
 	}
 
 	/**
@@ -96,28 +164,28 @@ SQL;
 		$value = round($size, 2);
 		switch ($i) {
 			case 0:
-				$unit= 'B';
+				$unit = 'B';
 				break;
 			case 1:
-				$unit= 'kB';
+				$unit = 'kB';
 				break;
 			case 2:
-				$unit= 'MB';
+				$unit = 'MB';
 				break;
 			case 3:
-				$unit= 'GB';
+				$unit = 'GB';
 				break;
 			case 4:
-				$unit= 'TB';
+				$unit = 'TB';
 				break;
 			case 5:
-				$unit= 'EB';
+				$unit = 'EB';
 				break;
 			case 6:
-				$unit= 'PB';
+				$unit = 'PB';
 				break;
 			default:
-				$unit= '????';
+				$unit = '????';
 				break;
 		}
 
