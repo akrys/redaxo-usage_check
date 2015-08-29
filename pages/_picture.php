@@ -109,6 +109,31 @@ if (!$showAll) {
 							  }
 							 */
 							?>
+
+
+							<small style="font-size:0.875em;">
+								<br />
+								<strong><?php echo $I18N->msg('akrys_usagecheck_images_category_header'); ?></strong>
+								<br />
+
+								<?php
+								/* @var $medium OOMedia */
+								$medium = OOMedia::getMediaByFileName($item['filename']);
+								/* @var $cat OOMediaCategory */
+								$initCat = $medium->getCategory();
+
+								$i = 0;
+								foreach ($initCat->getParentTree() as $category) {
+									?>
+									<a href="index.php?page=mediapool&rex_file_category=<?php echo $category->getId(); ?>"><?php echo $category->getName() ?></a>
+
+									/
+									<?php
+								}
+								?>
+								<a href="index.php?page=mediapool&rex_file_category=<?php echo $initCat->getId(); ?>"><?php echo $initCat->getName() ?></a>
+							</small>
+
 						</span>
 					</div>
 				</td>
