@@ -32,12 +32,25 @@ class Pictures
 	 *
 	 * @todo bei Instanzen mit vielen Dateien im Medienpool testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
+	 *
+	 * @todo die Funktion sollte daten in einem anderen Objekt aufrufen, so dass ein Objekt zurückgegeben werden kann. Da kann man mit getResult() und getFields() besser auf die Daten zugreifen.
 	 */
 	public static function getPictures($show_all = false)
 	{
 		$rexSQL = new \rex_sql;
+
+		$sqlParts = self::getXFormTableSQLParts();
+		$havingClauses = $sqlParts['havingClauses'];
+		$additionalSelect = $sqlParts['additionalSelect'];
+		$additionalJoins = $sqlParts['additionalJoins'];
+		$tableFields = $sqlParts['tableFields'];
+
 		$sql = <<<SQL
-SELECT f.*,count(s.id) as count, s.id as slice_id,s.article_id, s.clang, s.ctype
+SELECT f.*,count(s.id) as count,
+group_concat(distinct concat(s.id,"\\t",s.article_id,"\\t",a.name,"\\t",s.clang,"\\t",s.ctype) Separator "\\n") as slice_data
+
+$additionalSelect
+
 FROM rex_file f
 left join `rex_article_slice` s on (
     s.file1=f.filename
@@ -62,13 +75,99 @@ left join `rex_article_slice` s on (
  OR find_in_set(f.filename, s.filelist10)
 )
 
+left join rex_article a on (a.id=s.article_id and a.clang=s.clang)
+
+$additionalJoins
+
 SQL;
+
 		if (!$show_all) {
 			$sql.='where s.id is null ';
 		}
 
-		$sql.='group by f.filename';
-		return $rexSQL->getArray($sql);
+		$sql.='group by f.filename ';
+
+
+		if (!$show_all && isset($havingClauses)) {
+			$sql.='having '.implode(' and ', $havingClauses).' ';
+		}
+
+		return array('result' => $rexSQL->getArray($sql), 'fields' => $tableFields);
+	}
+
+	/**
+	 * SQL Parts generieren.
+	 *
+	 * @todo Da so viele Daten im return-array gesammelt werden, könnte man auch über ein weiteres Objekt nachdenken, wo diese Daten als instanz hinterlegt werden.
+	 * @return array
+	 */
+	private static function getXFormTableSQLParts()
+	{
+		$return = array(
+			'additionalSelect' => '',
+			'additionalJoins' => '',
+			'tableFields' => array(),
+			'havingClauses' => array(),
+		);
+		$rexSQL = new \rex_sql;
+
+		if (!\OOAddon::isAvailable('xform')) {
+			return $return;
+		}
+
+		$xformtable = $rexSQL->getArray("show table status like 'rex_xform_table'");
+		$xformfield = $rexSQL->getArray("show table status like 'rex_xform_field'");
+
+		$xformtableExists = count($xformfield) > 0;
+		$xformfieldExists = count($xformtable) > 0;
+
+		if ($xformfieldExists <= 0 || $xformtableExists <= 0) {
+			return $return;
+		}
+
+		if ($xformfieldExists && $xformtableExists) {
+
+			$sql = <<<SQL
+select f.table_name, t.name as table_out,f1,f2,type_name
+from rex_xform_field f
+left join rex_xform_table t on t.table_name=f.table_name
+where type_name in ('be_mediapool','be_medialist','mediafile')
+SQL;
+			$tables = $rexSQL->getArray($sql);
+
+			$xTables = array();
+			foreach ($tables as $table) {
+				$xTables[$table['table_name']][] = array('name' => $table['f1'], 'name_out' => $table['f2'], 'table_out' => $table['table_out'], 'type' => $table['type_name']);
+			}
+
+			foreach ($xTables as $tableName => $fields) {
+				$return['additionalSelect'].=', group_concat(distinct '.$tableName.'.id';
+				$return['additionalJoins'].='LEFT join '.$tableName.' on (';
+
+				foreach ($fields as $key => $field) {
+					if ($key > 0) {
+						$return['additionalJoins'].=' OR ';
+					}
+
+					switch ($field['type']) {
+						case 'be_mediapool':
+						case 'mediafile':
+							$return['additionalJoins'].=$tableName.'.'.$field['name'].'= f.filename';
+							break;
+						case 'be_medialist':
+							$return['additionalJoins'].='FIND_IN_SET(f.filename,'.$tableName.'.'.$field['name'].')';
+							break;
+					}
+				}
+
+				$return['tableFields'][$tableName] = $fields;
+				$return['additionalJoins'].=')'.PHP_EOL;
+				$return['additionalSelect'].=' Separator "\n") as '.$tableName.PHP_EOL;
+				$return['havingClauses'][] = $return['tableFields'][$tableName].' IS NULL';
+			}
+		}
+
+		return $return;
 	}
 
 	/**
@@ -96,28 +195,28 @@ SQL;
 		$value = round($size, 2);
 		switch ($i) {
 			case 0:
-				$unit= 'B';
+				$unit = 'B';
 				break;
 			case 1:
-				$unit= 'kB';
+				$unit = 'kB';
 				break;
 			case 2:
-				$unit= 'MB';
+				$unit = 'MB';
 				break;
 			case 3:
-				$unit= 'GB';
+				$unit = 'GB';
 				break;
 			case 4:
-				$unit= 'TB';
+				$unit = 'TB';
 				break;
 			case 5:
-				$unit= 'EB';
+				$unit = 'EB';
 				break;
 			case 6:
-				$unit= 'PB';
+				$unit = 'PB';
 				break;
 			default:
-				$unit= '????';
+				$unit = '????';
 				break;
 		}
 
