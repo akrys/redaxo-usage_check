@@ -163,7 +163,7 @@ SQL;
 				$return['tableFields'][$tableName] = $fields;
 				$return['additionalJoins'].=')'.PHP_EOL;
 				$return['additionalSelect'].=' Separator "\n") as '.$tableName.PHP_EOL;
-				$return['havingClauses'][] = $return['tableFields'][$tableName].' IS NULL';
+				$return['havingClauses'][] = $tableName.' IS NULL';
 			}
 		}
 
