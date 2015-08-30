@@ -40,6 +40,8 @@ akrys_usagecheck_module_table_heading_name = Name
 akrys_usagecheck_module_table_heading_functions = Functions
 akrys_usagecheck_module_msg_used = OK, this is used
 akrys_usagecheck_module_msg_not_used = not used
+akrys_usagecheck_module_linktext_edit_slice = edit in original slice (ID: $sliceID$, article: "$articleName$")
+akrys_usagecheck_module_linktext_edit_code = Edit source code
 
 
 akrys_usagecheck_action_subpagetitle = Actions

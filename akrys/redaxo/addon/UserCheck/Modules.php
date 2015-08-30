@@ -44,12 +44,14 @@ class Modules
 
 		$sql = <<<SQL
 SELECT m.name,
-	count(s.id) as count,
+	m.id,
 	m.createdate,
 	m.updatedate,
-	s.id as slice_id
+	group_concat(concat(s.id,"\t",s.clang,"\t",s.ctype,"\t",a.id,"\t",a.name) Separator "\n") slice_data
 FROM `rex_module` m
 left join rex_article_slice s on s.modultyp_id=m.id
+left join rex_article a on s.article_id=a.id and s.clang=a.clang
+
 $where
 group by m.id
 

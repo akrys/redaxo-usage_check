@@ -91,6 +91,7 @@ if ($showAll) {
 								</ol>
 							</span>
 						</div>
+
 						<?php
 					}
 					?>
