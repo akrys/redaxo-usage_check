@@ -38,19 +38,22 @@ class Templates
 		$rexSQL = new \rex_sql;
 
 		$where = '';
+		$having = '';
+
 		if (!$show_all) {
-			$where.='count > 0';
+			$having.='count = 0';
 		}
 
 		if (!$show_inactive) {
-			if ($where !== '') {
-				$where .='and ';
-			}
 			$where.='t.active = 1';
 		}
 
-		if($where !== '') {
-			$where='where '.$where;
+		if ($where !== '') {
+			$where = 'where '.$where;
+		}
+
+		if ($having !== '') {
+			$having = 'having '.$having;
 		}
 
 		$sql = <<<SQL
@@ -63,8 +66,12 @@ SELECT
 FROM `rex_template` t
 left join rex_article a on t.id=a.template_id
 left join `rex_template` t2 on t.id <> t2.id and t2.content like concat('%TEMPLATE[', t.id, ']%')
+
 $where
+
 group by a.template_id,t.id
+
+$having
 
 SQL;
 
