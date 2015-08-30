@@ -41,7 +41,7 @@ class Templates
 		$having = '';
 
 		if (!$show_all) {
-			$having.='count = 0';
+			$having.='articles is null and templates is null';
 		}
 
 		if (!$show_inactive) {
@@ -49,20 +49,19 @@ class Templates
 		}
 
 		if ($where !== '') {
-			$where = 'where '.$where;
+			$where = 'where '.$where.' ';
 		}
 
 		if ($having !== '') {
-			$having = 'having '.$having;
+			$having = 'having '.$having.' ';
 		}
 
 		$sql = <<<SQL
 SELECT
 	t.*,
 	a.id as article_id,
-	count(a.id) as count_articles,
-	count(t2.id) as count_templates,
-	count(a.id) + count(t2.id) count
+	group_concat(concat(a.id,"\t",a.re_id,"\t",a.startpage,"\t",a.name) Separator "\n") as articles,
+	group_concat(concat(t2.id ,"\t",t2.name) Separator "\n") as templates
 FROM `rex_template` t
 left join rex_article a on t.id=a.template_id
 left join `rex_template` t2 on t.id <> t2.id and t2.content like concat('%TEMPLATE[', t.id, ']%')

@@ -68,8 +68,9 @@ akrys_usagecheck_template_table_inactive = Inaktiv
 akrys_usagecheck_template_msg_used = OK, wird verwendet
 akrys_usagecheck_template_msg_not_used = nicht verwendet
 akrys_usagecheck_template_detail_heading = Nutzung
-akrys_usagecheck_template_detail_column_article = Artikel
-akrys_usagecheck_template_detail_column_template = Templates
+akrys_usagecheck_template_linktext_edit_article = Artikel bearbeiten (ID: $articleID$, Artikel: "$articleName$")
+akrys_usagecheck_template_linktext_edit_template = REX_TEMPLATE[$templateID$] in "$templateName$" bearbeiten
+akrys_usagecheck_template_linktext_edit_code = Quellcode bearbeiten
 
 
 akrys_usagecheck_changelog_subpagetitle = Changelog

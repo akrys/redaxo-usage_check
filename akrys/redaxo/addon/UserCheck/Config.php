@@ -39,6 +39,6 @@ class Config
 	 * Release-Datum zur Unterscheidung der Versionen
 	 * @var string
 	 */
-	const DATE = '2015-09-01';
+	const DATE = '2015-08-30';
 
 }
