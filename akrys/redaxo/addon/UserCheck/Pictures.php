@@ -91,7 +91,6 @@ SQL;
 		return array('result' => $rexSQL->getArray($sql), 'fields' => $tableFields);
 	}
 
-
 	/**
 	 * SQL Parts generieren.
 	 *
@@ -100,9 +99,17 @@ SQL;
 	 */
 	private static function getXFormTableSQLParts()
 	{
-		$return = array();
+		$return = array(
+			'additionalSelect' => '',
+			'additionalJoins' => '',
+			'tableFields' => array(),
+			'havingClauses' => array(),
+		);
 		$rexSQL = new \rex_sql;
 
+		if (!\OOAddon::isAvailable('xform')) {
+			return $return;
+		}
 
 		$xformtable = $rexSQL->getArray("show table status like 'rex_xform_table'");
 		$xformfield = $rexSQL->getArray("show table status like 'rex_xform_field'");
@@ -110,10 +117,11 @@ SQL;
 		$xformtableExists = count($xformfield) > 0;
 		$xformfieldExists = count($xformtable > 0);
 
-		if ($xformfieldExists && $xformtableExists) {
+		if ($xformfieldExists <= 0 || $xformtableExists <= 0) {
+			return $return;
+		}
 
-			$return['additionalSelect'] = '';
-			$return['additionalJoins'] = '';
+		if ($xformfieldExists && $xformtableExists) {
 
 			$sql = <<<SQL
 select table_name,f1,type_name
@@ -122,10 +130,7 @@ where type_name in ('be_mediapool','be_medialist','mediafile')
 SQL;
 			$tables = $rexSQL->getArray($sql);
 
-			$return['tableFields'] = array();
-
 			$xTables = array();
-			$return['havingClauses'] = array();
 			foreach ($tables as $table) {
 				$xTables[$table['table_name']][] = array('name' => $table['f1'], 'type' => $table['type_name']);
 			}
