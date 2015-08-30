@@ -21,7 +21,7 @@ namespace akrys\redaxo\addon\UserCheck;
  *
  * @author akrys
  */
-class Modules
+class Actions
 {
 
 	/**
@@ -33,27 +33,24 @@ class Modules
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
-	public static function getModules($show_all = false)
+	public static function getActions($show_all = false)
 	{
 		$rexSQL = new \rex_sql;
 
 		$where = '';
 		if (!$show_all) {
-			$where.='where s.id is null';
+			$where.='where ma.id is null';
 		}
 
 		$sql = <<<SQL
-SELECT m.name,
-	m.id,
-	m.createdate,
-	m.updatedate,
-	group_concat(concat(s.id,"\t",s.clang,"\t",s.ctype,"\t",a.id,"\t",a.name) Separator "\n") slice_data
-FROM `rex_module` m
-left join rex_article_slice s on s.modultyp_id=m.id
-left join rex_article a on s.article_id=a.id and s.clang=a.clang
+SELECT a.*, group_concat(concat(ma.module_id,"\t",m.name) separator "\n") as modul
+FROM rex_action a
+left join rex_module_action ma on ma.action_id=a.id
+left join rex_module m on ma.module_id=m.id or m.id is null
 
 $where
-group by m.id
+
+group by a.id
 
 SQL;
 

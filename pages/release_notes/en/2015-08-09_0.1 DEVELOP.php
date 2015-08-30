@@ -6,6 +6,5 @@
 <h2>Known Todo:</h2>
 <ul>
 	<li>File links inserted to XForm-Tables should also be analyzed</li>
-	<li>Comments on Items to give a hint why these are not used</li>
 </ul>
 

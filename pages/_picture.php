@@ -39,7 +39,7 @@ if (!$showAll) {
 	<tbody>
 
 		<?php
-		foreach ($items as $item) {
+		foreach ($items['result'] as $item) {
 			?>
 			<tr>
 				<td>
@@ -65,7 +65,21 @@ if (!$showAll) {
 				</td>
 				<td>
 					<?php
-					if ($item['slice_id'] === null) {
+					$used = false;
+					if ($item['slice_data'] !== null) {
+						$used = true;
+					}
+
+					$table = '';
+					foreach ($items['fields'] as $tablename => $field) {
+						if ($item[$tablename] !== null) {
+							$used = true;
+							$table = $tablename;
+							break;
+						}
+					}
+
+					if ($used === false) {
 						?>
 
 						<div class="rex-message">
@@ -88,13 +102,78 @@ if (!$showAll) {
 							</div>
 						</div>
 
+						<div  class="rex-message" style="border:0;outline:0;">
+							<span>
+
+								<ol>
+									<li><a href="http://redaxo.arbeit.local/redaxo/index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>" target="_blank"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit'); ?></a><br /></li>
+
+									<?php
+									if ($item['slice_data'] !== null) {
+
+										$usages = explode("\n", $item['slice_data']);
+										$linktextRaw = $I18N->msg('akrys_usagecheck_images_linktext_edit_in_slice');
+										foreach ($usages as $usage) {
+											$articleData = explode("\t", $usage);
+
+											//s.id,"\\t",s.article_id,"\\t",s.clang,"\\t",s.ctype
+											$sliceID = $articleData[0];
+											$articleID = $articleData[1];
+											$articleName = $articleData[2];
+											$clang = $articleData[3];
+											$ctype = $articleData[4];
+
+
+											$linktext = $linktextRaw;
+											$linktext = str_replace('$sliceID$', $sliceID, $linktext);
+											$linktext = str_replace('$articleName$', $articleName, $linktext);
+											$href = 'index.php?page=content&article_id='.$articleID.'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.'&function=edit#slice'.$sliceID;
+											?>
+
+											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+
+											<?php
+											unset($href, $linktext, $ctype, $clang, $articleID, $articleName, $sliceID);
+										}
+									}
+
+
+									$linktextRaw = $I18N->msg('akrys_usagecheck_images_linktext_edit_in_xformtable');
+									foreach ($items['fields'] as $table => $field) {
+
+										if (!isset($item[$table])) {
+											continue;
+										}
+
+										$ids = explode("\n", $item[$table]);
+										foreach ($ids as $id) {
+
+											$linktext = $linktextRaw;
+											$linktext = str_replace('$entryID$', $id, $linktext);
+											$linktext = str_replace('$tableName$', $field[0]['table_out'], $linktext);
+
+
+											$href = 'index.php?page=xform&subpage=manager&tripage=data_edit&table_name='.$table.'&rex_xform_search=0&data_id='.$id.'&func=edit&start=';
+											?>
+
+											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+
+											<?php
+										}
+									}
+									?>
+
+								</ol>
+
+							</span>
+						</div>
+
 						<?php
 					}
 					?>
 
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
-							<a href="http://redaxo.arbeit.local/redaxo/index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>" target="_blank"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit'); ?></a><br />
 
 							<?php
 							/*
@@ -108,7 +187,38 @@ if (!$showAll) {
 							  <?php
 							  }
 							 */
+
+							/* @var $medium OOMedia */
+							$medium = OOMedia::getMediaByFileName($item['filename']);
+							/* @var $cat OOMediaCategory */
+							$initCat = $medium->getCategory();
+
+							if (isset($initCat)) {
+								?>
+
+
+								<small style="font-size:0.875em;">
+									<br />
+									<strong><?php echo $I18N->msg('akrys_usagecheck_images_category_header'); ?></strong>
+									<br />
+
+									<?php
+									$i = 0;
+									foreach ($initCat->getParentTree() as $category) {
+										?>
+										<a href="index.php?page=mediapool&rex_file_category=<?php echo $category->getId(); ?>"><?php echo $category->getName() ?></a>
+
+										/
+										<?php
+									}
+									?>
+									<a href="index.php?page=mediapool&rex_file_category=<?php echo $initCat->getId(); ?>"><?php echo $initCat->getName() ?></a>
+
+								</small>
+								<?php
+							}
 							?>
+
 						</span>
 					</div>
 				</td>

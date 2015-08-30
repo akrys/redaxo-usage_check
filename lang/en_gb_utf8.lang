@@ -1,6 +1,7 @@
 akrys_usagecheck_overview = Overview
 akrys_usagecheck_picture = Pictures
 akrys_usagecheck_module = Modules
+akrys_usagecheck_action = Actions
 akrys_usagecheck_templates = Templates
 akrys_usagecheck_changelog = Change log
 
@@ -23,10 +24,12 @@ akrys_usagecheck_images_link_show_unused = Show unused files only
 akrys_usagecheck_images_intro_text = In Mediapool there are sometimes files other than images. These files aren't able to have a preview.
 akrys_usagecheck_images_table_heading_name = Name
 akrys_usagecheck_images_table_heading_functions = Functions
+akrys_usagecheck_images_category_header = Category
 akrys_usagecheck_images_msg_used = OK, this is used
 akrys_usagecheck_images_msg_not_used = not used
-akrys_usagecheck_images_linktext_edit = edit
-akrys_usagecheck_images_linktext_edit_in_slice = edit in original slice
+akrys_usagecheck_images_linktext_edit = edit in media pool
+akrys_usagecheck_images_linktext_edit_in_slice = edit in original slice (ID: $sliceID$, article: "$articleName$")
+akrys_usagecheck_images_linktext_edit_in_xformtable = edit in table "$tableName$" (ID: $entryID$)
 
 
 akrys_usagecheck_module_subpagetitle = Modules
@@ -37,6 +40,21 @@ akrys_usagecheck_module_table_heading_name = Name
 akrys_usagecheck_module_table_heading_functions = Functions
 akrys_usagecheck_module_msg_used = OK, this is used
 akrys_usagecheck_module_msg_not_used = not used
+akrys_usagecheck_module_linktext_edit_slice = edit in original slice (ID: $sliceID$, article: "$articleName$")
+akrys_usagecheck_module_linktext_edit_code = Edit source code
+
+
+akrys_usagecheck_action_subpagetitle = Actions
+akrys_usagecheck_action_link_show_all = Show all actions
+akrys_usagecheck_action_link_show_unused = Show unused actions only
+akrys_usagecheck_action_intro_text =
+akrys_usagecheck_action_table_heading_name = Name
+akrys_usagecheck_action_table_heading_functions=Functions
+akrys_usagecheck_action_msg_used = OK, this is used
+akrys_usagecheck_action_msg_not_used = not used
+akrys_usagecheck_action_linktext_edit_in_modul = edit in module "$modulName$"
+akrys_usagecheck_action_linktext_edit_code = Edit source code
+
 
 akrys_usagecheck_template_subpagetitle = Templates
 akrys_usagecheck_template_intro_text = <p>Templates can be used in 2 ways: <ol><li>Connecting them to articles (column: article)</li><li>as an include in another template (column: template)</li></ol></p><p>Deactivated templates are shown using a slightly lighter color.</p>
@@ -50,8 +68,9 @@ akrys_usagecheck_template_table_inactive = inactive
 akrys_usagecheck_template_msg_used = OK, this is used
 akrys_usagecheck_template_msg_not_used = not used
 akrys_usagecheck_template_detail_heading = Usage
-akrys_usagecheck_template_detail_column_article = Article
-akrys_usagecheck_template_detail_column_template = Templates
+akrys_usagecheck_template_linktext_edit_article = edit article (ID: $articleID$, Artikel: "$articleName$")
+akrys_usagecheck_template_linktext_edit_template = edit REX_TEMPLATE[$templateID$] in "$templateName$"
+akrys_usagecheck_template_linktext_edit_code = Edit source code
 
 
 akrys_usagecheck_changelog_subpagetitle = Changelog
