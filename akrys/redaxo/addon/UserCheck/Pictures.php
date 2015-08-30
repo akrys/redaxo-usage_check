@@ -46,7 +46,9 @@ class Pictures
 		$tableFields = $sqlParts['tableFields'];
 
 		$sql = <<<SQL
-SELECT f.*,count(s.id) as count, s.id as slice_id,s.article_id, s.clang, s.ctype
+SELECT f.*,count(s.id) as count,
+group_concat(distinct concat(s.id,"\\t",s.article_id,"\\t",a.name,"\\t",s.clang,"\\t",s.ctype) Separator "\\n") as slice_data
+
 $additionalSelect
 
 FROM rex_file f
@@ -72,6 +74,8 @@ left join `rex_article_slice` s on (
  OR find_in_set(f.filename, s.filelist9)
  OR find_in_set(f.filename, s.filelist10)
 )
+
+left join rex_article a on (a.id=s.article_id and a.clang=s.clang)
 
 $additionalJoins
 
@@ -115,7 +119,7 @@ SQL;
 		$xformfield = $rexSQL->getArray("show table status like 'rex_xform_field'");
 
 		$xformtableExists = count($xformfield) > 0;
-		$xformfieldExists = count($xformtable > 0);
+		$xformfieldExists = count($xformtable) > 0;
 
 		if ($xformfieldExists <= 0 || $xformtableExists <= 0) {
 			return $return;
@@ -124,27 +128,26 @@ SQL;
 		if ($xformfieldExists && $xformtableExists) {
 
 			$sql = <<<SQL
-select table_name,f1,type_name
+select f.table_name, t.name as table_out,f1,f2,type_name
 from rex_xform_field f
+left join rex_xform_table t on t.table_name=f.table_name
 where type_name in ('be_mediapool','be_medialist','mediafile')
 SQL;
 			$tables = $rexSQL->getArray($sql);
 
 			$xTables = array();
 			foreach ($tables as $table) {
-				$xTables[$table['table_name']][] = array('name' => $table['f1'], 'type' => $table['type_name']);
+				$xTables[$table['table_name']][] = array('name' => $table['f1'], 'name_out' => $table['f2'], 'table_out' => $table['table_out'], 'type' => $table['type_name']);
 			}
 
 			foreach ($xTables as $tableName => $fields) {
-				$return['additionalSelect'].=', concat(';
+				$return['additionalSelect'].=', group_concat(distinct '.$tableName.'.id';
 				$return['additionalJoins'].='LEFT join '.$tableName.' on (';
 
 				foreach ($fields as $key => $field) {
 					if ($key > 0) {
 						$return['additionalJoins'].=' OR ';
-						$return['additionalSelect'].=',';
 					}
-					$return['additionalSelect'].=$tableName.'.'.$field['name'];
 
 					switch ($field['type']) {
 						case 'be_mediapool':
@@ -157,9 +160,9 @@ SQL;
 					}
 				}
 
-				$return['tableFields'][$tableName] = 'in_'.$tableName;
+				$return['tableFields'][$tableName] = $fields;
 				$return['additionalJoins'].=')'.PHP_EOL;
-				$return['additionalSelect'].=') <> "" as '.$return['tableFields'][$tableName].PHP_EOL;
+				$return['additionalSelect'].=' Separator "\n") as '.$tableName.PHP_EOL;
 				$return['havingClauses'][] = $return['tableFields'][$tableName].' IS NULL';
 			}
 		}
