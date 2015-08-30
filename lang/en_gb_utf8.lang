@@ -53,6 +53,7 @@ akrys_usagecheck_action_table_heading_functions=Functions
 akrys_usagecheck_action_msg_used = OK, this is used
 akrys_usagecheck_action_msg_not_used = not used
 akrys_usagecheck_action_linktext_edit_in_modul = edit in module "$modulName$"
+akrys_usagecheck_action_linktext_edit_code = Edit source code
 
 
 akrys_usagecheck_template_subpagetitle = Templates

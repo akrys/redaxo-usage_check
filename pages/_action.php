@@ -65,13 +65,16 @@ if ($showAll) {
 						<div class="rex-message">
 							<div class="rex-info">
 								<p>
-									<span><?php echo $I18N->msg('akrys_usagecheck_action_msg_used'); ?> (<?php echo $item['count']; ?>)</span>
+									<span><?php echo $I18N->msg('akrys_usagecheck_action_msg_used'); ?></span>
 								</p>
 							</div>
 						</div>
 						<div  class="rex-message" style="border:0;outline:0;">
 							<span>
 								<ol>
+
+									<li><a href="index.php?page=module&subpage=actions&action_id=<?php echo $item['id']; ?>&function=edit"><?php echo $I18N->msg('akrys_usagecheck_action_linktext_edit_code'); ?></a></li>
+
 									<?php
 									$usages = explode("\n", $item['modul']);
 									$linktextRaw = $I18N->msg('akrys_usagecheck_action_linktext_edit_in_modul');
