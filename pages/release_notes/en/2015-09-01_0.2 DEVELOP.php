@@ -8,4 +8,5 @@
 		</ul>
 	</li>
 	<li>Files added in XFORM tables are shown as used now.</li>
+	<li>Added action usage analyze</li>
 </ul>
