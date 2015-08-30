@@ -48,6 +48,7 @@ if (isset($I18N)) {
 		array('overview', $I18N->msg('akrys_usagecheck_overview')),
 		array('picture', $I18N->msg('akrys_usagecheck_picture')),
 		array('module', $I18N->msg('akrys_usagecheck_module')),
+		array('action', $I18N->msg('akrys_usagecheck_action')),
 		array('template', $I18N->msg('akrys_usagecheck_templates')),
 		array('changelog', $I18N->msg('akrys_usagecheck_changelog')),
 	);
