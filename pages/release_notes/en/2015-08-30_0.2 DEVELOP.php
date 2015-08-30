@@ -9,4 +9,5 @@
 	</li>
 	<li>Files added in XFORM tables are shown as used now.</li>
 	<li>Added action usage analyze</li>
+	<li>Added edit links to all used elements</li>
 </ul>

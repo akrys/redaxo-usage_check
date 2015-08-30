@@ -47,7 +47,7 @@ if ($showAll) {
 				<td><?php echo $item['name']; ?></td>
 				<td>
 					<?php
-					if ($item['slice_id'] === null) {
+					if ($item['slice_data'] === null) {
 						?>
 
 						<div class="rex-message">
@@ -65,9 +65,41 @@ if ($showAll) {
 						<div class="rex-message">
 							<div class="rex-info">
 								<p>
-									<span><?php echo $I18N->msg('akrys_usagecheck_module_msg_used'); ?> (<?php echo $item['count']; ?>)</span>
+									<span><?php echo $I18N->msg('akrys_usagecheck_module_msg_used'); ?></span>
 								</p>
 							</div>
+						</div>
+						<div  class="rex-message" style="border:0;outline:0;">
+							<span>
+								<ol>
+
+									<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo $I18N->msg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
+
+									<?php
+									$usages = explode("\n", $item['slice_data']);
+
+									$linktextRaw = $I18N->msg('akrys_usagecheck_module_linktext_edit_slice');
+									foreach ($usages as $usageRaw) {
+										$usage = explode("\t", $usageRaw);
+										$sliceID = $usage[0];
+										$clang = $usage[1];
+										$ctype = $usage[2];
+										$articleID = $usage[3];
+										$articleName = $usage[4];
+										$href = 'index.php?page=content&article_id='.$articleID.'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.'&function=edit#slice'.$sliceID;
+										$linktext = $linktextRaw;
+										$linktext = str_replace('$sliceID$', $sliceID, $linktext);
+										$linktext = str_replace('$articleName$', $articleName, $linktext);
+										?>
+
+										<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+
+										<?php
+									}
+									?>
+
+								</ol>
+							</span>
 						</div>
 
 						<?php
