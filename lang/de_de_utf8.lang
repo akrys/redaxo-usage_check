@@ -1,6 +1,7 @@
 akrys_usagecheck_overview = Übersicht
 akrys_usagecheck_picture = Bilder
 akrys_usagecheck_module = Module
+akrys_usagecheck_action = Aktionen
 akrys_usagecheck_templates = Templates
 akrys_usagecheck_changelog = Change log
 
@@ -39,6 +40,17 @@ akrys_usagecheck_module_table_heading_name = Name
 akrys_usagecheck_module_table_heading_functions = Funktionen
 akrys_usagecheck_module_msg_used = OK, wird verwendet
 akrys_usagecheck_module_msg_not_used = nicht verwendet
+
+
+akrys_usagecheck_action_subpagetitle = Aktionen
+akrys_usagecheck_action_link_show_all = Zeige alle Aktionen
+akrys_usagecheck_action_link_show_unused = Zeige nur ungenutzte Aktionen
+akrys_usagecheck_action_intro_text =
+akrys_usagecheck_action_table_heading_name = Name
+akrys_usagecheck_action_table_heading_functions=Funktionen
+akrys_usagecheck_action_msg_used = OK, wird verwendet
+akrys_usagecheck_action_msg_not_used = nicht verwendet
+akrys_usagecheck_action_linktext_edit_in_modul = Bearbeiten in Modul "$modulName$"
 
 
 akrys_usagecheck_template_subpagetitle = Templates
