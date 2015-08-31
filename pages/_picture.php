@@ -106,7 +106,7 @@ if (!$showAll) {
 							<span>
 
 								<ol>
-									<li><a href="http://redaxo.arbeit.local/redaxo/index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>" target="_blank"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit'); ?></a><br /></li>
+									<li><a href="index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>" target="_blank"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit'); ?></a><br /></li>
 
 									<?php
 									if ($item['slice_data'] !== null) {
