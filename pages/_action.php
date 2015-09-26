@@ -5,18 +5,18 @@
  * and open the template in the editor.
  */
 
-require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Config.php';
+require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 
 /* @var $I18N \i18n */
 
-use akrys\redaxo\addon\UserCheck\Config;
-require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Actions.php';
+use akrys\redaxo\addon\UsageCheck\Config;
+require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Actions.php';
 
 $showAll = rex_get('showall', 'string', "");
 
 rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_action_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
 
-$items = \akrys\redaxo\addon\UserCheck\Actions::getActions($showAll);
+$items = \akrys\redaxo\addon\UsageCheck\Actions::getActions($showAll);
 
 
 $showAllParam = '&showall=true';

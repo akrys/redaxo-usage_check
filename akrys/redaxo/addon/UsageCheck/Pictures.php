@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace akrys\redaxo\addon\UserCheck;
+namespace akrys\redaxo\addon\UsageCheck;
 
 /**
  * Datei für ...
@@ -221,5 +221,16 @@ SQL;
 		}
 
 		return $value.' '.$unit;
+	}
+
+	/**
+	 * Überprüfen, ob eine Datei existiert.
+	 *
+	 * @global type $REX
+	 * @param array $item
+	 * @return boolean
+	 */
+	public static function exits($item){
+		return file_exists($GLOBALS['REX']['MEDIAFOLDER'].DIRECTORY_SEPARATOR.$item['filename']);
 	}
 }
