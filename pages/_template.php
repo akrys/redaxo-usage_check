@@ -102,68 +102,68 @@ if (!$showInactive) {
 								</p>
 							</div>
 						</div>
-						<div  class="rex-message" style="border:0;outline:0;">
-							<span>
-								<strong><?php echo $I18N->msg('akrys_usagecheck_template_detail_heading'); ?></strong>
-								<ol>
-									<li><a href="index.php?page=template&subpage=&function=edit&template_id=<?php echo $item['id']; ?>"><?php echo $I18N->msg('akrys_usagecheck_template_linktext_edit_code'); ?></a>
-
-										<?php
-										if ($item['articles'] !== null) {
-											$linktextRaw = $I18N->msg('akrys_usagecheck_template_linktext_edit_article');
-											$articles = explode("\n", $item['articles']);
-											foreach ($articles as $article) {
-												$usage = explode("\t", $article);
-												$articleID = $usage[0];
-												$articleReID = $usage[1];
-												$startpage = $usage[2];
-												$articleName = $usage[3];
-
-												if ($startpage == 1) {
-													$articleReID = $articleID;
-												}
-												$href = 'index.php?page=structure&article_id='.$articleID.'&function=edit_art&category_id='.$articleReID.'&clang=0';
-												$linktext = $linktextRaw;
-												$linktext = str_replace('$articleID$', $articleID, $linktext);
-												$linktext = str_replace('$articleName$', $articleName, $linktext);
-												?>
-
-											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
-
-											<?php
-										}
-									}
-
-									if ($item['templates'] !== null) {
-										$templates = explode("\n", $item['templates']);
-										$linktextRaw = $I18N->msg('akrys_usagecheck_template_linktext_edit_template');
-										foreach ($templates as $template) {
-											$usage = explode("\t", $template);
-
-											$id = $usage[0];
-											$name = $usage[1];
-
-											$href = 'index.php?page=template&subpage=&function=edit&template_id='.$id;
-											$linktext = $linktextRaw;
-											$linktext = str_replace('$templateName$', $name, $linktext);
-											$linktext = str_replace('$templateID$', $item['id'], $linktext);
-											?>
-
-											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
-
-											<?php
-										}
-									}
-									?>
-
-								</ol>
-							</span>
-						</div>
 
 						<?php
 					}
 					?>
 
+					<div  class="rex-message" style="border:0;outline:0;">
+						<span>
+							<strong><?php echo $I18N->msg('akrys_usagecheck_template_detail_heading'); ?></strong>
+							<ol>
+								<li><a href="index.php?page=template&subpage=&function=edit&template_id=<?php echo $item['id']; ?>"><?php echo $I18N->msg('akrys_usagecheck_template_linktext_edit_code'); ?></a>
+
+									<?php
+									if ($item['articles'] !== null) {
+										$linktextRaw = $I18N->msg('akrys_usagecheck_template_linktext_edit_article');
+										$articles = explode("\n", $item['articles']);
+										foreach ($articles as $article) {
+											$usage = explode("\t", $article);
+											$articleID = $usage[0];
+											$articleReID = $usage[1];
+											$startpage = $usage[2];
+											$articleName = $usage[3];
+
+											if ($startpage == 1) {
+												$articleReID = $articleID;
+											}
+											$href = 'index.php?page=structure&article_id='.$articleID.'&function=edit_art&category_id='.$articleReID.'&clang=0';
+											$linktext = $linktextRaw;
+											$linktext = str_replace('$articleID$', $articleID, $linktext);
+											$linktext = str_replace('$articleName$', $articleName, $linktext);
+											?>
+
+										<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+
+										<?php
+									}
+								}
+
+								if ($item['templates'] !== null) {
+									$templates = explode("\n", $item['templates']);
+									$linktextRaw = $I18N->msg('akrys_usagecheck_template_linktext_edit_template');
+									foreach ($templates as $template) {
+										$usage = explode("\t", $template);
+
+										$id = $usage[0];
+										$name = $usage[1];
+
+										$href = 'index.php?page=template&subpage=&function=edit&template_id='.$id;
+										$linktext = $linktextRaw;
+										$linktext = str_replace('$templateName$', $name, $linktext);
+										$linktext = str_replace('$templateID$', $item['id'], $linktext);
+										?>
+
+										<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+
+										<?php
+									}
+								}
+								?>
+
+							</ol>
+						</span>
+					</div>
 				</td>
 
 				<?php

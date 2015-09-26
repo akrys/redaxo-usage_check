@@ -69,13 +69,18 @@ if ($showAll) {
 								</p>
 							</div>
 						</div>
-						<div  class="rex-message" style="border:0;outline:0;">
-							<span>
-								<ol>
 
-									<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo $I18N->msg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
+						<?php
+					}
+					?>
 
-									<?php
+					<div  class="rex-message" style="border:0;outline:0;">
+						<span>
+							<ol>
+								<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo $I18N->msg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
+
+								<?php
+								if ($item['slice_data'] !== null) {
 									$usages = explode("\n", $item['slice_data']);
 
 									$linktextRaw = $I18N->msg('akrys_usagecheck_module_linktext_edit_slice');
@@ -96,16 +101,12 @@ if ($showAll) {
 
 										<?php
 									}
-									?>
+								}
+								?>
 
-								</ol>
-							</span>
-						</div>
-
-						<?php
-					}
-					?>
-
+							</ol>
+						</span>
+					</div>
 				</td>
 
 				<?php
