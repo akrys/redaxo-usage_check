@@ -6,9 +6,9 @@
  * and open the template in the editor.
  */
 
-require_once __DIR__.'/akrys/redaxo/addon/UserCheck/Config.php';
+require_once __DIR__.'/akrys/redaxo/addon/UsageCheck/Config.php';
 
-use akrys\redaxo\addon\UserCheck\Config;
+use akrys\redaxo\addon\UsageCheck\Config;
 // @todo Datenbank anpassung
 
 $error = '';

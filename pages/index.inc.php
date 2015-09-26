@@ -16,9 +16,9 @@
  */
 require $REX['INCLUDE_PATH'].'/layout/top.php';
 
-require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Config.php';
+require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 
-use akrys\redaxo\addon\UserCheck\Config;
+use akrys\redaxo\addon\UsageCheck\Config;
 
 $page = rex_request('page', 'string');
 $subpage = rex_request('subpage', 'string');

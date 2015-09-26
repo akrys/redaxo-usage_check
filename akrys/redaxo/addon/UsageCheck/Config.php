@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace akrys\redaxo\addon\UserCheck;
+namespace akrys\redaxo\addon\UsageCheck;
 
 class Config
 {
@@ -33,7 +33,7 @@ class Config
 	 *
 	 * @var string
 	 */
-	const VERSION = '0.2 DEVELOP';
+	const VERSION = '0.25 DEVELOP';
 
 	/**
 	 * Release-Datum zur Unterscheidung der Versionen
