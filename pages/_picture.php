@@ -2,18 +2,18 @@
 /**
  * Anzeige der nicht verwendeten Bilder.
  */
-require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Config.php';
+require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 
 /* @var $I18N \i18n */
 
-use akrys\redaxo\addon\UserCheck\Config;
-require_once __DIR__.'/../akrys/redaxo/addon/UserCheck/Pictures.php';
+use akrys\redaxo\addon\UsageCheck\Config;
+require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Pictures.php';
 
 $showAll = rex_get('showall', 'string', "");
 
 rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_images_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
 
-$items = \akrys\redaxo\addon\UserCheck\Pictures::getPictures($showAll);
+$items = \akrys\redaxo\addon\UsageCheck\Pictures::getPictures($showAll);
 
 
 
@@ -57,7 +57,7 @@ if (!$showAll) {
 					<strong><?php echo $item['title']; ?></strong><br />
 
 					<?php
-					echo $item['filename'].' ('.akrys\redaxo\addon\UserCheck\Pictures::getSizeOut($item).')';
+					echo $item['filename'].' ('.akrys\redaxo\addon\UsageCheck\Pictures::getSizeOut($item).')';
 					?>
 
 					<br />
@@ -79,14 +79,31 @@ if (!$showAll) {
 						}
 					}
 
+					$errors = array();
 					if ($used === false) {
+						$errors[] = $I18N->msg('akrys_usagecheck_images_msg_not_used');
+					}
+
+					if (!\akrys\redaxo\addon\UsageCheck\Pictures::exits($item)) {
+						$errors[] = $I18N->msg('akrys_usagecheck_images_msg_not_found');
+					}
+
+					if (count($errors) > 0) {
 						?>
 
 						<div class="rex-message">
 							<div class="rex-warning">
-								<p>
-									<span><?php echo $I18N->msg('akrys_usagecheck_images_msg_not_used'); ?></span>
-								</p>
+								<?php
+								foreach ($errors as $error) {
+									?>
+
+									<p>
+										<span><?php echo $error; ?></span>
+									</p>
+
+									<?php
+								}
+								?>
 							</div>
 						</div>
 
@@ -106,7 +123,7 @@ if (!$showAll) {
 							<span>
 
 								<ol>
-									<li><a href="http://redaxo.arbeit.local/redaxo/index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>" target="_blank"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit'); ?></a><br /></li>
+									<li><a href="index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>" target="_blank"><?php echo $I18N->msg('akrys_usagecheck_images_linktext_edit'); ?></a><br /></li>
 
 									<?php
 									if ($item['slice_data'] !== null) {
