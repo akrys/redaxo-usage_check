@@ -88,7 +88,7 @@ SQL;
 		$sql.='group by f.filename ';
 
 
-		if (!$show_all && isset($havingClauses)) {
+		if (!$show_all && isset($havingClauses) && count($havingClauses) > 0) {
 			$sql.='having '.implode(' and ', $havingClauses).' ';
 		}
 
