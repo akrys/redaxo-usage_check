@@ -33,7 +33,7 @@ class Config
 	 *
 	 * @var string
 	 */
-	const VERSION = '0.2 DEVELOP';
+	const VERSION = '0.25 DEVELOP';
 
 	/**
 	 * Release-Datum zur Unterscheidung der Versionen
