@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__.'/akrys/redaxo/addon/UsageCheck/Config.php';
+require_once __DIR__.'/akrys/redaxo/addon/UsageCheck/Permission.php';
 
 use akrys\redaxo\addon\UsageCheck\Config;
 /* Addon Parameter */
@@ -44,13 +45,46 @@ if (isset($I18N)) {
 	 * eines Redaxo-Addons…
 	 */
 	$I18N->appendFile($REX['INCLUDE_PATH'].'/addons/'.Config::NAME.'/lang/');
-	$REX['ADDON']['pages'][Config::NAME] = array(
-		array('overview', $I18N->msg('akrys_usagecheck_overview')),
-		array('picture', $I18N->msg('akrys_usagecheck_picture')),
-		array('module', $I18N->msg('akrys_usagecheck_module')),
-		array('action', $I18N->msg('akrys_usagecheck_action')),
-		array('template', $I18N->msg('akrys_usagecheck_templates')),
-		array('changelog', $I18N->msg('akrys_usagecheck_changelog')),
-	);
+
+	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME] = array();
+
+
+	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('overview', $I18N->msg('akrys_usagecheck_overview'));
+	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('picture', $I18N->msg('akrys_usagecheck_picture'));
+	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('module', $I18N->msg('akrys_usagecheck_module'));
+	if ($REX['USER'] && $REX['USER']->isAdmin()) {
+		$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('action', $I18N->msg('akrys_usagecheck_action'));
+	}
+	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('template', $I18N->msg('akrys_usagecheck_templates'));
+	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('changelog', $I18N->msg('akrys_usagecheck_changelog'));
 }
 
+
+
+
+/*
+
+//Grundlegende Idee:
+//Die Menüpunkte anhand der Berechtigungen hinzufügen.
+//
+//Mögliche Extension-Points
+//- ADDONS_INCLUDED
+//- PAGE_HEADER
+//- PAGE_CHECKED
+//
+//ADDONS_INCLUDED geht nicht, weil die Berechtigungen noch nicht ausgewertet wurden.
+//PAGE_HEADER geht nicht, weil die Pages schon zum Menü hinzugefügt wurden.
+//PAGE_CHECKED geht nicht, weil erst die Seiten hinzugefügt werden und dann erst Berechtigungen ausgewertet werden.
+//
+//s. auch http://www.redaxo.org/de/doku/tutorials/addon-entwicklung-in-7-folgen/addon-entwicklung-teil-6---seitengenerierung/
+
+rex_register_extension('PAGE_CHECKED', '\\usage_check_perms');
+
+function usage_check_perms()
+{
+	global $REX, $I18N;
+	var_dump(array_keys($GLOBALS['REX']['USER']->pages));
+	var_dump(OOAddon::isAvailable('xform'));
+	var_dump(OOPlugin::isAvailable('xform', 'manager'));
+}
+ */

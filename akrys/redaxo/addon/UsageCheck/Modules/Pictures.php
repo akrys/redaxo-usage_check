@@ -5,7 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace akrys\redaxo\addon\UsageCheck;
+namespace akrys\redaxo\addon\UsageCheck\Modules;
+
+require_once __DIR__.'/../Permission.php';
 
 /**
  * Datei für ...
@@ -37,6 +39,11 @@ class Pictures
 	 */
 	public static function getPictures($show_all = false)
 	{
+
+		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_MEDIAPOOL)) {
+			return false;
+		}
+
 		$rexSQL = new \rex_sql;
 
 		$sqlParts = self::getXFormTableSQLParts();
@@ -112,6 +119,10 @@ SQL;
 		$rexSQL = new \rex_sql;
 
 		if (!\OOAddon::isAvailable('xform')) {
+			return $return;
+		}
+
+		if (!\OOPlugin::isAvailable('xform', 'manager')) {
 			return $return;
 		}
 
@@ -230,7 +241,8 @@ SQL;
 	 * @param array $item
 	 * @return boolean
 	 */
-	public static function exits($item){
+	public static function exists($item)
+	{
 		return file_exists($GLOBALS['REX']['MEDIAFOLDER'].DIRECTORY_SEPARATOR.$item['filename']);
 	}
 }

@@ -5,7 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace akrys\redaxo\addon\UsageCheck;
+namespace akrys\redaxo\addon\UsageCheck\Modules;
+
+require_once __DIR__.'/../Permission.php';
 
 /**
  * Datei für ...
@@ -35,6 +37,11 @@ class Modules
 	 */
 	public static function getModules($show_all = false)
 	{
+		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_STRUCTURE)) {
+			//\akrys\redaxo\addon\UsageCheck\Permission::PERM_MODUL
+			return false;
+		}
+
 		$rexSQL = new \rex_sql;
 
 		$where = '';
@@ -47,7 +54,7 @@ SELECT m.name,
 	m.id,
 	m.createdate,
 	m.updatedate,
-	group_concat(concat(s.id,"\t",s.clang,"\t",s.ctype,"\t",a.id,"\t",a.name) Separator "\n") slice_data
+	group_concat(concat(s.id,"\t",s.clang,"\t",s.ctype,"\t",a.id,"\t",a.re_id,"\t",a.name) Separator "\n") slice_data
 FROM `rex_module` m
 left join rex_article_slice s on s.modultyp_id=m.id
 left join rex_article a on s.article_id=a.id and s.clang=a.clang

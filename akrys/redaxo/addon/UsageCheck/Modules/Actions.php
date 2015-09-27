@@ -5,7 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace akrys\redaxo\addon\UsageCheck;
+namespace akrys\redaxo\addon\UsageCheck\Modules;
+
+require_once __DIR__.'/../Permission.php';
 
 /**
  * Datei für ...
@@ -35,6 +37,10 @@ class Actions
 	 */
 	public static function getActions($show_all = false)
 	{
+		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_MODUL)) {
+			return false;
+		}
+
 		$rexSQL = new \rex_sql;
 
 		$where = '';

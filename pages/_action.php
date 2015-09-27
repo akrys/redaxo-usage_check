@@ -10,14 +10,28 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 /* @var $I18N \i18n */
 
 use akrys\redaxo\addon\UsageCheck\Config;
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Actions.php';
+require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Actions.php';
 
 $showAll = rex_get('showall', 'string', "");
 
 rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_action_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
 
-$items = \akrys\redaxo\addon\UsageCheck\Actions::getActions($showAll);
+$items = \akrys\redaxo\addon\UsageCheck\Modules\Actions::getActions($showAll);
 
+if (!$items) {
+	?>
+
+	<div class="rex-message">
+		<div class="rex-warning">
+			<p>
+				<span><?php echo $I18N->msg('akrys_usagecheck_no_rights'); ?></span>
+			</p>
+		</div>
+	</div>
+
+	<?php
+	return;
+}
 
 $showAllParam = '&showall=true';
 $showAllLinktext = $I18N->msg('akrys_usagecheck_action_link_show_all');

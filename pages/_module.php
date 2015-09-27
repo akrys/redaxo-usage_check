@@ -10,14 +10,28 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 /* @var $I18N \i18n */
 
 use akrys\redaxo\addon\UsageCheck\Config;
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules.php';
+require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Modules.php';
 
 $showAll = rex_get('showall', 'string', "");
 
 rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_module_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
 
-$items = \akrys\redaxo\addon\UsageCheck\Modules::getModules($showAll);
+$items = \akrys\redaxo\addon\UsageCheck\Modules\Modules::getModules($showAll);
 
+if (!$items) {
+	?>
+
+	<div class="rex-message">
+		<div class="rex-warning">
+			<p>
+				<span><?php echo $I18N->msg('akrys_usagecheck_no_rights'); ?></span>
+			</p>
+		</div>
+	</div>
+
+	<?php
+	return;
+}
 
 $showAllParam = '&showall=true';
 $showAllLinktext = $I18N->msg('akrys_usagecheck_module_link_show_all');
@@ -42,7 +56,11 @@ if ($showAll) {
 
 		<?php
 		foreach ($items as $item) {
+			if (!$REX['USER']->hasPerm('module['.$item['id'].']')) {
+				continue;
+			}
 			?>
+
 			<tr>
 				<td><?php echo $item['name']; ?></td>
 				<td>
@@ -77,9 +95,15 @@ if ($showAll) {
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
-								<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo $I18N->msg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
-
 								<?php
+								if ($REX['USER']->isAdmin()) {
+									?>
+
+									<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo $I18N->msg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
+
+									<?php
+								}
+
 								if ($item['slice_data'] !== null) {
 									$usages = explode("\n", $item['slice_data']);
 
@@ -90,16 +114,21 @@ if ($showAll) {
 										$clang = $usage[1];
 										$ctype = $usage[2];
 										$articleID = $usage[3];
-										$articleName = $usage[4];
-										$href = 'index.php?page=content&article_id='.$articleID.'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.'&function=edit#slice'.$sliceID;
-										$linktext = $linktextRaw;
-										$linktext = str_replace('$sliceID$', $sliceID, $linktext);
-										$linktext = str_replace('$articleName$', $articleName, $linktext);
-										?>
+										$categoryID = $usage[4];
+										$articleName = $usage[5];
 
-										<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+										//$REX['USER']->hasPerm('article['.$articleID.']') ist immer false
+										if (/* $REX['USER']->hasPerm('article['.$articleID.']') || */$REX['USER']->hasCategoryPerm($articleID)) {
+											$href = 'index.php?page=content&article_id='.$articleID.'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.'&function=edit#slice'.$sliceID;
+											$linktext = $linktextRaw;
+											$linktext = str_replace('$sliceID$', $sliceID, $linktext);
+											$linktext = str_replace('$articleName$', $articleName, $linktext);
+											?>
 
-										<?php
+											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+
+											<?php
+										}
 									}
 								}
 								?>

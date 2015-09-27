@@ -5,7 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace akrys\redaxo\addon\UsageCheck;
+namespace akrys\redaxo\addon\UsageCheck\Modules;
+
+require_once __DIR__.'/../Permission.php';
 
 /**
  * Datei für ...
@@ -35,6 +37,18 @@ class Templates
 	 */
 	public static function getTemplates($show_all = false, $show_inactive = false)
 	{
+
+		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_STRUCTURE)) {
+			//\akrys\redaxo\addon\UsageCheck\Permission::PERM_TEMPLATE
+			return false;
+		}
+
+		//Parameter-Korrektur, wenn der User KEIN Admin ist
+		//Der darf die inaktiven Templats nämlich sowieso nicht sehen.
+		if (!$GLOBALS['REX']['USER']->isAdmin() && $show_inactive === true) {
+			$show_inactive = false;
+		}
+
 		$rexSQL = new \rex_sql;
 
 		$where = '';
