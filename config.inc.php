@@ -2,6 +2,7 @@
 
 require_once __DIR__.'/akrys/redaxo/addon/UsageCheck/Config.php';
 require_once __DIR__.'/akrys/redaxo/addon/UsageCheck/Permission.php';
+require_once __DIR__.'/akrys/redaxo/addon/UsageCheck/Error.php';
 
 use akrys\redaxo\addon\UsageCheck\Config;
 /* Addon Parameter */
@@ -13,6 +14,10 @@ $REX['ADDON']['author'][Config::NAME] = 'Axel Krysztofiak <akrys@web.de>';
 $REX['ADDON']['supportpage'][Config::NAME] = 'localhost/nixda';
 $REX['PERM'][] = 'usage_check[]';
 
+//Eigener Error-Status
+$REX['ADDON']['errors'][akrys\redaxo\addon\UsageCheck\Config::NAME] = array();
+
+\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add('test');
 
 /*
  * I18N gibt es nicht am Frontend, nur im Backend
@@ -38,6 +43,21 @@ $REX['PERM'][] = 'usage_check[]';
  *
  */
 if (isset($I18N)) {
+	require_once __DIR__.'/akrys/redaxo/addon/UsageCheck/LangFile.php';
+	try {
+		$langDE = new \akrys\redaxo\addon\UsageCheck\LangFile('de_de');
+		$langDE->createISOFile();
+	} catch (\akrys\redaxo\addon\UsageCheck\Exception\LangFileGenError $e) {
+		\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($e->getMessage());
+	}
+
+	try {
+		$langEN = new \akrys\redaxo\addon\UsageCheck\LangFile('en_gb');
+		$langEN->createISOFile();
+	} catch (\akrys\redaxo\addon\UsageCheck\Exception\LangFileGenError $e) {
+		\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($e->getMessage());
+	}
+
 	/*
 	 * Überestzungen hinzufügen
 	 * lege ich aktuell aber nur in UTF-8

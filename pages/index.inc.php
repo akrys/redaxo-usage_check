@@ -20,6 +20,24 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 
 use akrys\redaxo\addon\UsageCheck\Config;
 
+//Fehlerausgabe
+if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
+	foreach (\akrys\redaxo\addon\UsageCheck\Error::getInstance() as $error) {
+		?>
+		<div class="rex-message">
+			<div class="rex-warning">
+				<p>
+					<span>
+						<?php echo $error; ?>
+					</span>
+				</p>
+			</div>
+		</div>
+
+		<?php
+	}
+}
+
 $page = rex_request('page', 'string');
 $subpage = rex_request('subpage', 'string');
 
@@ -29,7 +47,6 @@ if ($subpage === '') {
 }
 
 $contentFile = __DIR__.'/_'.$subpage.'.php';
-
 
 if (file_exists($contentFile)) {
 	include $contentFile;
