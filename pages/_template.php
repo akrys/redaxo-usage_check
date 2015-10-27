@@ -178,7 +178,7 @@ if (!$showInactive) {
 										}
 
 										//$REX['USER']->hasPerm('article['.$articleID.']') ist immer false
-										if (/* $REX['USER']->hasPerm('article['.$articleID.']') || */$REX['USER']->hasCategoryPerm($articleID)) {
+										if (/* $REX['USER']->hasPerm('article['.$articleID.']') || */ $REX['USER']->hasCategoryPerm($articleID)) {
 
 											$href = 'index.php?page=structure&article_id='.$articleID.'&function=edit_art&category_id='.$articleReID.'&clang=0';
 											$linktext = $linktextRaw;

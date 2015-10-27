@@ -56,7 +56,7 @@ if ($showAll) {
 
 		<?php
 		foreach ($items as $item) {
-			if (!$REX['USER']->hasPerm('module['.$item['id'].']')) {
+			if (!$REX['USER']->isAdmin() && !$REX['USER']->hasPerm('module['.$item['id'].']')) {
 				continue;
 			}
 			?>

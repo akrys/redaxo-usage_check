@@ -55,7 +55,7 @@ if (!$showAll) {
 
 		<?php
 		foreach ($items['result'] as $item) {
-			if(!$REX['USER']->hasPerm('media[' . $item['category_id'] . ']')) {
+			if(!$REX['USER']->isAdmin() && !$REX['USER']->hasPerm('media[' . $item['category_id'] . ']')) {
 				continue;
 			}
 			?>
