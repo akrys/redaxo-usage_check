@@ -17,8 +17,6 @@ $REX['PERM'][] = 'usage_check[]';
 //Eigener Error-Status
 $REX['ADDON']['errors'][akrys\redaxo\addon\UsageCheck\Config::NAME] = array();
 
-\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add('test');
-
 /*
  * I18N gibt es nicht am Frontend, nur im Backend
  *

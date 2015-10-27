@@ -15,7 +15,7 @@ rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_images_subpagetitl
 
 $items = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::getPictures($showAll);
 
-if (!$items) {
+if ($items === false) {
 	?>
 
 	<div class="rex-message">

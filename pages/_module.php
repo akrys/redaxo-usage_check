@@ -18,7 +18,7 @@ rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_module_subpagetitl
 
 $items = \akrys\redaxo\addon\UsageCheck\Modules\Modules::getModules($showAll);
 
-if (!$items) {
+if ($items === false) {
 	?>
 
 	<div class="rex-message">

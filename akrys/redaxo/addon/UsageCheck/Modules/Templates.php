@@ -70,12 +70,23 @@ class Templates
 			$having = 'having '.$having.' ';
 		}
 
+		//Keine integer oder Datumswerte in einem concat!
+		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
+		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
 		$sql = <<<SQL
 SELECT
 	t.*,
 	a.id as article_id,
-	group_concat(concat(a.id,"\t",a.re_id,"\t",a.startpage,"\t",a.name) Separator "\n") as articles,
-	group_concat(concat(t2.id ,"\t",t2.name) Separator "\n") as templates
+	group_concat(concat(
+		cast(a.id as char),"\t",
+		cast(a.re_id as char),"\t",
+		cast(a.startpage as char),"\t",
+		a.name) Separator "\n"
+	) as articles,
+	group_concat(concat(
+		cast(t2.id as char),"\t",
+		t2.name) Separator "\n"
+	) as templates
 FROM `rex_template` t
 left join rex_article a on t.id=a.template_id
 left join `rex_template` t2 on t.id <> t2.id and t2.content like concat('%TEMPLATE[', t.id, ']%')
