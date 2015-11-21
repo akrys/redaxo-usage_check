@@ -5,7 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace akrys\redaxo\addon\UsageCheck;
+namespace akrys\redaxo\addon\UsageCheck\Modules;
+
+require_once __DIR__.'/../Permission.php';
 
 /**
  * Datei für ...
@@ -35,6 +37,10 @@ class Actions
 	 */
 	public static function getActions($show_all = false)
 	{
+		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_MODUL)) {
+			return false;
+		}
+
 		$rexSQL = new \rex_sql;
 
 		$where = '';
@@ -42,8 +48,14 @@ class Actions
 			$where.='where ma.id is null';
 		}
 
+		//Keine integer oder Datumswerte in einem concat!
+		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
+		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
 		$sql = <<<SQL
-SELECT a.*, group_concat(concat(ma.module_id,"\t",m.name) separator "\n") as modul
+SELECT a.*, group_concat(concat(
+	cast(ma.module_id as char),"\t",
+	m.name
+) separator "\n") as modul
 FROM rex_action a
 left join rex_module_action ma on ma.action_id=a.id
 left join rex_module m on ma.module_id=m.id or m.id is null

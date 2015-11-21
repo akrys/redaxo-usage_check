@@ -11,6 +11,7 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 
 use akrys\redaxo\addon\UsageCheck\Config;
 rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_overview_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
+
 ?>
 
 

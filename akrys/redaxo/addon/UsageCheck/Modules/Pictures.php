@@ -5,7 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace akrys\redaxo\addon\UsageCheck;
+namespace akrys\redaxo\addon\UsageCheck\Modules;
+
+require_once __DIR__.'/../Permission.php';
 
 /**
  * Datei für ...
@@ -37,6 +39,11 @@ class Pictures
 	 */
 	public static function getPictures($show_all = false)
 	{
+
+		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_MEDIAPOOL)) {
+			return false;
+		}
+
 		$rexSQL = new \rex_sql;
 
 		$sqlParts = self::getXFormTableSQLParts();
@@ -45,9 +52,18 @@ class Pictures
 		$additionalJoins = $sqlParts['additionalJoins'];
 		$tableFields = $sqlParts['tableFields'];
 
+		//Keine integer oder Datumswerte in einem concat!
+		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
+		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
 		$sql = <<<SQL
 SELECT f.*,count(s.id) as count,
-group_concat(distinct concat(s.id,"\\t",s.article_id,"\\t",a.name,"\\t",s.clang,"\\t",s.ctype) Separator "\\n") as slice_data
+group_concat(distinct concat(
+	cast(s.id as char),"\\t",
+	cast(s.article_id as char),"\\t",
+	a.name,"\\t",
+	cast(s.clang as char),"\\t",
+	cast(s.ctype as char)
+) Separator "\\n") as slice_data
 
 $additionalSelect
 
@@ -112,6 +128,10 @@ SQL;
 		$rexSQL = new \rex_sql;
 
 		if (!\OOAddon::isAvailable('xform')) {
+			return $return;
+		}
+
+		if (!\OOPlugin::isAvailable('xform', 'manager')) {
 			return $return;
 		}
 
@@ -230,7 +250,8 @@ SQL;
 	 * @param array $item
 	 * @return boolean
 	 */
-	public static function exits($item){
+	public static function exists($item)
+	{
 		return file_exists($GLOBALS['REX']['MEDIAFOLDER'].DIRECTORY_SEPARATOR.$item['filename']);
 	}
 }

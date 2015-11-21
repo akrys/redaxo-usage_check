@@ -7,15 +7,28 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 /* @var $I18N \i18n */
 
 use akrys\redaxo\addon\UsageCheck\Config;
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Pictures.php';
+require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Pictures.php';
 
 $showAll = rex_get('showall', 'string', "");
 
 rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_images_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
 
-$items = \akrys\redaxo\addon\UsageCheck\Pictures::getPictures($showAll);
+$items = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::getPictures($showAll);
 
+if ($items === false) {
+	?>
 
+	<div class="rex-message">
+		<div class="rex-warning">
+			<p>
+				<span><?php echo $I18N->msg('akrys_usagecheck_no_rights'); ?></span>
+			</p>
+		</div>
+	</div>
+
+	<?php
+	return;
+}
 
 $showAllLinktext = $I18N->msg('akrys_usagecheck_images_link_show_unused');
 $showAllParam = '';
@@ -24,7 +37,9 @@ if (!$showAll) {
 	$showAllParam = '&showall=true';
 }
 ?>
-<p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a>
+
+<p class="rex-tx1">
+	<a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a>
 </a>
 <p class="rex-tx1"><?php echo $I18N->msg('akrys_usagecheck_images_intro_text'); ?></p>
 
@@ -40,7 +55,11 @@ if (!$showAll) {
 
 		<?php
 		foreach ($items['result'] as $item) {
+			if(!$REX['USER']->isAdmin() && !$REX['USER']->hasPerm('media[' . $item['category_id'] . ']')) {
+				continue;
+			}
 			?>
+
 			<tr>
 				<td>
 					<?php
@@ -57,7 +76,7 @@ if (!$showAll) {
 					<strong><?php echo $item['title']; ?></strong><br />
 
 					<?php
-					echo $item['filename'].' ('.akrys\redaxo\addon\UsageCheck\Pictures::getSizeOut($item).')';
+					echo $item['filename'].' ('.akrys\redaxo\addon\UsageCheck\Modules\Pictures::getSizeOut($item).')';
 					?>
 
 					<br />
@@ -84,7 +103,7 @@ if (!$showAll) {
 						$errors[] = $I18N->msg('akrys_usagecheck_images_msg_not_used');
 					}
 
-					if (!\akrys\redaxo\addon\UsageCheck\Pictures::exits($item)) {
+					if (!\akrys\redaxo\addon\UsageCheck\Modules\Pictures::exists($item)) {
 						$errors[] = $I18N->msg('akrys_usagecheck_images_msg_not_found');
 					}
 
