@@ -1,4 +1,4 @@
-akrys_usagecheck_overview = Ãœbersicht
+akrys_usagecheck_overview = Übersicht
 akrys_usagecheck_picture = Bilder
 akrys_usagecheck_module = Module
 akrys_usagecheck_action = Aktionen
@@ -7,22 +7,22 @@ akrys_usagecheck_changelog = Change log
 
 akrys_usagecheck_no_rights = Sie haben keine ausreichenden Rechte, diese Seite aufzurufen.
 
-akrys_usagecheck_overview_subpagetitle = Ãœbersicht
+akrys_usagecheck_overview_subpagetitle = Übersicht
 akrys_usagecheck_overview_intro = Dieses Addon sucht nach Bildern, Module und Templates, die nicht verwendet werden.
 akrys_usagecheck_overview_images_title = Modul: Bilder
-akrys_usagecheck_overview_images_body = <p>Es wird nach einer Nutzung in Modul-BlÃ¶cken gesucht.<br />Konkret sind die Felder:</p><ol><li>file1, file2, .. , file10</li><li>filelist1, filelist2, .. , linklist10</li></ol></p>
+akrys_usagecheck_overview_images_body = <p>Es wird nach einer Nutzung in Modul-Blöcken gesucht.<br />Konkret sind die Felder:</p><ol><li>file1, file2, .. , file10</li><li>filelist1, filelist2, .. , linklist10</li></ol></p>
 akrys_usagecheck_overview_module_title = Modul: Module
-akrys_usagecheck_overview_module_body = <p>Es wird nach einer Nutzung in der Tabelle <tt>rex_article_slice</tt> gesucht.<br />Dort werden die ArtikelblÃ¶cke mit hinweis auf den Modultyp und den Artikel hinterlegt.</p>
+akrys_usagecheck_overview_module_body = <p>Es wird nach einer Nutzung in der Tabelle <tt>rex_article_slice</tt> gesucht.<br />Dort werden die Artikelblöcke mit hinweis auf den Modultyp und den Artikel hinterlegt.</p>
 akrys_usagecheck_overview_template_title = Modul: Templates
-akrys_usagecheck_overview_template_body = <p>Es wird nach einer Nutzung in Artikeln geuscht.<br />DafÃ¼r wird die Tabelle <tt>rex_artile</tt> nach vorkommen der Templates analysiert.</p><p>ZusÃ¤tzlich werden alle Templates durchsucht, ob dort ein Sub-Tempalateeingebunden wird. <br /><br />Syntax in Templates: <tt>TEMPLATE[TPL_ID]</tt><br /><br /> GroÃŸer Vorteil fÃ¼r die Suche: bei der Syntax sind keine Leerzeichen erlaubt, so dass sich die Suche technisch betrachtet recht simpel gestaltet.</p>
+akrys_usagecheck_overview_template_body = <p>Es wird nach einer Nutzung in Artikeln geuscht.<br />Dafür wird die Tabelle <tt>rex_artile</tt> nach vorkommen der Templates analysiert.</p><p>Zusätzlich werden alle Templates durchsucht, ob dort ein Sub-Tempalateeingebunden wird. <br /><br />Syntax in Templates: <tt>TEMPLATE[TPL_ID]</tt><br /><br /> Großer Vorteil für die Suche: bei der Syntax sind keine Leerzeichen erlaubt, so dass sich die Suche technisch betrachtet recht simpel gestaltet.</p>
 akrys_usagecheck_overview_action_title = Modul: Actions
-akrys_usagecheck_overview_atcion_body = <p>Es wird nachgesehen, ob alle Actions zu Modulen hinzugefÃ¼gt wurden.<br /><br />DafÃ¼r werden alle EintrÃ¤ge in <tt>rex_action</tt> auf EintrÃ¤ge in <tt>rex_module_action</tt> und <tt>rex_module</tt> geprÃ¼ft.</p>
+akrys_usagecheck_overview_atcion_body = <p>Es wird nachgesehen, ob alle Actions zu Modulen hinzugefügt wurden.<br /><br />Dafür werden alle Einträge in <tt>rex_action</tt> auf Einträge in <tt>rex_module_action</tt> und <tt>rex_module</tt> geprüft.</p>
 
 
 akrys_usagecheck_images_subpagetitle = Bilder
 akrys_usagecheck_images_link_show_all = Zeige alle Dateien
 akrys_usagecheck_images_link_show_unused = Zeige nur ungenutzte Dateien
-akrys_usagecheck_images_intro_text = Im Medienpool kÃ¶nnen neben Bildern auch andere Dateien hochgeladen werden. Nur FÃ¼r Bilder gibt es eine Vorschau.
+akrys_usagecheck_images_intro_text = Im Medienpool können neben Bildern auch andere Dateien hochgeladen werden. Nur Für Bilder gibt es eine Vorschau.
 akrys_usagecheck_images_table_heading_name = Name
 akrys_usagecheck_images_table_heading_functions = Funktionen
 akrys_usagecheck_images_category_header = Kategorie
@@ -37,7 +37,7 @@ akrys_usagecheck_images_linktext_edit_in_xformtable = In Tabelle "$tableName$" b
 akrys_usagecheck_module_subpagetitle = Module
 akrys_usagecheck_module_link_show_all = Zeige alle Module
 akrys_usagecheck_module_link_show_unused = Zeige nur ungenutzte Module
-akrys_usagecheck_module_intro_text = Module kÃ¶nnen nur in Artikel als Block verwendet werden. Dort wird auch nach der Verwenung der Module gesucht.
+akrys_usagecheck_module_intro_text = Module können nur in Artikel als Block verwendet werden. Dort wird auch nach der Verwenung der Module gesucht.
 akrys_usagecheck_module_table_heading_name = Name
 akrys_usagecheck_module_table_heading_functions = Funktionen
 akrys_usagecheck_module_msg_used = OK, wird verwendet
@@ -63,7 +63,7 @@ akrys_usagecheck_template_link_show_all = Alle Templates zeigen
 akrys_usagecheck_template_link_show_unused = Nur ungenutzte Templates zeigen
 akrys_usagecheck_template_link_show_active = Nur aktive Templates zeigen
 akrys_usagecheck_template_link_show_active_inactive = Aktive und inaktive Templates zeigen
-akrys_usagecheck_template_intro_text = <p>Templates haben 2 AnwendungmÃ¶glichkeiten: <ol><li>Zuweisung beim Aritkel (Spalte: Artikel)</li><li>als include in einem anderen Template (Spalte: Template)</li></ol></p><p>Deaktivierte Templates werden etwas schwÃ¤cher angezeigt</p>
+akrys_usagecheck_template_intro_text = <p>Templates haben 2 Anwendungmöglichkeiten: <ol><li>Zuweisung beim Aritkel (Spalte: Artikel)</li><li>als include in einem anderen Template (Spalte: Template)</li></ol></p><p>Deaktivierte Templates werden etwas schwächer angezeigt</p>
 akrys_usagecheck_template_table_heading_name = Name
 akrys_usagecheck_template_table_heading_functions = Funktionen
 akrys_usagecheck_template_table_inactive = Inaktiv
@@ -78,7 +78,7 @@ akrys_usagecheck_template_linktext_edit_code = Quellcode bearbeiten
 akrys_usagecheck_changelog_subpagetitle = Changelog
 akrys_usagecheck_changelog_header_version = Version
 akrys_usagecheck_changelog_header_date = Datum
-akrys_usagecheck_changelog_header_changes = Ã„nderungen
+akrys_usagecheck_changelog_header_changes = Änderungen
 
 
 akrys_usagecheck_error_content_file_not_found = Diese Datei sollte angezeigt werden, sie wurde aber nicht gefunden.

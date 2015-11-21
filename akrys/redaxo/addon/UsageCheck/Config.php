@@ -14,7 +14,7 @@ class Config
 	 * @todo Addon registrieren um eine echte ID zu bekommen
 	 * @var int
 	 */
-	const ID = '000000';//noch kein offizielles Addon
+	const ID = '000000'; //noch kein offizielles Addon
 
 	/**
 	 * Technischer Name des Addons
@@ -33,12 +33,24 @@ class Config
 	 *
 	 * @var string
 	 */
-	const VERSION = '0.3 DEVELOP';
+	const VERSION = '1.0 Beta 1';
 
 	/**
-	 * Release-Datum zur Unterscheidung der Versionen
-	 * @var string
+	 * release state
+	 * @var int
 	 */
-	const DATE = '2015-09-25';
+	const RELEASE_STATE = 0;
+
+	/**
+	 * Status: LIVE-Version
+	 * @var int
+	 */
+	const RELEASE_STATE_LIVE = 1;
+
+	/**
+	 * Status: DEV-Version
+	 * @var int
+	 */
+	const RELEASE_STATE_DEV = 0;
 
 }

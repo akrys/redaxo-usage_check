@@ -45,8 +45,17 @@ class LangFile
 	 */
 	public function createISOFile()
 	{
-		if (stristr($GLOBALS['REX']['LANG'], '_utf8')) {
-			//nothing needs to happen here
+		//Die ISO-Dateien sollten immer im Release enthalten sein,
+		//also sollten sie auch immer generiert werden.
+//		if (stristr($GLOBALS['REX']['LANG'], '_utf8')) {
+//			//nothing needs to happen here
+//			return true;
+//		}
+
+		//Im Live-Betrieb sollte sich an den Dateien nichts mehr ändern.
+		//Wäre doof, wenn im Falle des Falles immer der Hinweis erscheint, dass
+		//die Sparchdatei nicht geschrieben werden konnte.
+		if (Config::RELEASE_STATE == Config::RELEASE_STATE_LIVE) {
 			return true;
 		}
 
