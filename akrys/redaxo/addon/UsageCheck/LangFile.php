@@ -51,15 +51,20 @@ class LangFile
 //			//nothing needs to happen here
 //			return true;
 //		}
-
 		//Im Live-Betrieb sollte sich an den Dateien nichts mehr ändern.
 		//Wäre doof, wenn im Falle des Falles immer der Hinweis erscheint, dass
 		//die Sparchdatei nicht geschrieben werden konnte.
-		if (Config::RELEASE_STATE == Config::RELEASE_STATE_LIVE) {
-			return true;
-		}
+//		if (Config::RELEASE_STATE == Config::RELEASE_STATE_LIVE) {
+//			return true;
+//		}
 
-		$langPath = $GLOBALS['REX']['INCLUDE_PATH'].'/addons/'.Config::NAME.'/lang/';
+		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+			$langPath = $GLOBALS['REX']['INCLUDE_PATH'].'/addons/'.Config::NAME.'/lang/';
+			$convertToIso = true;
+		} else {
+			$langPath = \rex_path::addon(Config::NAME).'/lang/';
+			$convertToIso = false;
+		}
 
 		$isoFile = $langPath.$this->lang.'.lang';
 		$utfFile = $langPath.$this->lang.'_utf8.lang';
@@ -80,7 +85,12 @@ class LangFile
 				require_once __DIR__.'/Exception/LangFileGenError.php';
 				throw new Exception\LangFileGenError('ISO language files cannot be updated as they are not writable');
 			}
-			file_put_contents($isoFile, mb_convert_encoding(file_get_contents($utfFile), 'ISO-8859-1', 'utf-8'));
+
+			$content = file_get_contents($utfFile);
+			if ($convertToIso) {
+				$content = mb_convert_encoding($content, 'ISO-8859-1', 'utf-8');
+			}
+			file_put_contents($isoFile, $content);
 		}
 		return true;
 	}
