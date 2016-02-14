@@ -40,9 +40,25 @@ if ($showAll) {
 	$showAllParam = '';
 	$showAllLinktext = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_link_show_unused');
 }
+
+switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+		?>
+
+		<p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
+
+		<?php
+		break;
+	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+		?>
+
+		<p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>/<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
+
+		<?php
+		break;
+}
 ?>
 
-<p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
 <p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_intro_text'); ?></p>
 
 
@@ -92,9 +108,25 @@ if ($showAll) {
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
-								<li><a href="index.php?page=module&subpage=actions&action_id=<?php echo $item['id']; ?>&function=edit"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_linktext_edit_code'); ?></a></li>
 
 								<?php
+								switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+									case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+										?>
+
+										<li><a href="index.php?page=module&subpage=actions&action_id=<?php echo $item['id']; ?>&function=edit"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_linktext_edit_code'); ?></a></li>
+
+										<?php
+										break;
+									case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+										?>
+
+										<li><a href="index.php?page=module/actions&action_id=<?php echo $item['id']; ?>&function=edit"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_linktext_edit_code'); ?></a></li>
+
+										<?php
+										break;
+								}
+
 								if ($item['modul'] !== null) {
 									$usages = explode("\n", $item['modul']);
 									$linktextRaw = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_linktext_edit_in_modul');
