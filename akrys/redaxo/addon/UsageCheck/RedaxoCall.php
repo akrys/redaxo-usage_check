@@ -34,10 +34,10 @@ class RedaxoCall
 	 * @param string $sub_title
 	 * @return string
 	 */
-	public static function rexTitle($title, $sub_title)
+	public static function rexTitle($title)
 	{
 		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			return \rex_title($title, $sub_title);
+			return \rex_title($title, $GLOBALS['REX']['ADDON']['pages'][Config::NAME]);
 		} else {
 			return \rex_view::title($title);
 		}

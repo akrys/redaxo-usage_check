@@ -15,7 +15,8 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Modules.php';
 
 $showAll = rex_get('showall', 'string', "");
 
-echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::rexTitle(Config::NAME_OUT.' / '.\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', Config::NAME_OUT);
+echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::rexTitle(Config::NAME_OUT.' / '.\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>');
+
 switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
 		$tableClass = 'rex-table';
