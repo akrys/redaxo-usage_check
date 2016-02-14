@@ -1,4 +1,5 @@
 <?php
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -22,46 +23,12 @@ switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 		$tableClass = 'table table-striped';
 		break;
 }
-?>
 
 
-<div class="rex-addon-output">
-	<h2 class="rex-hl2"><?php echo Config::NAME_OUT; ?></h2>
+echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::panelOut(Config::NAME_OUT, \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_intro'));
+echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::panelOut(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_images_title'), \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_images_body'));
+echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::panelOut(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_module_title'), \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_module_body'));
+echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::panelOut(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_template_title'), \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_template_body'));
+echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::panelOut(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_action_title'), \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_atcion_body'));
+//echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::panelOut($title,$text);
 
-	<div class="rex-addon-content">
-		<p class="rex-tx1">
-			 <?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_intro'); ?>
-		</p>
-	</div>
-</div>
-
-<div class="rex-addon-output">
-	<h3 class="rex-hl2"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_images_title'); ?></h3>
-	<div class="rex-addon-content">
-		 <?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_images_body'); ?>
-
-	</div>
-</div>
-
-
-<div class="rex-addon-output">
-	<h2 class="rex-hl2"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_module_title'); ?></h2>
-	<div class="rex-addon-content">
-		 <?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_module_body'); ?>
-	</div>
-</div>
-
-<div class="rex-addon-output">
-	<h2 class="rex-hl2"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_template_title'); ?></h2>
-	<div class="rex-addon-content">
-		 <?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_template_body'); ?>
-	</div>
-</div>
-
-<div class="rex-addon-output">
-	<h2 class="rex-hl2"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_action_title'); ?></h2>
-	<div class="rex-addon-content">
-		<?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview_atcion_body'); ?>
-	</div>
-
-</div>

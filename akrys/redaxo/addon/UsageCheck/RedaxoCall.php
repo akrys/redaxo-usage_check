@@ -118,4 +118,45 @@ MSG;
 				break;
 		}
 	}
+
+	/**
+	 * Ausgabe-Kasten auf der Addon-Seite erstellen.
+	 * @param string $title
+	 * @param string $text
+	 * @return string
+	 */
+	public static function panelOut($title, $text)
+	{
+		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+				return <<<MSG
+
+
+<div class="rex-addon-output">
+	<h2 class="rex-hl2">$title</h2>
+
+	<div class="rex-addon-content">
+		<p class="rex-tx1">
+			$text
+		</p>
+	</div>
+</div>
+
+MSG;
+				break;
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+				return <<<MSG
+
+<div class="panel panel-default">
+	<header class="panel-heading"><div class="panel-title">$title</div></header>
+	<div class="panel-body">
+		$text
+	</div>
+</div>
+
+
+MSG;
+				break;
+		}
+	}
 }

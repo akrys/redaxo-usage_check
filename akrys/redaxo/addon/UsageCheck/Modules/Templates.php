@@ -93,6 +93,12 @@ class Templates
 		}
 	}
 
+	/**
+	 * SQL für Redaxo 4
+	 * @param string $where
+	 * @param string $having
+	 * @return string
+	 */
 	private static function getSQLRedaxo4($where, $having)
 	{
 		//Keine integer oder Datumswerte in einem concat!
@@ -127,6 +133,12 @@ SQL;
 		return $sql;
 	}
 
+	/**
+	 * SQL für Redaxo 5
+	 * @param string $where
+	 * @param string $having
+	 * @return string
+	 */
 	private static function getSQLRedaxo5($where, $having)
 	{
 
