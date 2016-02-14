@@ -45,8 +45,15 @@ class Templates
 
 		//Parameter-Korrektur, wenn der User KEIN Admin ist
 		//Der darf die inaktiven Templats nämlich sowieso nicht sehen.
-		if (!$GLOBALS['REX']['USER']->isAdmin() && $show_inactive === true) {
-			$show_inactive = false;
+		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+			if (!$GLOBALS['REX']['USER']->isAdmin() && $show_inactive === true) {
+				$show_inactive = false;
+			}
+		} else {
+			$user = \rex::getUser();
+			if (!$user->isAdmin() && $show_inactive === true) {
+				$show_inactive = false;
+			}
 		}
 
 		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
@@ -74,6 +81,20 @@ class Templates
 			$having = 'having '.$having.' ';
 		}
 
+		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+				$sql = self::getSQLRedaxo4($where, $having);
+				return $rexSQL->getArray($sql);
+				break;
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+				$sql = self::getSQLRedaxo5($where, $having);
+				return $rexSQL->getArray($sql, array());
+				break;
+		}
+	}
+
+	private static function getSQLRedaxo4($where, $having)
+	{
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
@@ -85,7 +106,8 @@ SELECT
 		cast(a.id as char),"\t",
 		cast(a.re_id as char),"\t",
 		cast(a.startpage as char),"\t",
-		a.name) Separator "\n"
+		a.name,"\t",
+		cast(a.clang as char)) Separator "\n"
 	) as articles,
 	group_concat(concat(
 		cast(t2.id as char),"\t",
@@ -102,7 +124,41 @@ group by a.template_id,t.id
 $having
 
 SQL;
+		return $sql;
+	}
 
-		return $rexSQL->getArray($sql);
+	private static function getSQLRedaxo5($where, $having)
+	{
+
+		//Keine integer oder Datumswerte in einem concat!
+		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
+		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
+		$sql = <<<SQL
+SELECT
+	t.*,
+	a.id as article_id,
+	group_concat(concat(
+		cast(a.id as char),"\t",
+		cast(a.parent_id as char),"\t",
+		cast(a.startarticle as char),"\t",
+		a.name,"\t",
+		cast(a.clang_id as char)) Separator "\n"
+	) as articles,
+	group_concat(concat(
+		cast(t2.id as char),"\t",
+		t2.name) Separator "\n"
+	) as templates
+FROM `rex_template` t
+left join rex_article a on t.id=a.template_id
+left join `rex_template` t2 on t.id <> t2.id and t2.content like concat('%TEMPLATE[', t.id, ']%')
+
+$where
+
+group by a.template_id,t.id
+
+$having
+
+SQL;
+		return $sql;
 	}
 }

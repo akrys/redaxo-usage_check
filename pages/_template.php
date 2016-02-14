@@ -72,15 +72,39 @@ if (!$showInactive) {
 ?>
 <div class="rex-navi-slice">
 	<ul>
-		<li><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam.$showInactiveParamCurr; ?>"><?php echo $showAllLinktext; ?></a></li>
 
 		<?php
-		if ($REX['USER']->isAdmin()) {
-			?>
+		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+				?>
 
-			<li><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParamCurr.$showInactiveParam; ?>"><?php echo $showInactiveLinktext ?></a></li>
+				<li><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam.$showInactiveParamCurr; ?>"><?php echo $showAllLinktext; ?></a></li>
 
-			<?php
+				<?php
+				if ($REX['USER']->isAdmin()) {
+					?>
+
+					<li><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParamCurr.$showInactiveParam; ?>"><?php echo $showInactiveLinktext ?></a></li>
+
+					<?php
+				}
+				break;
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+				?>
+
+				<li><a href="index.php?page=<?php echo Config::NAME; ?>/<?php echo $subpage; ?><?php echo $showAllParam.$showInactiveParamCurr; ?>"><?php echo $showAllLinktext; ?></a></li>
+
+
+				<?php
+				$user = \rex::getUser();
+				if ($user->isAdmin()) {
+					?>
+
+					<li><a href="index.php?page=<?php echo Config::NAME; ?>/<?php echo $subpage; ?><?php echo $showAllParamCurr.$showInactiveParam; ?>"><?php echo $showInactiveLinktext ?></a></li>
+
+					<?php
+				}
+				break;
 		}
 		?>
 
@@ -121,31 +145,12 @@ if (!$showInactive) {
 
 				</td>
 				<td>
-					 <?php
-					 if ($item['articles'] === null && $item['templates'] === null) {
-						 ?>
 
-						<div class="rex-message">
-							<div class="rex-warning">
-								<p>
-									<span><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_not_used'); ?></span>
-								</p>
-							</div>
-						</div>
-
-						<?php
+					<?php
+					if ($item['articles'] === null && $item['templates'] === null) {
+						echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::errorMsg(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_not_used'));
 					} else {
-						?>
-
-						<div class="rex-message">
-							<div class="rex-info">
-								<p>
-									<span><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_template_msg_used'); ?></span>
-								</p>
-							</div>
-						</div>
-
-						<?php
+						echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::infoMsg(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_template_msg_used'));
 					}
 					?>
 
@@ -153,13 +158,28 @@ if (!$showInactive) {
 						<span>
 							<strong><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_template_detail_heading'); ?></strong>
 							<ol>
-								 <?php
-								 if ($REX['USER']->isAdmin()) {
-									 ?>
 
-									<li><a href="index.php?page=template&subpage=&function=edit&template_id=<?php echo $item['id']; ?>"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_template_linktext_edit_code'); ?></a></li>
+								<?php
+								switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+									case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+										if ($REX['USER']->isAdmin()) {
+											?>
 
-									<?php
+											<li><a href="index.php?page=template&subpage=&function=edit&template_id=<?php echo $item['id']; ?>"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_template_linktext_edit_code'); ?></a></li>
+
+											<?php
+										}
+										break;
+									case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+										$user = \rex::getUser();
+										if ($user->isAdmin()) {
+											?>
+
+											<li><a href="index.php?page=template&function=edit&template_id=<?php echo $item['id']; ?>"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_template_linktext_edit_code'); ?></a></li>
+
+											<?php
+										}
+										break;
 								}
 								?>
 
@@ -173,15 +193,30 @@ if (!$showInactive) {
 										$articleReID = $usage[1];
 										$startpage = $usage[2];
 										$articleName = $usage[3];
+										$clang = $usage[4];
 
 										if ($startpage == 1) {
 											$articleReID = $articleID;
 										}
 
-										//$REX['USER']->hasPerm('article['.$articleID.']') ist immer false
-										if (/* $REX['USER']->hasPerm('article['.$articleID.']') || */ $REX['USER']->hasCategoryPerm($articleID)) {
+										$hasPerm = false;
+										switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+											case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+												//$REX['USER']->hasPerm('article['.$articleID.']') ist immer false
+												if (/* $REX['USER']->hasPerm('article['.$articleID.']') || */ $REX['USER']->hasCategoryPerm($articleID)) {
+													$hasPerm = true;
+												}
+												break;
+											case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+												$user = \rex::getUser();
+												$perm = rex_structure_perm::get($user, 'structure');
+												$hasPerm = $perm->hasCategoryPerm($articleID);
+												break;
+										}
 
-											$href = 'index.php?page=structure&article_id='.$articleID.'&function=edit_art&category_id='.$articleReID.'&clang=0';
+										if ($hasPerm) {
+
+											$href = 'index.php?page=structure&article_id='.$articleID.'&function=edit_art&category_id='.$articleReID.'&clang='.$clang;
 											$linktext = $linktextRaw;
 											$linktext = str_replace('$articleID$', $articleID, $linktext);
 											$linktext = str_replace('$articleName$', $articleName, $linktext);
@@ -196,7 +231,20 @@ if (!$showInactive) {
 
 								//Templates, die in Templates verwendert werden, betrifft
 								//nur die Coder, und das wären Admins
-								if ($REX['USER']->isAdmin()) {
+								$hasPerm = false;
+								switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+									case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+										//$REX['USER']->hasPerm('article['.$articleID.']') ist immer false
+										if ($REX['USER']->isAdmin()) {
+											$hasPerm = true;
+										}
+										break;
+									case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+										$user = \rex::getUser();
+										$hasPerm = $user->isAdmin();
+										break;
+								}
+								if ($hasPerm) {
 
 									if ($item['templates'] !== null) {
 										$templates = explode("\n", $item['templates']);
@@ -207,7 +255,14 @@ if (!$showInactive) {
 											$id = $usage[0];
 											$name = $usage[1];
 
-											$href = 'index.php?page=template&subpage=&function=edit&template_id='.$id;
+											switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+												case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+													$href = 'index.php?page=template&subpage=&function=edit&template_id='.$id;
+													break;
+												case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+													$href = 'index.php?page=templates&function=edit&template_id='.$id;
+													break;
+											}
 											$linktext = $linktextRaw;
 											$linktext = str_replace('$templateName$', $name, $linktext);
 											$linktext = str_replace('$templateID$', $item['id'], $linktext);

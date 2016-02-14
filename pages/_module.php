@@ -74,46 +74,30 @@ switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 
 		<?php
 		foreach ($items as $item) {
-			if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-				if (!$REX['USER']->isAdmin() && !$REX['USER']->hasPerm('module['.$item['id'].']')) {
-					continue;
-				}
-			} else {
-				$user = \rex::getUser();
-				if (!$user->isAdmin() && !$user->getComplexPerm('modules')->hasPerm($item['id'])) {
-					continue;
-				}
+			switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+					if (!$REX['USER']->isAdmin() && !$REX['USER']->hasPerm('module['.$item['id'].']')) {
+						continue;
+					}
+					break;
+				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+					$user = \rex::getUser();
+					if (!$user->isAdmin() && !$user->getComplexPerm('modules')->hasPerm($item['id'])) {
+						continue;
+					}
+					break;
 			}
 			?>
 
 			<tr>
 				<td><?php echo $item['name']; ?></td>
 				<td>
-					 <?php
-					 if ($item['slice_data'] === null) {
-						 ?>
 
-						<div class="rex-message">
-							<div class="rex-warning">
-								<p>
-									<span><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_msg_not_used'); ?></span>
-								</p>
-							</div>
-						</div>
-
-						<?php
+					<?php
+					if ($item['slice_data'] === null) {
+						echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::errorMsg(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_msg_not_used'));
 					} else {
-						?>
-
-						<div class="rex-message">
-							<div class="rex-info">
-								<p>
-									<span><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_msg_used'); ?></span>
-								</p>
-							</div>
-						</div>
-
-						<?php
+						echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::infoMsg(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_msg_used'));
 					}
 					?>
 
