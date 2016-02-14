@@ -7,6 +7,8 @@
  */
 namespace akrys\redaxo\addon\UsageCheck;
 
+require_once __DIR__.'/RedaxoCall.php';
+
 /**
  * Datei für ...
  *
@@ -58,12 +60,15 @@ class LangFile
 //			return true;
 //		}
 
-		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			$langPath = $GLOBALS['REX']['INCLUDE_PATH'].'/addons/'.Config::NAME.'/lang/';
-			$convertToIso = true;
-		} else {
-			$langPath = \rex_path::addon(Config::NAME).'/lang/';
-			$convertToIso = false;
+		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+				$langPath = $GLOBALS['REX']['INCLUDE_PATH'].'/addons/'.Config::NAME.'/lang/';
+				$convertToIso = true;
+				break;
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+				$langPath = \rex_path::addon(Config::NAME).'/lang/';
+				$convertToIso = false;
+				break;
 		}
 
 		$isoFile = $langPath.$this->lang.'.lang';
@@ -80,10 +85,10 @@ class LangFile
 		if ($timeUTF > $timeISO) {
 			if (!is_writeable($langPath) && !file_exists($isoFile)) {
 				require_once __DIR__.'/Exception/LangFileGenError.php';
-				throw new Exception\LangFileGenError('Directory not writable. ISO language files cannot be created');
+				throw new Exception\LangFileGenError('"lang"-Directory not writable. Language file cannot be created (Redaxo 4 ISO-8859-1 file or Redaxo 5 UTF-8)');
 			} else if (file_exists($isoFile) && !is_writeable($isoFile)) {
 				require_once __DIR__.'/Exception/LangFileGenError.php';
-				throw new Exception\LangFileGenError('ISO language files cannot be updated as they are not writable');
+				throw new Exception\LangFileGenError('Language files cannot be updated as they are not writable (Redaxo 4 ISO-8859-1 file or Redaxo 5 UTF-8)');
 			}
 
 			$content = file_get_contents($utfFile);
