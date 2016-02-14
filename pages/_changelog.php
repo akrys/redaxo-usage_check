@@ -6,18 +6,28 @@
  */
 
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
+require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 
-/* @var $I18N \i18n */
+switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+		$language = $REX['LANG'];
+		$tableClass = 'rex-table';
+		break;
+	case\akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+		$language = rex::getProperty('lang');
+		$tableClass = 'table table-striped';
+		break;
+}
 
 use akrys\redaxo\addon\UsageCheck\Config;
-rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_changelog_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
+echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::rexTitle(Config::NAME_OUT.' / '.\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_changelog_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', Config::NAME_OUT);
 
 if (!function_exists('\\glob')) {
 	print 'this page requires the glob function';
 	die();
 }
 
-if (stristr($REX['LANG'], 'de_')) {
+if (stristr($language, 'de_')) {
 	$dir = glob(__DIR__.'/release_notes/de/*_*.php');
 } else {
 	$dir = glob(__DIR__.'/release_notes/en/*_*.php');
@@ -26,15 +36,16 @@ rsort($dir);
 ?>
 
 
-<table class = "rex-table">
+<table class="<?php echo $tableClass ?>">
 	<thead>
 		<tr>
-			<th><?php echo $I18N->msg('akrys_usagecheck_changelog_header_version'); ?></th>
-			<th><?php echo $I18N->msg('akrys_usagecheck_changelog_header_date'); ?></th>
-			<th><?php echo $I18N->msg('akrys_usagecheck_changelog_header_changes'); ?></th>
+			<th><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_changelog_header_version'); ?></th>
+			<th><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_changelog_header_date'); ?></th>
+			<th><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_changelog_header_changes'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
+
 		<?php
 		foreach ($dir as $file) {
 
@@ -42,10 +53,10 @@ rsort($dir);
 			?>
 
 			<tr>
-				<td><?php echo $data[0]; ?></td>
 				<td><?php echo $data[1]; ?></td>
+				<td><?php echo $data[0]; ?></td>
 				<td>
-					<?php require $file; ?>
+					 <?php require $file; ?>
 				</td>
 			</tr>
 

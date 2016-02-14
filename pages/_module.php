@@ -6,6 +6,7 @@
  */
 
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
+require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 
 /* @var $I18N \i18n */
 
@@ -14,42 +15,42 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Modules.php';
 
 $showAll = rex_get('showall', 'string', "");
 
-rex_title(Config::NAME_OUT.' / '.$I18N->msg('akrys_usagecheck_module_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', $REX['ADDON']['pages'][Config::NAME]);
+echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::rexTitle(Config::NAME_OUT.' / '.\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', Config::NAME_OUT);
+switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+		$tableClass = 'rex-table';
+		break;
+
+	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+		$tableClass = 'table table-striped';
+		break;
+}
+
 
 $items = \akrys\redaxo\addon\UsageCheck\Modules\Modules::getModules($showAll);
 
 if ($items === false) {
-	?>
-
-	<div class="rex-message">
-		<div class="rex-warning">
-			<p>
-				<span><?php echo $I18N->msg('akrys_usagecheck_no_rights'); ?></span>
-			</p>
-		</div>
-	</div>
-
-	<?php
+	echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::errorMsg(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_no_rights'), true);
 	return;
 }
 
 $showAllParam = '&showall=true';
-$showAllLinktext = $I18N->msg('akrys_usagecheck_module_link_show_all');
+$showAllLinktext = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_link_show_all');
 if ($showAll) {
 	$showAllParam = '';
-	$showAllLinktext = $I18N->msg('akrys_usagecheck_module_link_show_unused');
+	$showAllLinktext = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_link_show_unused');
 }
 ?>
 
 <p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
-<p class="rex-tx1"><?php echo $I18N->msg('akrys_usagecheck_module_intro_text'); ?></p>
+<p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_intro_text'); ?></p>
 
 
 <table class = "rex-table">
 	<thead>
 		<tr>
-			<th><?php echo $I18N->msg('akrys_usagecheck_module_table_heading_name'); ?></th>
-			<th><?php echo $I18N->msg('akrys_usagecheck_module_table_heading_functions'); ?></th>
+			<th><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_table_heading_name'); ?></th>
+			<th><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -64,14 +65,14 @@ if ($showAll) {
 			<tr>
 				<td><?php echo $item['name']; ?></td>
 				<td>
-					<?php
-					if ($item['slice_data'] === null) {
-						?>
+					 <?php
+					 if ($item['slice_data'] === null) {
+						 ?>
 
 						<div class="rex-message">
 							<div class="rex-warning">
 								<p>
-									<span><?php echo $I18N->msg('akrys_usagecheck_module_msg_not_used'); ?></span>
+									<span><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_msg_not_used'); ?></span>
 								</p>
 							</div>
 						</div>
@@ -83,7 +84,7 @@ if ($showAll) {
 						<div class="rex-message">
 							<div class="rex-info">
 								<p>
-									<span><?php echo $I18N->msg('akrys_usagecheck_module_msg_used'); ?></span>
+									<span><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_msg_used'); ?></span>
 								</p>
 							</div>
 						</div>
@@ -95,11 +96,11 @@ if ($showAll) {
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
-								<?php
-								if ($REX['USER']->isAdmin()) {
-									?>
+								 <?php
+								 if ($REX['USER']->isAdmin()) {
+									 ?>
 
-									<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo $I18N->msg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
+									<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
 
 									<?php
 								}
@@ -107,7 +108,7 @@ if ($showAll) {
 								if ($item['slice_data'] !== null) {
 									$usages = explode("\n", $item['slice_data']);
 
-									$linktextRaw = $I18N->msg('akrys_usagecheck_module_linktext_edit_slice');
+									$linktextRaw = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_linktext_edit_slice');
 									foreach ($usages as $usageRaw) {
 										$usage = explode("\t", $usageRaw);
 										$sliceID = $usage[0];

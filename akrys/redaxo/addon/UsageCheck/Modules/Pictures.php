@@ -44,7 +44,11 @@ class Pictures
 			return false;
 		}
 
-		$rexSQL = new \rex_sql;
+		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+			$rexSQL = new \rex_sql;
+		} else {
+			$rexSQL = \rex_sql::factory();
+		}
 
 		$sqlParts = self::getXFormTableSQLParts();
 		$havingClauses = $sqlParts['havingClauses'];
@@ -52,10 +56,14 @@ class Pictures
 		$additionalJoins = $sqlParts['additionalJoins'];
 		$tableFields = $sqlParts['tableFields'];
 
-		//Keine integer oder Datumswerte in einem concat!
-		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
-		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
-		$sql = <<<SQL
+		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+
+
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+//Keine integer oder Datumswerte in einem concat!
+//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
+// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
+				$sql = <<<SQL
 SELECT f.*,count(s.id) as count,
 group_concat(distinct concat(
 	cast(s.id as char),"\\t",
@@ -96,7 +104,51 @@ left join rex_article a on (a.id=s.article_id and a.clang=s.clang)
 $additionalJoins
 
 SQL;
+				break;
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+				$sql = <<<SQL
+SELECT f.*,count(s.id) as count,
+group_concat(distinct concat(
+	cast(s.id as char),"\\t",
+	cast(s.article_id as char),"\\t",
+	a.name,"\\t",
+	cast(s.clang_id as char),"\\t",
+	cast(s.ctype_id as char)
+) Separator "\\n") as slice_data
 
+$additionalSelect
+
+FROM rex_media f
+left join `rex_article_slice` s on (
+    s.media1=f.filename
+ OR s.media2=f.filename
+ OR s.media3=f.filename
+ OR s.media4=f.filename
+ OR s.media5=f.filename
+ OR s.media6=f.filename
+ OR s.media7=f.filename
+ OR s.media8=f.filename
+ OR s.media9=f.filename
+ OR s.media10=f.filename
+ OR find_in_set(f.filename, s.medialist1)
+ OR find_in_set(f.filename, s.medialist2)
+ OR find_in_set(f.filename, s.medialist3)
+ OR find_in_set(f.filename, s.medialist4)
+ OR find_in_set(f.filename, s.medialist5)
+ OR find_in_set(f.filename, s.medialist6)
+ OR find_in_set(f.filename, s.medialist7)
+ OR find_in_set(f.filename, s.medialist8)
+ OR find_in_set(f.filename, s.medialist9)
+ OR find_in_set(f.filename, s.medialist10)
+)
+
+left join rex_article a on (a.id=s.article_id and a.clang_id=s.clang_id)
+
+$additionalJoins
+
+SQL;
+				break;
+		}
 		if (!$show_all) {
 			$sql.='where s.id is null ';
 		}
@@ -125,14 +177,27 @@ SQL;
 			'tableFields' => array(),
 			'havingClauses' => array(),
 		);
-		$rexSQL = new \rex_sql;
-
-		if (!\OOAddon::isAvailable('xform')) {
-			return $return;
+		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+			$rexSQL = new \rex_sql;
+		} else {
+			$rexSQL = \rex_sql::factory();
 		}
+		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+			if (!\OOAddon::isAvailable('xform')) {
+				return $return;
+			}
 
-		if (!\OOPlugin::isAvailable('xform', 'manager')) {
-			return $return;
+			if (!\OOPlugin::isAvailable('xform', 'manager')) {
+				return $return;
+			}
+		} else {
+			if (!\rex_addon::get('xform')->isAvailable()) {
+				return $return;
+			}
+
+			if (!\rex_plugin::get('xform', 'manager')->isAvailable()) {
+				return $return;
+			}
 		}
 
 		$xformtable = $rexSQL->getArray("show table status like 'rex_xform_table'");
@@ -252,6 +317,10 @@ SQL;
 	 */
 	public static function exists($item)
 	{
-		return file_exists($GLOBALS['REX']['MEDIAFOLDER'].DIRECTORY_SEPARATOR.$item['filename']);
+		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+			return file_exists($GLOBALS['REX']['MEDIAFOLDER'].DIRECTORY_SEPARATOR.$item['filename']);
+		} else {
+			return file_exists(\rex_path::media().DIRECTORY_SEPARATOR.$item['filename']);
+		}
 	}
 }

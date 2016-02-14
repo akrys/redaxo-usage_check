@@ -9,22 +9,24 @@ namespace akrys\redaxo\addon\UsageCheck;
 
 class Permission
 {
-
 	/**
 	 * Name des Rechts für Templates
 	 * @var string
 	 */
 	const PERM_TEMPLATE = 'template';
+
 	/**
 	 * Name des Rechts für den Mediapool
 	 * @var string
 	 */
 	const PERM_MEDIAPOOL = 'mediapool';
+
 	/**
 	 * Name des Rechts für Module
 	 * @var string
 	 */
 	const PERM_MODUL = 'module';
+
 	/**
 	 * Name des Rechts für das XFormaddon
 	 * @var string
@@ -45,6 +47,11 @@ class Permission
 	 */
 	public static function check($perm)
 	{
-		return $GLOBALS['REX']['USER']->isAdmin() || (isset($GLOBALS['REX']['USER']->pages[$perm]) && $GLOBALS['REX']['USER']->pages[$perm]->getPage()->checkPermission($GLOBALS['REX']['USER']));
+		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+			return $GLOBALS['REX']['USER']->isAdmin() || (isset($GLOBALS['REX']['USER']->pages[$perm]) && $GLOBALS['REX']['USER']->pages[$perm]->getPage()->checkPermission($GLOBALS['REX']['USER']));
+		} else {
+			$user = \rex::getUser();
+			return $user->isAdmin() || $user->hasPerm($perm);
+		}
 	}
 }

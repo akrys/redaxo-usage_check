@@ -41,7 +41,11 @@ class Actions
 			return false;
 		}
 
-		$rexSQL = new \rex_sql;
+		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+			$rexSQL = new \rex_sql;
+		} else {
+			$rexSQL = \rex_sql::factory();
+		}
 
 		$where = '';
 		if (!$show_all) {

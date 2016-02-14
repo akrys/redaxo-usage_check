@@ -49,7 +49,11 @@ class Templates
 			$show_inactive = false;
 		}
 
-		$rexSQL = new \rex_sql;
+		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+			$rexSQL = new \rex_sql;
+		} else {
+			$rexSQL = \rex_sql::factory();
+		}
 
 		$where = '';
 		$having = '';

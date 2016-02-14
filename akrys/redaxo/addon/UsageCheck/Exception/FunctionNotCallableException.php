@@ -10,17 +10,19 @@ namespace akrys\redaxo\addon\UsageCheck\Exception;
 /**
  * Datei für ...
  *
- * @version       1.0 / 2015-10-27
+ * @version       1.0 / 2016-02-14
+ * @package       new_package
+ * @subpackage    new_subpackage
  * @author        akrys
  */
 
 /**
- * Description of LangFileGenError
+ * Description of FunctionNotCallableException
  *
  * @author akrys
  */
-class LangFileGenError
+class FunctionNotCallableException
 	extends \Exception
 {
-
+	//put your code here
 }
