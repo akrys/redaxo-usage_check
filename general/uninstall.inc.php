@@ -15,5 +15,5 @@ if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\reda
 //	$sql='ALTER TABLE rex_article_slice DROP INDEX modultyp_id;';
 } else {
 	//REDAXO 5
-	$this->setProperty('install', false);
+//	$this->setProperty('install', false);
 }
