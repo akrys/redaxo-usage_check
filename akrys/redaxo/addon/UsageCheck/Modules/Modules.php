@@ -52,7 +52,20 @@ class Modules
 		if (!$show_all) {
 			$where.='where s.id is null';
 		}
+		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+				$sql = self::getSQLRedaxo4($where);
+				break;
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+				$sql = self::getSQLRedaxo5($where);
+				break;
+		}
 
+		return $rexSQL->getArray($sql);
+	}
+
+	private static function getSQLRedaxo4($where)
+	{
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
@@ -78,7 +91,36 @@ $where
 group by m.id
 
 SQL;
+		return $sql;
+	}
 
-		return $rexSQL->getArray($sql);
+	private static function getSQLRedaxo5($where)
+	{
+		//Keine integer oder Datumswerte in einem concat!
+		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
+		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
+		$sql = <<<SQL
+SELECT m.name,
+	m.id,
+	m.createdate,
+	m.updatedate,
+	group_concat(
+		concat(
+			cast(s.id as char),"\t",
+			cast(s.clang_id as char),"\t",
+			cast(s.ctype_id as char),"\t",
+			cast(a.id as char),"\t",
+			cast(a.parent_id as char),"\t",
+			a.name) Separator "\n"
+		) slice_data
+FROM `rex_module` m
+left join rex_article_slice s on s.module_id=m.id
+left join rex_article a on s.article_id=a.id and s.clang_id=a.clang_id
+
+$where
+group by m.id
+
+SQL;
+		return $sql;
 	}
 }

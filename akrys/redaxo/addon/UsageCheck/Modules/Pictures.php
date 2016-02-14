@@ -60,93 +60,12 @@ class Pictures
 
 
 			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-//Keine integer oder Datumswerte in einem concat!
-//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
-// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
-				$sql = <<<SQL
-SELECT f.*,count(s.id) as count,
-group_concat(distinct concat(
-	cast(s.id as char),"\\t",
-	cast(s.article_id as char),"\\t",
-	a.name,"\\t",
-	cast(s.clang as char),"\\t",
-	cast(s.ctype as char)
-) Separator "\\n") as slice_data
+				self::getPictureSQLRedaxo4($additionalSelect, $additionalJoins);
 
-$additionalSelect
-
-FROM rex_file f
-left join `rex_article_slice` s on (
-    s.file1=f.filename
- OR s.file2=f.filename
- OR s.file3=f.filename
- OR s.file4=f.filename
- OR s.file5=f.filename
- OR s.file6=f.filename
- OR s.file7=f.filename
- OR s.file8=f.filename
- OR s.file9=f.filename
- OR s.file10=f.filename
- OR find_in_set(f.filename, s.filelist1)
- OR find_in_set(f.filename, s.filelist2)
- OR find_in_set(f.filename, s.filelist3)
- OR find_in_set(f.filename, s.filelist4)
- OR find_in_set(f.filename, s.filelist5)
- OR find_in_set(f.filename, s.filelist6)
- OR find_in_set(f.filename, s.filelist7)
- OR find_in_set(f.filename, s.filelist8)
- OR find_in_set(f.filename, s.filelist9)
- OR find_in_set(f.filename, s.filelist10)
-)
-
-left join rex_article a on (a.id=s.article_id and a.clang=s.clang)
-
-$additionalJoins
-
-SQL;
 				break;
 			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-				$sql = <<<SQL
-SELECT f.*,count(s.id) as count,
-group_concat(distinct concat(
-	cast(s.id as char),"\\t",
-	cast(s.article_id as char),"\\t",
-	a.name,"\\t",
-	cast(s.clang_id as char),"\\t",
-	cast(s.ctype_id as char)
-) Separator "\\n") as slice_data
+				self::getPictureSQLRedaxo5($additionalSelect, $additionalJoins);
 
-$additionalSelect
-
-FROM rex_media f
-left join `rex_article_slice` s on (
-    s.media1=f.filename
- OR s.media2=f.filename
- OR s.media3=f.filename
- OR s.media4=f.filename
- OR s.media5=f.filename
- OR s.media6=f.filename
- OR s.media7=f.filename
- OR s.media8=f.filename
- OR s.media9=f.filename
- OR s.media10=f.filename
- OR find_in_set(f.filename, s.medialist1)
- OR find_in_set(f.filename, s.medialist2)
- OR find_in_set(f.filename, s.medialist3)
- OR find_in_set(f.filename, s.medialist4)
- OR find_in_set(f.filename, s.medialist5)
- OR find_in_set(f.filename, s.medialist6)
- OR find_in_set(f.filename, s.medialist7)
- OR find_in_set(f.filename, s.medialist8)
- OR find_in_set(f.filename, s.medialist9)
- OR find_in_set(f.filename, s.medialist10)
-)
-
-left join rex_article a on (a.id=s.article_id and a.clang_id=s.clang_id)
-
-$additionalJoins
-
-SQL;
 				break;
 		}
 		if (!$show_all) {
@@ -322,5 +241,112 @@ SQL;
 		} else {
 			return file_exists(\rex_path::media().DIRECTORY_SEPARATOR.$item['filename']);
 		}
+	}
+
+	/**
+	 * Spezifisches SQL für redaxo 4
+	 * @param string $additionalSelect
+	 * @param string $additionalJoins
+	 * @return string
+	 */
+	private static function getPictureSQLRedaxo4($additionalSelect, $additionalJoins)
+	{
+//Keine integer oder Datumswerte in einem concat!
+//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
+// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
+		$sql = <<<SQL
+SELECT f.*,count(s.id) as count,
+group_concat(distinct concat(
+	cast(s.id as char),"\\t",
+	cast(s.article_id as char),"\\t",
+	a.name,"\\t",
+	cast(s.clang as char),"\\t",
+	cast(s.ctype as char)
+) Separator "\\n") as slice_data
+
+$additionalSelect
+
+FROM rex_file f
+left join `rex_article_slice` s on (
+    s.file1=f.filename
+ OR s.file2=f.filename
+ OR s.file3=f.filename
+ OR s.file4=f.filename
+ OR s.file5=f.filename
+ OR s.file6=f.filename
+ OR s.file7=f.filename
+ OR s.file8=f.filename
+ OR s.file9=f.filename
+ OR s.file10=f.filename
+ OR find_in_set(f.filename, s.filelist1)
+ OR find_in_set(f.filename, s.filelist2)
+ OR find_in_set(f.filename, s.filelist3)
+ OR find_in_set(f.filename, s.filelist4)
+ OR find_in_set(f.filename, s.filelist5)
+ OR find_in_set(f.filename, s.filelist6)
+ OR find_in_set(f.filename, s.filelist7)
+ OR find_in_set(f.filename, s.filelist8)
+ OR find_in_set(f.filename, s.filelist9)
+ OR find_in_set(f.filename, s.filelist10)
+)
+
+left join rex_article a on (a.id=s.article_id and a.clang=s.clang)
+
+$additionalJoins
+
+SQL;
+		return $sql;
+	}
+
+	/**
+	 * Spezifisches SQL für redaxo 5
+	 * @param string $additionalSelect
+	 * @param string $additionalJoins
+	 * @return string
+	 */
+	private static function getPictureSQLRedaxo5($additionalSelect, $additionalJoins)
+	{
+		$sql = <<<SQL
+SELECT f.*,count(s.id) as count,
+group_concat(distinct concat(
+	cast(s.id as char),"\\t",
+	cast(s.article_id as char),"\\t",
+	a.name,"\\t",
+	cast(s.clang_id as char),"\\t",
+	cast(s.ctype_id as char)
+) Separator "\\n") as slice_data
+
+$additionalSelect
+
+FROM rex_media f
+left join `rex_article_slice` s on (
+    s.media1=f.filename
+ OR s.media2=f.filename
+ OR s.media3=f.filename
+ OR s.media4=f.filename
+ OR s.media5=f.filename
+ OR s.media6=f.filename
+ OR s.media7=f.filename
+ OR s.media8=f.filename
+ OR s.media9=f.filename
+ OR s.media10=f.filename
+ OR find_in_set(f.filename, s.medialist1)
+ OR find_in_set(f.filename, s.medialist2)
+ OR find_in_set(f.filename, s.medialist3)
+ OR find_in_set(f.filename, s.medialist4)
+ OR find_in_set(f.filename, s.medialist5)
+ OR find_in_set(f.filename, s.medialist6)
+ OR find_in_set(f.filename, s.medialist7)
+ OR find_in_set(f.filename, s.medialist8)
+ OR find_in_set(f.filename, s.medialist9)
+ OR find_in_set(f.filename, s.medialist10)
+)
+
+left join rex_article a on (a.id=s.article_id and a.clang_id=s.clang_id)
+
+$additionalJoins
+
+SQL;
+		return $sql;
 	}
 }
