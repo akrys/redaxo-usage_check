@@ -60,12 +60,10 @@ class Pictures
 
 
 			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-				self::getPictureSQLRedaxo4($additionalSelect, $additionalJoins);
-
+				$sql = self::getPictureSQLRedaxo4($additionalSelect, $additionalJoins);
 				break;
 			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-				self::getPictureSQLRedaxo5($additionalSelect, $additionalJoins);
-
+				$sql = self::getPictureSQLRedaxo5($additionalSelect, $additionalJoins);
 				break;
 		}
 		if (!$show_all) {

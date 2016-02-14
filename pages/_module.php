@@ -40,9 +40,26 @@ if ($showAll) {
 	$showAllParam = '';
 	$showAllLinktext = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_link_show_unused');
 }
+
+
+switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+		?>
+
+		<p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
+
+		<?php
+		break;
+	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+		?>
+
+		<p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>/<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
+
+		<?php
+		break;
+}
 ?>
 
-<p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
 <p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_intro_text'); ?></p>
 
 
@@ -57,8 +74,15 @@ if ($showAll) {
 
 		<?php
 		foreach ($items as $item) {
-			if (!$REX['USER']->isAdmin() && !$REX['USER']->hasPerm('module['.$item['id'].']')) {
-				continue;
+			if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+				if (!$REX['USER']->isAdmin() && !$REX['USER']->hasPerm('module['.$item['id'].']')) {
+					continue;
+				}
+			} else {
+				$user = \rex::getUser();
+				if (!$user->isAdmin() && !$user->getComplexPerm('modules')->hasPerm($item['id'])) {
+					continue;
+				}
 			}
 			?>
 
@@ -96,13 +120,28 @@ if ($showAll) {
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
-								 <?php
-								 if ($REX['USER']->isAdmin()) {
-									 ?>
 
-									<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
+								<?php
+								switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+									case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+										if ($REX['USER']->isAdmin()) {
+											?>
 
-									<?php
+											<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
+
+											<?php
+										}
+										break;
+									case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+										$user = \rex::getUser();
+										if ($user->isAdmin()) {
+											?>
+
+											<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
+
+											<?php
+										}
+										break;
 								}
 
 								if ($item['slice_data'] !== null) {
@@ -118,8 +157,22 @@ if ($showAll) {
 										$categoryID = $usage[4];
 										$articleName = $usage[5];
 
+										$hasPerm = false;
+										switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+											case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+												if (/* $REX['USER']->hasPerm('article['.$articleID.']') || */$REX['USER']->hasCategoryPerm($articleID)) {
+													$hasPerm = true;
+												}
+												break;
+											case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+												$user = \rex::getUser();
+												$perm = rex_structure_perm::get($user, 'structure');
+												$hasPerm = $perm->hasCategoryPerm($articleID);
+												break;
+										}
+
 										//$REX['USER']->hasPerm('article['.$articleID.']') ist immer false
-										if (/* $REX['USER']->hasPerm('article['.$articleID.']') || */$REX['USER']->hasCategoryPerm($articleID)) {
+										if ($hasPerm) {
 											$href = 'index.php?page=content&article_id='.$articleID.'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.'&function=edit#slice'.$sliceID;
 											$linktext = $linktextRaw;
 											$linktext = str_replace('$sliceID$', $sliceID, $linktext);

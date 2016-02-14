@@ -51,7 +51,7 @@ class Permission
 			return $GLOBALS['REX']['USER']->isAdmin() || (isset($GLOBALS['REX']['USER']->pages[$perm]) && $GLOBALS['REX']['USER']->pages[$perm]->getPage()->checkPermission($GLOBALS['REX']['USER']));
 		} else {
 			$user = \rex::getUser();
-			return $user->isAdmin() || $user->hasPerm($perm);
+			return $user->isAdmin() || $user->hasPerm($perm) || $user->getComplexPerm($perm)->hasAll();
 		}
 	}
 }
