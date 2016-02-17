@@ -108,14 +108,14 @@ class Templates
 SELECT
 	t.*,
 	a.id as article_id,
-	group_concat(concat(
+	group_concat(distinct concat(
 		cast(a.id as char),"\t",
 		cast(a.re_id as char),"\t",
 		cast(a.startpage as char),"\t",
 		a.name,"\t",
 		cast(a.clang as char)) Separator "\n"
 	) as articles,
-	group_concat(concat(
+	group_concat(distinct concat(
 		cast(t2.id as char),"\t",
 		t2.name) Separator "\n"
 	) as templates
@@ -149,14 +149,14 @@ SQL;
 SELECT
 	t.*,
 	a.id as article_id,
-	group_concat(concat(
+	group_concat(distinct concat(
 		cast(a.id as char),"\t",
 		cast(a.parent_id as char),"\t",
 		cast(a.startarticle as char),"\t",
 		a.name,"\t",
 		cast(a.clang_id as char)) Separator "\n"
 	) as articles,
-	group_concat(concat(
+	group_concat(distinct concat(
 		cast(t2.id as char),"\t",
 		t2.name) Separator "\n"
 	) as templates
