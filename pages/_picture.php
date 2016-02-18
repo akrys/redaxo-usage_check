@@ -84,6 +84,21 @@ if (!$showAll) {
 					continue;
 				}
 			}
+			
+			$initCat = null;
+
+			switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+					/* @var $medium OOMedia */
+					$medium = OOMedia::getMediaByFileName($item['filename']);
+					break;
+				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+					/* @var $medium rex_media */
+					$medium = rex_media::get($item['filename']);
+					break;
+			}
+
+			
 			?>
 
 			<tr>
@@ -145,6 +160,13 @@ if (!$showAll) {
 
 					if (!\akrys\redaxo\addon\UsageCheck\Modules\Pictures::exists($item)) {
 						$errors[] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_not_found');
+					}
+
+					/**
+					* @todo Check REDAXO 5
+					**/
+					if($medium->isInUse()) {
+						$errors[] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_in_use');
 					}
 
 					if (count($errors) > 0) {
