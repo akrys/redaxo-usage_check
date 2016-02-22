@@ -84,7 +84,7 @@ if (!$showAll) {
 					continue;
 				}
 			}
-			
+
 			$initCat = null;
 
 			switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
@@ -98,7 +98,7 @@ if (!$showAll) {
 					break;
 			}
 
-			
+
 			?>
 
 			<tr>
@@ -165,10 +165,18 @@ if (!$showAll) {
 					/**
 					* @todo Check REDAXO 5
 					**/
-					if($medium->isInUse()) {
-						$errors[] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_in_use');
+					switch (akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()){
+						case akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+							$medium->isInUse();
+							break;
+						case akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+							rex_mediapool_mediaIsInUse($medium->getFileName());
+							break;
 					}
 
+					if($used) {
+						$errors[] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_in_use');
+					}
 					if (count($errors) > 0) {
 						$text = '';
 						foreach ($errors as $error) {
