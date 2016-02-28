@@ -97,8 +97,6 @@ if (!$showAll) {
 					$medium = rex_media::get($item['filename']);
 					break;
 			}
-
-
 			?>
 
 			<tr>
@@ -162,20 +160,22 @@ if (!$showAll) {
 						$errors[] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_not_found');
 					}
 
-					/**
-					* @todo Check REDAXO 5
-					**/
-					switch (akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()){
-						case akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-							$medium->isInUse();
-							break;
-						case akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-							rex_mediapool_mediaIsInUse($medium->getFileName());
-							break;
-					}
+					if (!$used) {
+						// Ob ein Medium lt. Medienpool in Nutzung ist, brauchen wir nur zu prüfen,
+						// wenn wir glauben, dass die Datei ungenutzt ist.
+						// Vielleicht wird sie ja dennoch verwendet ;-)
+						switch (akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+							case akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+								$used = $medium->isInUse();
+								break;
+							case akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+								$used = rex_mediapool_mediaIsInUse($medium->getFileName());
+								break;
+						}
 
-					if($used) {
-						$errors[] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_in_use');
+						if ($used) {
+							$errors[] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_in_use');
+						}
 					}
 					if (count($errors) > 0) {
 						$text = '';
