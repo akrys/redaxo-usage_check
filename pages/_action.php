@@ -77,31 +77,11 @@ switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 			<tr>
 				<td><?php echo $item['name']; ?></td>
 				<td>
-					 <?php
-					 if ($item['modul'] === null) {
-						 ?>
-
-						<div class="rex-message">
-							<div class="rex-warning">
-								<p>
-									<span><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_msg_not_used'); ?></span>
-								</p>
-							</div>
-						</div>
-
-						<?php
+					<?php
+					if ($item['modul'] === null) {
+						echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::errorMsg(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_msg_not_used'));
 					} else {
-						?>
-
-						<div class="rex-message">
-							<div class="rex-info">
-								<p>
-									<span><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_msg_used'); ?></span>
-								</p>
-							</div>
-						</div>
-
-						<?php
+						echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::infoMsg(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_msg_used'));
 					}
 					?>
 
