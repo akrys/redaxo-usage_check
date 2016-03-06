@@ -10,46 +10,36 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 
 /* @var $I18N \i18n */
 
-use akrys\redaxo\addon\UsageCheck\Config;
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Actions.php';
+use \akrys\redaxo\addon\UsageCheck\Config;
+use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
-switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-		$tableClass = 'rex-table';
-		break;
-
-	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-		$tableClass = 'table table-striped';
-		break;
-}
+echo RedaxoCall::rexTitle(Config::NAME_OUT.' / '.RedaxoCall::i18nMsg('akrys_usagecheck_action_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>');
 
 $showAll = rex_get('showall', 'string', "");
-
-echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::rexTitle(Config::NAME_OUT.' / '.\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>');
-
+require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Actions.php';
 $items = \akrys\redaxo\addon\UsageCheck\Modules\Actions::getActions($showAll);
 
 if ($items === false) {
-	echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::errorMsg(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_no_rights'), true);
+	echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_no_rights'), true);
 	return;
 }
 
 $showAllParam = '&showall=true';
-$showAllLinktext = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_link_show_all');
+$showAllLinktext = RedaxoCall::i18nMsg('akrys_usagecheck_action_link_show_all');
 if ($showAll) {
 	$showAllParam = '';
-	$showAllLinktext = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_link_show_unused');
+	$showAllLinktext = RedaxoCall::i18nMsg('akrys_usagecheck_action_link_show_unused');
 }
 
-switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+switch (RedaxoCall::getRedaxoVersion()) {
+	case RedaxoCall::REDAXO_VERSION_4:
 		?>
 
 		<p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
 
 		<?php
 		break;
-	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+	case RedaxoCall::REDAXO_VERSION_5:
 		?>
 
 		<p class="rex-tx1"><a href="index.php?page=<?php echo Config::NAME; ?>/<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
@@ -59,14 +49,14 @@ switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 }
 ?>
 
-<p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_intro_text'); ?></p>
+<p class="rex-tx1"><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_action_intro_text'); ?></p>
 
 
-<table class = "rex-table">
+<table class="<?php echo RedaxoCall::getTableClass(); ?>">
 	<thead>
 		<tr>
-			<th><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_table_heading_name'); ?></th>
-			<th><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_table_heading_functions'); ?></th>
+			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_action_table_heading_name'); ?></th>
+			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_action_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -79,9 +69,9 @@ switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 				<td>
 					<?php
 					if ($item['modul'] === null) {
-						echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::errorMsg(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_msg_not_used'));
+						echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_action_msg_not_used'));
 					} else {
-						echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::infoMsg(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_msg_used'));
+						echo RedaxoCall::infoMsg(RedaxoCall::i18nMsg('akrys_usagecheck_action_msg_used'));
 					}
 					?>
 
@@ -90,18 +80,18 @@ switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 							<ol>
 
 								<?php
-								switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-									case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+								switch (RedaxoCall::getRedaxoVersion()) {
+									case RedaxoCall::REDAXO_VERSION_4:
 										?>
 
-										<li><a href="index.php?page=module&subpage=actions&action_id=<?php echo $item['id']; ?>&function=edit"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_linktext_edit_code'); ?></a></li>
+										<li><a href="index.php?page=module&subpage=actions&action_id=<?php echo $item['id']; ?>&function=edit"><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_action_linktext_edit_code'); ?></a></li>
 
 										<?php
 										break;
-									case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+									case RedaxoCall::REDAXO_VERSION_5:
 										?>
 
-										<li><a href="index.php?page=module/actions&action_id=<?php echo $item['id']; ?>&function=edit"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_linktext_edit_code'); ?></a></li>
+										<li><a href="index.php?page=module/actions&action_id=<?php echo $item['id']; ?>&function=edit"><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_action_linktext_edit_code'); ?></a></li>
 
 										<?php
 										break;
@@ -109,7 +99,7 @@ switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 
 								if ($item['modul'] !== null) {
 									$usages = explode("\n", $item['modul']);
-									$linktextRaw = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action_linktext_edit_in_modul');
+									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_action_linktext_edit_in_modul');
 									foreach ($usages as $usageRaw) {
 										$usage = (explode("\t", $usageRaw));
 										$modulID = $usage[0];

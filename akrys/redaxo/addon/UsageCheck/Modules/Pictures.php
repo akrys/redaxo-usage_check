@@ -72,7 +72,6 @@ class Pictures
 
 		$sql.='group by f.filename ';
 
-
 		if (!$show_all && isset($havingClauses) && count($havingClauses) > 0) {
 			$sql.='having '.implode(' and ', $havingClauses).' ';
 		}
@@ -99,26 +98,43 @@ class Pictures
 		} else {
 			$rexSQL = \rex_sql::factory();
 		}
-		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			if (!\OOAddon::isAvailable('xform')) {
-				return $return;
-			}
+		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+				if (!\OOAddon::isAvailable('xform')) {
+					return $return;
+				}
 
-			if (!\OOPlugin::isAvailable('xform', 'manager')) {
-				return $return;
-			}
-		} else {
-			if (!\rex_addon::get('xform')->isAvailable()) {
-				return $return;
-			}
+				if (!\OOPlugin::isAvailable('xform', 'manager')) {
+					return $return;
+				}
+				$xformtable = $rexSQL->getArray("show table status like 'rex_xform_table'");
+				$xformfield = $rexSQL->getArray("show table status like 'rex_xform_field'");
+			$sql = <<<SQL
+select f.table_name, t.name as table_out,f.f1,f.f2,f.type_name
+from rex_xform_field f
+left join rex_xform_table t on t.table_name=f.table_name
+where type_name in ('be_mediapool','be_medialist','mediafile')
+SQL;
+				break;
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+				if (!\rex_addon::get('yform')->isAvailable()) {
+					return $return;
+				}
 
-			if (!\rex_plugin::get('xform', 'manager')->isAvailable()) {
-				return $return;
-			}
+				if (!\rex_plugin::get('yform', 'manager')->isAvailable()) {
+					return $return;
+				}
+				$xformtable = $rexSQL->getArray("show table status like 'rex_yform_table'");
+				$xformfield = $rexSQL->getArray("show table status like 'rex_yform_field'");
+			$sql = <<<SQL
+select f.table_name, t.name as table_out,f.name as f1, f.label as f2,f.type_name
+from rex_yform_field f
+left join rex_yform_table t on t.table_name=f.table_name
+where type_name in ('be_media','be_medialist','mediafile')
+SQL;
+				break;
 		}
 
-		$xformtable = $rexSQL->getArray("show table status like 'rex_xform_table'");
-		$xformfield = $rexSQL->getArray("show table status like 'rex_xform_field'");
 
 		$xformtableExists = count($xformfield) > 0;
 		$xformfieldExists = count($xformtable) > 0;
@@ -129,12 +145,6 @@ class Pictures
 
 		if ($xformfieldExists && $xformtableExists) {
 
-			$sql = <<<SQL
-select f.table_name, t.name as table_out,f1,f2,type_name
-from rex_xform_field f
-left join rex_xform_table t on t.table_name=f.table_name
-where type_name in ('be_mediapool','be_medialist','mediafile')
-SQL;
 			$tables = $rexSQL->getArray($sql);
 
 			$xTables = array();
@@ -152,7 +162,8 @@ SQL;
 					}
 
 					switch ($field['type']) {
-						case 'be_mediapool':
+						case 'be_mediapool': // Redaxo 4
+						case 'be_media': // Redaxo 5
 						case 'mediafile':
 							$return['additionalJoins'].=$tableName.'.'.$field['name'].'= f.filename';
 							break;

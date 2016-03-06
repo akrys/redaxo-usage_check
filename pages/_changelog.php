@@ -8,26 +8,17 @@
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 
-switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-		$language = $REX['LANG'];
-		$tableClass = 'rex-table';
-		break;
-	case\akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-		$language = rex::getProperty('lang');
-		$tableClass = 'table table-striped';
-		break;
-}
+use \akrys\redaxo\addon\UsageCheck\Config;
+use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
-use akrys\redaxo\addon\UsageCheck\Config;
-echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::rexTitle(Config::NAME_OUT.' / '.\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_changelog_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', Config::NAME_OUT);
+echo RedaxoCall::rexTitle(Config::NAME_OUT.' / '.RedaxoCall::i18nMsg('akrys_usagecheck_changelog_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>', Config::NAME_OUT);
 
 if (!function_exists('\\glob')) {
 	print 'this page requires the glob function';
 	die();
 }
 
-if (stristr($language, 'de_')) {
+if (stristr(RedaxoCall::getLang(), 'de_')) {
 	$dir = glob(__DIR__.'/release_notes/de/*_*.php');
 } else {
 	$dir = glob(__DIR__.'/release_notes/en/*_*.php');
@@ -36,12 +27,12 @@ rsort($dir);
 ?>
 
 
-<table class="<?php echo $tableClass ?>">
+<table class="<?php echo RedaxoCall::getTableClass(); ?>">
 	<thead>
 		<tr>
-			<th><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_changelog_header_version'); ?></th>
-			<th><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_changelog_header_date'); ?></th>
-			<th><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_changelog_header_changes'); ?></th>
+			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_changelog_header_version'); ?></th>
+			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_changelog_header_date'); ?></th>
+			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_changelog_header_changes'); ?></th>
 		</tr>
 	</thead>
 	<tbody>

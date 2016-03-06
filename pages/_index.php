@@ -9,16 +9,8 @@
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 
-use akrys\redaxo\addon\UsageCheck\Config;
-switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-		$tableClass = 'rex-table';
-		break;
-
-	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-		$tableClass = 'table table-striped';
-		break;
-}
+use \akrys\redaxo\addon\UsageCheck\Config;
+use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
 //Fehlerausgabe
 if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
@@ -34,11 +26,11 @@ if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
 
 TEXT;
 
-		echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::errorMsg($text, false);
+		echo RedaxoCall::errorMsg($text, false);
 	}
 }
 
-if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+if (RedaxoCall::getRedaxoVersion() == RedaxoCall::REDAXO_VERSION_4) {
 	$page = rex_request('page', 'string');
 	$subpage = rex_request('subpage', 'string');
 
@@ -60,6 +52,6 @@ $contentFile = __DIR__.'/_'.$subpage.'.php';
 if (file_exists($contentFile)) {
 	include $contentFile;
 } else {
-	echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::errorMsg(\akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile, true);
+	echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile, true);
 }
 
