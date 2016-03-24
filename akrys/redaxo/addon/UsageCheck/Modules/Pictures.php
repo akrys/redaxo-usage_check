@@ -40,7 +40,7 @@ class Pictures
 	public static function getPictures($show_all = false)
 	{
 
-		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_MEDIAPOOL)) {
+		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_MEDIA)) {
 			return false;
 		}
 

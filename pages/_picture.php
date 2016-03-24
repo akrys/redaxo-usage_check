@@ -68,7 +68,8 @@ if (!$showAll) {
 				}
 			} else {
 				$user = \rex::getUser();
-				if (!$user->isAdmin() && !$user->hasPerm('media['.$item['category_id'].']')) {
+				$complexPerm = $user->getComplexPerm('media');
+				if (!$user->isAdmin() && !(is_object($complexPerm) && $complexPerm->hasCategoryPerm($item['category_id']))) {
 					continue;
 				}
 			}

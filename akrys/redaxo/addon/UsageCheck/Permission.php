@@ -22,6 +22,12 @@ class Permission
 	const PERM_MEDIAPOOL = 'mediapool';
 
 	/**
+	 * Name des Rechts für den Mediapool
+	 * @var string
+	 */
+	const PERM_MEDIA = 'media';
+
+	/**
 	 * Name des Rechts für Module
 	 * @var string
 	 */
@@ -48,10 +54,93 @@ class Permission
 	public static function check($perm)
 	{
 		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+			$perm = self::mapPermRedaxo4($perm);
 			return $GLOBALS['REX']['USER']->isAdmin() || (isset($GLOBALS['REX']['USER']->pages[$perm]) && $GLOBALS['REX']['USER']->pages[$perm]->getPage()->checkPermission($GLOBALS['REX']['USER']));
 		} else {
 			$user = \rex::getUser();
-			return $user->isAdmin() || $user->hasPerm($perm) || $user->getComplexPerm($perm)->hasAll();
+			$perm = self::mapPermRedaxo5($perm);
+			$complexPerm = $user->getComplexPerm($perm);
+			/* @var $complexPerm rex_media_perm */
+
+			$hasSpecialPerm = true;
+			switch (get_class($complexPerm)) {
+				case 'rex_media_perm':
+					$hasSpecialPerm = $complexPerm->hasMediaPerm();
+					break;
+				default:
+					print get_class($complexPerm).' nicht bekann.';
+					break;
+			}
+
+			return $user->isAdmin() || $user->hasPerm($perm)|| $hasSpecialPerm /* || (isset($complexPerm) && $complexPerm->hasAll()) */;
 		}
+	}
+
+	/**
+	 * Permission Mapping (Redaxo 5)
+	 * @param string $perm
+	 * @return string
+	 */
+	private static function mapPermRedaxo4($perm)
+	{
+		$return = '';
+		switch ($perm) {
+			case self::PERM_MEDIAPOOL:
+				$return = 'mediapool';
+				break;
+			case self::PERM_MEDIA:
+				$return = 'mediapool';
+				break;
+			case self::PERM_MODUL:
+				$return = 'module';
+				break;
+			case self::PERM_STRUCTURE:
+				$return = 'structure';
+				break;
+			case self::PERM_TEMPLATE:
+				$return = 'template';
+				break;
+			case self::PERM_XFORM:
+				$return = 'xform';
+				break;
+			default:
+				$return = $perm;
+				break;
+		}
+		return $return;
+	}
+
+	/**
+	 * Permission Mapping (Redaxo 5)
+	 * @param string $perm
+	 * @return string
+	 */
+	private static function mapPermRedaxo5($perm)
+	{
+		$return = '';
+		switch ($perm) {
+			case self::PERM_MEDIAPOOL:
+				$return = 'mediapool';
+				break;
+			case self::PERM_MEDIA:
+				$return = 'media';
+				break;
+			case self::PERM_MODUL:
+				$return = 'module';
+				break;
+			case self::PERM_STRUCTURE:
+				$return = 'structure';
+				break;
+			case self::PERM_TEMPLATE:
+				$return = 'template';
+				break;
+			case self::PERM_XFORM:
+				$return = 'xform';
+				break;
+			default:
+				$return = $perm;
+				break;
+		}
+		return $return;
 	}
 }
