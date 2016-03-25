@@ -5,4 +5,5 @@
 	<li>Bugfix: multiple template links in template section.</li>
 	<li>Show an alternative error message if media pool says, the file is used</li>
 	<li>YForm Support (Redaxo 5), analogue to XForm in Redaxo 4.</li>
+	<li>Permissions in Redaxo 5</li>
 </ul>

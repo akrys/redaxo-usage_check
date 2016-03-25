@@ -60,19 +60,29 @@ class Permission
 			$user = \rex::getUser();
 			$perm = self::mapPermRedaxo5($perm);
 			$complexPerm = $user->getComplexPerm($perm);
-			/* @var $complexPerm rex_media_perm */
 
 			$hasSpecialPerm = true;
 			switch (get_class($complexPerm)) {
 				case 'rex_media_perm':
+					/* @var $complexPerm rex_media_perm */
 					$hasSpecialPerm = $complexPerm->hasMediaPerm();
 					break;
+				case 'rex_structure_perm':
+					/* @var $complexPerm rex_structure_perm */
+					$hasSpecialPerm = $complexPerm->hasStructurePerm();
+					break;
+//				case 'rex_module_perm':
+//					/* @var $complexPerm rex_module_perm */
+//					var_dump($complexPerm);
+//					$hasSpecialPerm = false;
+////					$hasSpecialPerm = $complexPerm->hasModulePerm();
+//					break;
 				default:
-					print get_class($complexPerm).' nicht bekann.';
+					throw new \Exception('"'.get_class($complexPerm).'": unknown permission class');
 					break;
 			}
 
-			return $user->isAdmin() || $user->hasPerm($perm)|| $hasSpecialPerm /* || (isset($complexPerm) && $complexPerm->hasAll()) */;
+			return $user->isAdmin() || $user->hasPerm($perm) || $hasSpecialPerm /* || (isset($complexPerm) && $complexPerm->hasAll()) */;
 		}
 	}
 
@@ -126,7 +136,7 @@ class Permission
 				$return = 'media';
 				break;
 			case self::PERM_MODUL:
-				$return = 'module';
+				$return = 'modules';
 				break;
 			case self::PERM_STRUCTURE:
 				$return = 'structure';

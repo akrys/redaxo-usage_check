@@ -12,7 +12,6 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
-
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Modules.php';
 
 $showAll = rex_get('showall', 'string', "");
@@ -55,7 +54,7 @@ switch (RedaxoCall::getRedaxoVersion()) {
 <p class="rex-tx1"><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_module_intro_text'); ?></p>
 
 
-<table class="<?php echo RedaxoCall::getTableClass()?>">
+<table class="<?php echo RedaxoCall::getTableClass() ?>">
 	<thead>
 		<tr>
 			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_module_table_heading_name'); ?></th>
@@ -66,18 +65,15 @@ switch (RedaxoCall::getRedaxoVersion()) {
 
 		<?php
 		foreach ($items as $item) {
-			switch (RedaxoCall::getRedaxoVersion()) {
-				case RedaxoCall::REDAXO_VERSION_4:
-					if (!$REX['USER']->isAdmin() && !$REX['USER']->hasPerm('module['.$item['id'].']')) {
-						continue;
-					}
-					break;
-				case RedaxoCall::REDAXO_VERSION_5:
-					$user = \rex::getUser();
-					if (!$user->isAdmin() && !$user->getComplexPerm('modules')->hasPerm($item['id'])) {
-						continue;
-					}
-					break;
+			if (RedaxoCall::getRedaxoVersion() == RedaxoCall::REDAXO_VERSION_4) {
+				if (!$REX['USER']->isAdmin() && !$REX['USER']->hasPerm('module['.$item['id'].']')) {
+					continue;
+				}
+			} else {
+				$user = \rex::getUser();
+				if (!$user->isAdmin() && !$user->getComplexPerm('modules')->hasPerm($item['id'])) {
+					continue;
+				}
 			}
 			?>
 

@@ -5,5 +5,6 @@
 	<li>Bugfix: Im Template-Bereich wurde ein Template mehrfach verlinkt.</li>
 	<li>Alternative Fehlermeldung, wenn die Datei lt. Medienpool benutzt wird.</li>
 	<li>YForm Unterstützung (Redaxo 5), analog zu XForm in Redaxo 4</li>
+	<li>Rechte in Redaxo 5</li>
 </ul>
 
