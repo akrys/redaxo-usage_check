@@ -182,14 +182,14 @@ abstract class Pictures
 				if ($joinArtMeta == '') {
 					$return['additionalSelect'].=',null as metaArtIDs '.PHP_EOL;
 				} else {
-					$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on ('.$joinArtMeta.')'.PHP_EOL;
+					$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on (rex_article_art_meta.id=a.id and ('.$joinArtMeta.'))'.PHP_EOL;
 					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_art_meta.id,"\t",rex_article_art_meta.name,"\t",rex_article_art_meta.clang) Separator "\n") as metaArtIDs '.PHP_EOL;
 				}
 
 				if ($joinCatMeta == '') {
 					$return['additionalSelect'].=',null as metaCatIDs '.PHP_EOL;
 				} else {
-					$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on ('.$joinCatMeta.')'.PHP_EOL;
+					$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on (rex_article_cat_meta.id=a.id and ('.$joinCatMeta.'))'.PHP_EOL;
 					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_cat_meta.id,"\t",rex_article_cat_meta.catname,"\t",rex_article_cat_meta.clang,"\t",rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
 				}
 				break;
@@ -229,14 +229,14 @@ abstract class Pictures
 				if ($joinArtMeta == '') {
 					$return['additionalSelect'].=',null as metaArtIDs '.PHP_EOL;
 				} else {
-					$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on ('.$joinArtMeta.')'.PHP_EOL;
+					$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on (rex_article_art_meta.id=a.id and ('.$joinArtMeta.'))'.PHP_EOL;
 					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_art_meta.id,"\t",rex_article_art_meta.name,"\t",rex_article_art_meta.clang_id) Separator "\n") as metaArtIDs '.PHP_EOL;
 				}
 
 				if ($joinCatMeta == '') {
 					$return['additionalSelect'].=',null as metaCatIDs '.PHP_EOL;
 				} else {
-					$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on ('.$joinCatMeta.')'.PHP_EOL;
+					$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on (rex_article_cat_meta.id=a.id and ('.$joinCatMeta.'))'.PHP_EOL;
 					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_cat_meta.id,"\t",rex_article_cat_meta.catname,"\t",rex_article_cat_meta.clang_id,"\t",rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
 				}
 

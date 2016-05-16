@@ -1,0 +1,5 @@
+
+<ul>
+	<li>Bug: files used only in article meta data are shown as used, even only unused should be shown</li>
+</ul>
+
