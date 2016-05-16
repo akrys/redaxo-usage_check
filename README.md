@@ -4,7 +4,7 @@ Dieses Addon sucht nach Bildern, Module und Templates, die nicht (mehr) verwende
 
 ## Installation
 
-Das Repo beinhaltet dirket die Dateien für das Verzeichnis
+Das Repo beinhaltet direkt die Dateien für das Verzeichnis
 `redaxo/inlcude/addons/usage_check` (Redaxo 4.x) oder
 `redaxo/src/addons/usage_check` (Redaxo 5.x)
 
