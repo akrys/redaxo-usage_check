@@ -1,0 +1,26 @@
+package: usage_check
+version: '1.0-Beta3'
+author: Axel Krysztofiak
+supportpage: https://github.com/akrys/redaxo-usage_check
+#load: early
+
+page:
+    title: Usage Check
+    perm: usage_check[]
+    block: system
+    prio: 50
+    pjax: true
+    icon: rex-icon rex-icon-system
+    subpages:
+        overview: { title: 'translate:akrys_usagecheck_overview' }
+        picture: { title: 'translate:akrys_usagecheck_picture' }
+        module: { title: 'translate:akrys_usagecheck_module' }
+        action: { title: 'translate:akrys_usagecheck_action', perm: admin }
+        template: { title: 'translate:akrys_usagecheck_templates' }
+        changelog: { title: 'translate:akrys_usagecheck_changelog' }
+
+requires:
+    redaxo: '>5'
+    php:
+        version: '>=5.3.2'
+        extensions: []

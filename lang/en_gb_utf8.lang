@@ -1,0 +1,86 @@
+akrys_usagecheck_overview = Overview
+akrys_usagecheck_picture = Pictures
+akrys_usagecheck_module = Modules
+akrys_usagecheck_action = Actions
+akrys_usagecheck_templates = Templates
+akrys_usagecheck_changelog = Change log
+
+akrys_usagecheck_no_rights = You don't have the permission to enter this page.
+
+akrys_usagecheck_overview_subpagetitle = Overview
+akrys_usagecheck_overview_intro = This addon searches for unused pictures, modules and templates.
+akrys_usagecheck_overview_images_title = Module: Picture
+akrys_usagecheck_overview_images_body = <p>This module searches for files used in article blocks, article meta data and XForm (Redaxo 4) / YForm(Redaxo 5) table.<br />These database fields in <tt>rex_article_slice</tt> are analyzed:</p><ol><li>file1, file2, .. , file10</li><li>filelist1, filelist2, .. , filelist10</li></ol></p><p>Media fields in other places can be configured. So these fields are only known on runtime.</p>
+akrys_usagecheck_overview_module_title = Module: Modules
+akrys_usagecheck_overview_module_body = <p>This module searches for used modules in the database table <tt>rex_article_slice</tt>.<br />All article blocks are saved there with a hint to find module type and the article, where it was used.</p>
+akrys_usagecheck_overview_template_title = Module: Templates
+akrys_usagecheck_overview_template_body = <p>This module searches for used templates.<br />It analyzes the table <tt>rex_artile</tt>, where articles are saved with their connection to the template it'll use.</p><p>Additionally all templates are analyzed. Sometimes templates are used as subtemplate in another tempalate. <br /><br />Syntax that can be used in templates: <tt>TEMPLATE[TPL_ID]</tt><br /><br />Advatage for our search: there are no spaces allowed. So there are no special variants to think about. That makes this search quite simple according to the technical aspects.</p>
+akrys_usagecheck_overview_action_title = Module: Actions
+akrys_usagecheck_overview_atcion_body = <p>This module searches for used actions.<br /><br />It analyzes all <tt>rex_action</tt> entries. Used actions also have entries in <tt>rex_module_action</tt>, which leads to an module in <tt>rex_module</tt>.</p>
+
+
+akrys_usagecheck_images_subpagetitle = Images
+akrys_usagecheck_images_link_show_all = Show all files
+akrys_usagecheck_images_link_show_unused = Show unused files only
+akrys_usagecheck_images_intro_text = In Mediapool there are sometimes files other than images. These files aren't able to have a preview.
+akrys_usagecheck_images_table_heading_name = Name
+akrys_usagecheck_images_table_heading_functions = Functions
+akrys_usagecheck_images_category_header = Category
+akrys_usagecheck_images_msg_used = OK, this is used
+akrys_usagecheck_images_msg_not_used = not used
+akrys_usagecheck_images_msg_not_found = This file does not exist.
+akrys_usagecheck_images_msg_in_use = According to media pool, this file is used.
+akrys_usagecheck_images_linktext_edit = edit in media pool
+akrys_usagecheck_images_linktext_edit_in_slice = edit in original slice (ID: $sliceID$, article: "$articleName$")
+akrys_usagecheck_images_linktext_edit_in_metadata_art = edit in article metadata (ID: $articleID$, article: "$articleName$")
+akrys_usagecheck_images_linktext_edit_in_metadata_cat = edit in category metadata (ID: $articleID$, category: "$articleName$")<br /><small>Please click on the "plus sign" button there</small>
+akrys_usagecheck_images_linktext_edit_in_xformtable = edit in table "$tableName$" (ID: $entryID$)
+
+
+akrys_usagecheck_module_subpagetitle = Modules
+akrys_usagecheck_module_link_show_all = Show all modules
+akrys_usagecheck_module_link_show_unused = Show unused modules only
+akrys_usagecheck_module_intro_text = Modules can only be used as blocks in articles. These connections are analyzed in order to find unused modules.
+akrys_usagecheck_module_table_heading_name = Name
+akrys_usagecheck_module_table_heading_functions = Functions
+akrys_usagecheck_module_msg_used = OK, this is used
+akrys_usagecheck_module_msg_not_used = not used
+akrys_usagecheck_module_linktext_edit_slice = edit in original slice (ID: $sliceID$, article: "$articleName$")
+akrys_usagecheck_module_linktext_edit_code = Edit source code
+
+
+akrys_usagecheck_action_subpagetitle = Actions
+akrys_usagecheck_action_link_show_all = Show all actions
+akrys_usagecheck_action_link_show_unused = Show unused actions only
+akrys_usagecheck_action_intro_text = Shows the defined actions, which are not used so far
+akrys_usagecheck_action_table_heading_name = Name
+akrys_usagecheck_action_table_heading_functions=Functions
+akrys_usagecheck_action_msg_used = OK, this is used
+akrys_usagecheck_action_msg_not_used = not used
+akrys_usagecheck_action_linktext_edit_in_modul = edit in module "$modulName$"
+akrys_usagecheck_action_linktext_edit_code = Edit source code
+
+
+akrys_usagecheck_template_subpagetitle = Templates
+akrys_usagecheck_template_intro_text = <p>Templates can be used in 2 ways: <ol><li>Connecting them to articles (column: article)</li><li>as an include in another template (column: template)</li></ol></p><p>Deactivated templates are shown using a slightly lighter color.</p>
+akrys_usagecheck_template_link_show_all = Show all templates
+akrys_usagecheck_template_link_show_unused = Show unused templates only
+akrys_usagecheck_template_link_show_active = Show active templates only
+akrys_usagecheck_template_link_show_active-inacitve = Show both (active and inactive) templates
+akrys_usagecheck_template_table_heading_name = Name
+akrys_usagecheck_template_table_heading_functions = Functions
+akrys_usagecheck_template_table_inactive = inactive
+akrys_usagecheck_template_msg_used = OK, this is used
+akrys_usagecheck_template_msg_not_used = not used
+akrys_usagecheck_template_detail_heading = Usage
+akrys_usagecheck_template_linktext_edit_article = edit article (ID: $articleID$, Artikel: "$articleName$")
+akrys_usagecheck_template_linktext_edit_template = edit REX_TEMPLATE[$templateID$] in "$templateName$"
+akrys_usagecheck_template_linktext_edit_code = Edit source code
+
+
+akrys_usagecheck_changelog_subpagetitle = Changelog
+akrys_usagecheck_changelog_header_version = Version
+akrys_usagecheck_changelog_header_date = Date
+akrys_usagecheck_changelog_header_changes = Changes
+
+akrys_usagecheck_error_content_file_not_found = This file should be shown, but it wasn't found
