@@ -17,7 +17,7 @@ switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 		$REX['ADDON']['rxid'][Config::NAME] = Config::ID;
 		$REX['ADDON']['name'][Config::NAME] = 'Usage Check';
 		$REX['ADDON']['perm'][Config::NAME] = 'usage_check[]';
-		$REX['ADDON']['version'][Config::NAME] = '1.0-Beta3';
+		$REX['ADDON']['version'][Config::NAME] = '1.0-Beta4';
 		$REX['ADDON']['author'][Config::NAME] = 'Axel Krysztofiak <akrys@web.de>';
 		$REX['ADDON']['supportpage'][Config::NAME] = 'https://github.com/akrys/redaxo-usage_check';
 		$REX['PERM'][] = 'usage_check[]';

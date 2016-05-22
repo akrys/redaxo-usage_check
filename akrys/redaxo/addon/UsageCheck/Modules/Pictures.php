@@ -100,12 +100,13 @@ abstract class Pictures
 
 		if (!$show_all) {
 			$sql.='where s.id is null ';
+			$havingClauses[] = 'metaCatIDs is null and metaArtIds is null ';
 		}
 
 		$sql.='group by f.filename ';
 
 		if (!$show_all && isset($havingClauses) && count($havingClauses) > 0) {
-			$sql.='having '.implode(' and ', $havingClauses).' and metaCatIDs is null and metaArtIds is null ';
+			$sql.='having '.implode(' and ', $havingClauses).'';
 		}
 
 		return array('result' => $rexSQL->getArray($sql), 'fields' => $tableFields);
@@ -182,14 +183,14 @@ abstract class Pictures
 				if ($joinArtMeta == '') {
 					$return['additionalSelect'].=',null as metaArtIDs '.PHP_EOL;
 				} else {
-					$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on ('.$joinArtMeta.')'.PHP_EOL;
+					$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on (rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
 					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_art_meta.id,"\t",rex_article_art_meta.name,"\t",rex_article_art_meta.clang) Separator "\n") as metaArtIDs '.PHP_EOL;
 				}
 
 				if ($joinCatMeta == '') {
 					$return['additionalSelect'].=',null as metaCatIDs '.PHP_EOL;
 				} else {
-					$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on ('.$joinCatMeta.')'.PHP_EOL;
+					$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on (rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
 					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_cat_meta.id,"\t",rex_article_cat_meta.catname,"\t",rex_article_cat_meta.clang,"\t",rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
 				}
 				break;
@@ -229,14 +230,14 @@ abstract class Pictures
 				if ($joinArtMeta == '') {
 					$return['additionalSelect'].=',null as metaArtIDs '.PHP_EOL;
 				} else {
-					$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on ('.$joinArtMeta.')'.PHP_EOL;
+					$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on (rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
 					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_art_meta.id,"\t",rex_article_art_meta.name,"\t",rex_article_art_meta.clang_id) Separator "\n") as metaArtIDs '.PHP_EOL;
 				}
 
 				if ($joinCatMeta == '') {
 					$return['additionalSelect'].=',null as metaCatIDs '.PHP_EOL;
 				} else {
-					$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on ('.$joinCatMeta.')'.PHP_EOL;
+					$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on (rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
 					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_cat_meta.id,"\t",rex_article_cat_meta.catname,"\t",rex_article_cat_meta.clang_id,"\t",rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
 				}
 

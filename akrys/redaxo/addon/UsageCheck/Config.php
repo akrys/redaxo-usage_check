@@ -14,7 +14,7 @@ class Config
 	 * @todo Addon registrieren um eine echte ID zu bekommen
 	 * @var int
 	 */
-	const ID = '000000'; //noch kein offizielles Addon
+	const ID = 'usage_check';
 
 	/**
 	 * Technischer Name des Addons
@@ -33,7 +33,7 @@ class Config
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.0 Beta 3';
+	const VERSION = '1.0 Beta 4';
 
 	/**
 	 * release state
