@@ -365,6 +365,34 @@ MSG;
 	}
 
 	/**
+	 * Kategorie-Rechte an einem Medium abfragen
+	 * @global array $REX
+	 * @param int $catID
+	 * @return boolean
+	 */
+	public static function hasMediaCategoryPerm($catID)
+	{
+		$hasPerm = false;
+		switch (RedaxoCall::getRedaxoVersion()) {
+			case RedaxoCall::REDAXO_VERSION_4:
+				if ($GLOBALS['REX']['USER']->isAdmin() || $GLOBALS['REX']['USER']->hasPerm('media[0]')) {
+					return true;
+				}
+
+				if ($GLOBALS['REX']['USER']->hasPerm('media['.$catID.']')) {
+					$hasPerm = true;
+				}
+				break;
+			case RedaxoCall::REDAXO_VERSION_5:
+				$user = \rex::getUser();
+				$perm = \rex_structure_perm::get($user, 'media');
+				$hasPerm = $perm->hasCategoryPerm($catID);
+				break;
+		}
+		return $hasPerm;
+	}
+
+	/**
 	 * URL zur Bearbeitung der Artikel-Metadaten.
 	 * @param int $articleID
 	 * @param int $clang

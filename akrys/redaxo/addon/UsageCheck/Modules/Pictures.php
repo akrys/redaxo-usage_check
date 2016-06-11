@@ -100,7 +100,7 @@ abstract class Pictures
 
 		if (!$show_all) {
 			$sql.='where s.id is null ';
-			$havingClauses[] = 'metaCatIDs is null and metaArtIds is null ';
+			$havingClauses[] = 'metaCatIDs is null and metaArtIDs is null and metaMedIDs is null';
 		}
 
 		$sql.='group by f.filename ';
@@ -127,6 +127,7 @@ abstract class Pictures
 
 		$joinArtMeta = '';
 		$joinCatMeta = '';
+		$joinMedMeta = '';
 
 		$names = self::getMetaNames();
 
@@ -144,8 +145,8 @@ abstract class Pictures
 								if (preg_match('/'.preg_quote($value, '/').'/', $name['name'])) {
 									$fieldname = 'joinArtMeta';
 									$tableName = 'rex_article_art_meta';
+									$continue = false;
 								}
-								$continue = false;
 								break;
 							case 'cat_':
 								if (preg_match('/'.preg_quote($value, '/').'/', $name['name'])) {
@@ -155,6 +156,12 @@ abstract class Pictures
 								}
 								break;
 							case 'med_':
+								if (preg_match('/'.preg_quote($value, '/').'/', $name['name'])) {
+									$fieldname = 'joinMedMeta';
+									$tableName = 'rex_article_med_meta';
+									$continue = false;
+								}
+								break;
 							default:
 
 								break;
@@ -193,6 +200,14 @@ abstract class Pictures
 					$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on (rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
 					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_cat_meta.id,"\t",rex_article_cat_meta.catname,"\t",rex_article_cat_meta.clang,"\t",rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
 				}
+
+				if ($joinMedMeta == '') {
+					$return['additionalSelect'].=',null as metaMedIDs '.PHP_EOL;
+				} else {
+					$return['additionalJoins'].='LEFT join rex_file as rex_article_med_meta on (rex_article_med_meta.file_id is not null and ('.$joinMedMeta.'))'.PHP_EOL;
+					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_med_meta.file_id,"\t",rex_article_med_meta.category_id,"\t",rex_article_med_meta.filename) Separator "\n") as metaMedIDs '.PHP_EOL;
+				}
+
 				break;
 			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
 				$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article');

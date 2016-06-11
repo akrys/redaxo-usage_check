@@ -55,7 +55,7 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 				<td>
 
 					<?php
-						$pictures->outputImagePreview($item);
+					$pictures->outputImagePreview($item);
 					?>
 
 					<strong><?php echo $item['title']; ?></strong><br />
@@ -89,6 +89,10 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 					}
 
 					if ($item['metaCatIDs'] !== null) {
+						$used = true;
+					}
+
+					if ($item['metaMedIDs'] !== null) {
 						$used = true;
 					}
 
@@ -228,6 +232,37 @@ ERROR;
 											$linktext = str_replace('$articleID$', $articleID, $linktext);
 											$linktext = str_replace('$articleName$', $articleName, $linktext);
 											$href = 'index.php?page=structure&category_id='.$parentID.'&article_id=0&clang='.$clang.'&edit_id='.$articleID.'&function=edit_cat&catstart=0';
+											?>
+
+											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+
+											<?php
+										}
+										unset($href, $linktext, $ctype, $clang, $articleID, $articleName, $sliceID);
+									}
+								}
+
+								if ($item['metaMedIDs'] !== null) {
+
+									$usages = explode("\n", $item['metaMedIDs']);
+									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit_in_metadata_med');
+									foreach ($usages as $usage) {
+										$mediaData = explode("\t", $usage);
+
+
+
+										//file_id,"\t",category_id,"\t",filename
+										$fileID = $mediaData[0];
+										$fileCatID = $mediaData[1];
+										$filename = $mediaData[2];
+
+										$hasPerm = RedaxoCall::hasMediaCategoryPerm($fileCatID);
+										$hasPerm = true;
+
+										if ($hasPerm) {
+											$linktext = $linktextRaw;
+											$linktext = str_replace('$filename$', $filename, $linktext);
+											$href = "index.php?page=mediapool&subpage=detail&file_name=".$filename;
 											?>
 
 											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
