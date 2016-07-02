@@ -190,4 +190,120 @@ SQL;
 
 		<?php
 	}
+
+	/**
+	 * SQL Parts für die Metadaten generieren
+	 * @return array
+	 */
+	protected function getMetaTableSQLParts()
+	{
+		$return = array(
+			'additionalSelect' => '',
+			'additionalJoins' => '',
+			'tableFields' => array(),
+			'havingClauses' => array(),
+		);
+
+		$joinArtMeta = '';
+		$joinCatMeta = '';
+		$joinMedMeta = '';
+
+		$names = $this->getMetaNames();
+
+		foreach ($names as $name) {
+			foreach ($GLOBALS['REX']['ADDON']['prefixes']['metainfo'] as $key => $value) {
+				$continue = true;
+				switch ($value) {
+					case 'art_':
+						if (preg_match('/'.preg_quote($value, '/').'/', $name['name'])) {
+							$fieldname = 'joinArtMeta';
+							$tableName = 'rex_article_art_meta';
+							$continue = false;
+						}
+						break;
+					case 'cat_':
+						if (preg_match('/'.preg_quote($value, '/').'/', $name['name'])) {
+							$fieldname = 'joinCatMeta';
+							$tableName = 'rex_article_cat_meta';
+							$continue = false;
+						}
+						break;
+					case 'med_':
+						if (preg_match('/'.preg_quote($value, '/').'/', $name['name'])) {
+							$fieldname = 'joinMedMeta';
+							$tableName = 'rex_article_med_meta';
+							$continue = false;
+						}
+						break;
+					default:
+
+						break;
+				}
+				if ($continue) {
+					continue 1;
+				}
+
+				switch ($name['type']) {
+					case 'REX_MEDIA_BUTTON':
+						if ($$fieldname != '') {
+							$$fieldname.=' or ';
+						}
+						$$fieldname.=''.$tableName.'.'.$name['name'].' = f.filename';
+						break;
+					case 'REX_MEDIALIST_BUTTON':
+						if ($$fieldname != '') {
+							$$fieldname.=' or ';
+						}
+						$$fieldname.='FIND_IN_SET(f.filename, '.$tableName.'.'.$name['name'].')';
+						break;
+				}
+			}
+		}
+
+		if ($joinArtMeta == '') {
+			$return['additionalSelect'].=',null as metaArtIDs '.PHP_EOL;
+		} else {
+			$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on (rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
+			$return['additionalSelect'].=',group_concat(distinct concat(rex_article_art_meta.id,"\t",rex_article_art_meta.name,"\t",rex_article_art_meta.clang) Separator "\n") as metaArtIDs '.PHP_EOL;
+		}
+
+		if ($joinCatMeta == '') {
+			$return['additionalSelect'].=',null as metaCatIDs '.PHP_EOL;
+		} else {
+			$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on (rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
+			$return['additionalSelect'].=',group_concat(distinct concat(rex_article_cat_meta.id,"\t",rex_article_cat_meta.catname,"\t",rex_article_cat_meta.clang,"\t",rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
+		}
+
+		if ($joinMedMeta == '') {
+			$return['additionalSelect'].=',null as metaMedIDs '.PHP_EOL;
+		} else {
+			$return['additionalJoins'].='LEFT join rex_file as rex_article_med_meta on (rex_article_med_meta.file_id is not null and ('.$joinMedMeta.'))'.PHP_EOL;
+			$return['additionalSelect'].=',group_concat(distinct concat(rex_article_med_meta.file_id,"\t",rex_article_med_meta.category_id,"\t",rex_article_med_meta.filename) Separator "\n") as metaMedIDs '.PHP_EOL;
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Meta-Bildfelder ermitteln.
+	 * @return array
+	 */
+	protected function getMetaNames()
+	{
+		$rexSQL = new \rex_sql;
+
+		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article');
+		$metainfoFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('62_params');
+		$metainfoTypeTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('62_type');
+
+		$sql = <<<SQL
+select f.name, t.label as type
+from $metainfoFieldTable f
+inner join $metainfoTypeTable t on t.id=f.type and t.label like '%MEDIA%'
+
+SQL;
+		$names = $rexSQL->getArray($sql);
+
+		return $names;
+	}
 }

@@ -33,7 +33,7 @@ class Config
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.0 Beta 4';
+	const VERSION = '1.0 Beta 5';
 
 	/**
 	 * release state
