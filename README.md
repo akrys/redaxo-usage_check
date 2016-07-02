@@ -1,3 +1,5 @@
+[english](README_en.md)
+
 # Usage Check
 
 Dieses Addon sucht nach Bildern, Module und Templates, die nicht (mehr) verwendet werden.
