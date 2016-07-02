@@ -165,7 +165,7 @@ SQL;
 		if (stristr($item['filetype'], 'image/')) {
 			?>
 
-			<img alt="" src="../index.php?rex_img_type=rex_mediapool_detail&amp;rex_img_file=<?php echo $item['filename']; ?>" style="max-width:150px;max-height: 150px;" />
+			<img alt="" src="index.php?rex_img_type=rex_mediapool_preview&rex_img_file=<?php echo $item['filename']; ?>" style="max-width:150px;max-height: 150px;" />
 			<br /><br />
 
 			<?php
