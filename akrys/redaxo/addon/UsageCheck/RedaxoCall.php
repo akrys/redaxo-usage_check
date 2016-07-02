@@ -63,7 +63,7 @@ class RedaxoCall
 			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
 				$out = $GLOBALS['REX']['LANG'];
 				break;
-			case\akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
 				$out = \rex::getProperty('lang');
 				break;
 		}

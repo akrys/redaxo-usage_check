@@ -222,6 +222,9 @@ abstract class Pictures
 					} else if (preg_match('/'.preg_quote(\rex_metainfo_category_handler::PREFIX, '/').'/', $name['name'])) {
 						$fieldname = 'joinCatMeta';
 						$tableName = 'rex_article_cat_meta';
+					} else if (preg_match('/'.preg_quote(\rex_metainfo_media_handler::PREFIX, '/').'/', $name['name'])) {
+						$fieldname = 'joinMedMeta';
+						$tableName = 'rex_article_med_meta';
 					} else {
 						continue;
 					}
@@ -255,7 +258,12 @@ abstract class Pictures
 					$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on (rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
 					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_cat_meta.id,"\t",rex_article_cat_meta.catname,"\t",rex_article_cat_meta.clang_id,"\t",rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
 				}
-
+				if ($joinMedMeta == '') {
+					$return['additionalSelect'].=',null as metaMedIDs '.PHP_EOL;
+				} else {
+					$return['additionalJoins'].='LEFT join rex_media as rex_article_med_meta on (rex_article_med_meta.id is not null and ('.$joinMedMeta.'))'.PHP_EOL;
+					$return['additionalSelect'].=',group_concat(distinct concat(rex_article_med_meta.id,"\t",rex_article_med_meta.category_id,"\t",rex_article_med_meta.filename) Separator "\n") as metaMedIDs '.PHP_EOL;
+				}
 				break;
 		}
 
