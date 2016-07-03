@@ -35,6 +35,7 @@ akrys_usagecheck_images_linktext_edit_in_slice = edit in original slice (ID: $sl
 akrys_usagecheck_images_linktext_edit_in_metadata_art = edit in article metadata (ID: $articleID$, article: "$articleName$")
 akrys_usagecheck_images_linktext_edit_in_metadata_cat = edit in category metadata (ID: $articleID$, category: "$articleName$")<br /><small>Please click on the "plus sign" button there</small>
 akrys_usagecheck_images_linktext_edit_in_xformtable = edit in table "$tableName$" (ID: $entryID$)
+akrys_usagecheck_images_linktext_edit_in_metadata_med = edit in file "$filename$"
 
 
 akrys_usagecheck_module_subpagetitle = Modules
