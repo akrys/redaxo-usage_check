@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor>
+
+	<parser>
+		<default-package-name>Redaxo Usage Check</default-package-name>
+		<target>phpdoc/cache/</target>
+		<encoding>utf-8</encoding>
+		<extensions>
+			<extension>php</extension>
+			<extension>php3</extension>
+			<extension>phtml</extension>
+		</extensions>
+	</parser>
+	<transformer>
+		<target>phpdoc/output/</target>
+	</transformer>
+	<files>
+		<directory>*</directory>
+		<ignore>pages/*</ignore>
+		<ignore>general/*</ignore>
+	</files>
+	<logging>
+		<level>warn</level>
+		<paths>
+			<default>phpdoc_log/{DATE}.log</default>
+			<errors>phpdoc_log/{DATE}.errors.log</errors>
+		</paths>
+	</logging>
+	<transformations>
+		<!--
+abstract				=> OK
+checkstyle			=> generiert nur ne XML mit den Fehlern
+clean					=> std
+new-black			=> OK, aber Fehlerhafter output
+old-ocean			=> OK
+pdf					=> Fatal Error
+responsive			=> OK
+responsive-twig	=> OK
+xml					=> OK
+zend					=> Fatal Error
+		-->
+		<template name="clean" />
+	</transformations>
+</phpdocumentor>

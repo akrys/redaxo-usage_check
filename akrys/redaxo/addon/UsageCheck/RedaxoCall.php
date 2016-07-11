@@ -1,9 +1,6 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Besonderheiten der unterschiedlichen Redaxo-Versionen abbilden.
  */
 namespace akrys\redaxo\addon\UsageCheck;
 
@@ -19,7 +16,7 @@ namespace akrys\redaxo\addon\UsageCheck;
  * sollte daher nicht für andere Projekte als Unversal-API verwendet werden.
  *
  */
-class RedaxoCall
+abstract class RedaxoCall
 {
 	/**
 	 * @var int
@@ -32,81 +29,75 @@ class RedaxoCall
 	const REDAXO_VERSION_5 = 5;
 
 	/**
+	 * Schnittstellenversion zu Redaxo 4 oder 5
+	 * @var RedaxoCall
+	 */
+	private static $api;
+
+	/**
 	 * @var int
 	 */
 	const REDAXO_VERSION_INVALID = -1;
+
+	/**
+	 * Versionsspezifische Redaxo-Aufrufe bündeln.
+	 *
+	 * Jeder Aufruf ist in eine spezielle API-Funktion gekapselt. Diese wird von
+	 * der enstprechenden Klasse für die jeweilige Redaxo-Version implementiert.
+	 *
+	 * @return RedaxoCall
+	 */
+	static function getAPI()
+	{
+		if (!isset(self::$api)) {
+			if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
+				// Redaxo 4
+				require_once(__DIR__.'/RexV4/RedaxoCallAPI.php');
+				self::$api = new RexV4\RedaxoCallAPI();
+			} else {
+				// Redaxo 5
+				require_once(__DIR__.'/RexV5/RedaxoCallAPI.php');
+				self::$api = new RexV5\RedaxoCallAPI();
+			}
+		}
+		return self::$api;
+	}
 
 	/**
 	 * Übersetzung holen
 	 * @param string $text
 	 * @return string
 	 */
-	public static function i18nMsg($text)
-	{
-		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			// Redaxo 4
-			return $GLOBALS['I18N']->msg($text);
-		} else {
-			// Redaxo 5
-			return \rex_i18n::rawMsg($text);
-		}
-	}
+	public abstract function i18nMsg($text);
 
 	/**
 	 * Sprachname Code holen.
 	 * @return string
 	 */
-	public static function getLang()
-	{
-		$out = '';
-		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-				$out = $GLOBALS['REX']['LANG'];
-				break;
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-				$out = \rex::getProperty('lang');
-				break;
-		}
-		return $out;
-	}
+	public abstract function getLang();
 
 	/**
 	 * Tabelle mit Prefix versehen
 	 * @param string $name
 	 * @return string
 	 */
-	public static function getTable($name)
+	public function getTable($name)
 	{
-		return self::getTablePrefix().$name;
+		return $this->getTablePrefix().$name;
 	}
 
 	/**
 	 * Tabellenprefix holen
 	 * @return string
 	 */
-	public static function getTablePrefix()
-	{
-		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			return $GLOBALS['REX']['TABLE_PREFIX'];
-		} else {
-			return \rex::getTablePrefix();
-		}
-	}
+	public abstract function getTablePrefix();
 
 	/**
 	 * Titel ändern
 	 * @param string $title
-	 * @param string $sub_title
 	 * @return string
 	 */
-	public static function rexTitle($title)
-	{
-		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			return \rex_title($title, $GLOBALS['REX']['ADDON']['pages'][Config::NAME]);
-		} else {
-			return \rex_view::title($title);
-		}
-	}
+	public abstract function rexTitle($title);
 
 	/**
 	 * Erkennung der Redaxo-Version
@@ -169,40 +160,22 @@ class RedaxoCall
 	 * @param boolean $addTags
 	 * @return string
 	 */
-	public static function errorMsg($text, $addTags = true)
-	{
-		$out = '';
+	public abstract function errorMsg($text, $addTags = true);
 
-		if ($addTags) {
-			$text = <<<TEXT
+	/**
+	 * Abgrenzungstags hinzugfügen.
+	 *
+	 * Span und p-Tags hinzufügen, so dass hinzugefügte Texte sich stärker von
+	 * einander abgrenden können.
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	protected function addTags($text)
+	{
+		return <<<TEXT
 <p><span>$text</span></p>
 TEXT;
-		}
-
-		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-				$out = <<<MSG
-
-<div class="rex-message">
-	<div class="rex-warning">
-		$text
-	</div>
-</div>
-
-MSG;
-				break;
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-				$out = <<<MSG
-
-<div class="alert alert-danger">
-	$text
-</div>
-
-MSG;
-				break;
-		}
-
-		return $out;
 	}
 
 	/**
@@ -215,39 +188,7 @@ MSG;
 	 * @param boolean $addTags
 	 * @return string
 	 */
-	public static function infoMsg($text, $addTags = true)
-	{
-		$out = '';
-
-		if ($addTags) {
-			$text = <<<TEXT
-<p><span>$text</span></p>
-TEXT;
-		}
-		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-				$out = <<<MSG
-
-<div class="rex-message">
-	<div class="rex-info">
-		$text
-	</div>
-</div>
-
-MSG;
-				break;
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-				$out = <<<MSG
-
-<div class="alert alert-success">
-	$text
-</div>
-
-MSG;
-				break;
-		}
-		return $out;
-	}
+	public abstract function infoMsg($text, $addTags = true);
 
 	/**
 	 * Ausgabe-Kasten auf der Addon-Seite erstellen.
@@ -255,44 +196,7 @@ MSG;
 	 * @param string $text
 	 * @return string
 	 */
-	public static function panelOut($title, $text)
-	{
-		$out = '';
-
-		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-				$out = <<<MSG
-
-
-<div class="rex-addon-output">
-	<h2 class="rex-hl2">$title</h2>
-
-	<div class="rex-addon-content">
-		<p class="rex-tx1">
-			$text
-		</p>
-	</div>
-</div>
-
-MSG;
-				break;
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-				$out = <<<MSG
-
-<div class="panel panel-default">
-	<header class="panel-heading"><div class="panel-title">$title</div></header>
-	<div class="panel-body">
-		$text
-	</div>
-</div>
-
-
-MSG;
-				break;
-		}
-
-		return $out;
-	}
+	public abstract function panelOut($title, $text);
 
 	/**
 	 * Table-Klasse anhand der Redaxo-Version ermittln.
@@ -301,43 +205,13 @@ MSG;
 	 *
 	 * @return string
 	 */
-	public static function getTableClass()
-	{
-		$out = '';
-		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-				$out = 'rex-table';
-				break;
-
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-				$out = 'table table-striped';
-				break;
-		}
-		return $out;
-	}
+	public abstract function getTableClass();
 
 	/**
 	 * Abfrage, ob der aktuelle User Admin ist
 	 * @return boolean
 	 */
-	public static function isAdmin()
-	{
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_4:
-				if ($GLOBALS['REX']['USER']->isAdmin()) {
-					return true;
-				}
-				break;
-			case RedaxoCall::REDAXO_VERSION_5:
-				$user = \rex::getUser();
-				if ($user->isAdmin()) {
-					return true;
-				}
-				break;
-		}
-
-		return false;
-	}
+	public abstract function isAdmin();
 
 	/**
 	 * Kategorie-Rechte an einem Artikel abfragen
@@ -345,24 +219,7 @@ MSG;
 	 * @param type $articleID
 	 * @return boolean
 	 */
-	public static function hasCategoryPerm($articleID)
-	{
-		$hasPerm = false;
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_4:
-				//$GLOBALS['REX']['USER']->hasPerm('article['.$articleID.']') ist immer false
-				if (/* $GLOBALS['REX']['USER']->hasPerm('article['.$articleID.']') || */ $GLOBALS['REX']['USER']->hasCategoryPerm($articleID)) {
-					$hasPerm = true;
-				}
-				break;
-			case RedaxoCall::REDAXO_VERSION_5:
-				$user = \rex::getUser();
-				$perm = \rex_structure_perm::get($user, 'structure');
-				$hasPerm = $perm->hasCategoryPerm($articleID);
-				break;
-		}
-		return $hasPerm;
-	}
+	public abstract function hasCategoryPerm($articleID);
 
 	/**
 	 * Kategorie-Rechte an einem Medium abfragen
@@ -370,85 +227,26 @@ MSG;
 	 * @param int $catID
 	 * @return boolean
 	 */
-	public static function hasMediaCategoryPerm($catID)
-	{
-		$hasPerm = false;
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_4:
-				if ($GLOBALS['REX']['USER']->isAdmin() || $GLOBALS['REX']['USER']->hasPerm('media[0]')) {
-					return true;
-				}
-
-				if ($GLOBALS['REX']['USER']->hasPerm('media['.$catID.']')) {
-					$hasPerm = true;
-				}
-				break;
-			case RedaxoCall::REDAXO_VERSION_5:
-				$user = \rex::getUser();
-				$perm = \rex_structure_perm::get($user, 'media');
-				$hasPerm = $perm->hasCategoryPerm($catID);
-				break;
-		}
-		return $hasPerm;
-	}
+	public abstract function hasMediaCategoryPerm($catID);
 
 	/**
 	 * URL zur Bearbeitung der Artikel-Metadaten.
 	 * @param int $articleID
 	 * @param int $clang
 	 */
-	public static function getArticleMetaUrl($articleID, $clang)
-	{
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_4:
-				$href = 'index.php?page=content&article_id='.$articleID.'&mode=meta&clang='.$clang.'&ctype=1';
-				break;
-			case RedaxoCall::REDAXO_VERSION_5:
-				$href = 'index.php?page=content/metainfo&article_id='.$articleID.'&clang='.$clang.'&ctype=1';
-				break;
-		}
-
-		return $href;
-	}
+	public abstract function getArticleMetaUrl($articleID, $clang);
 
 	/**
 	 * URL zur Bearbeitung der Artikel-Metadaten.
 	 * @param string $table
 	 * @param int $id
 	 */
-	public static function getXFormEditUrl($table, $id)
-	{
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_4:
-				$href = 'index.php?page=xform&subpage=manager&tripage=data_edit&table_name='.$table.'&rex_xform_search=0&data_id='.$id.'&func=edit&start=';
-				break;
-			case RedaxoCall::REDAXO_VERSION_5:
-				$href = 'index.php?page=yform/manager/data_edit&table_name='.$table.'&data_id='.$id.'&func=edit';
-				break;
-		}
-
-		return $href;
-	}
+	public abstract function getXFormEditUrl($table, $id);
 
 	/**
 	 * Abfrage, ob es Tabellenrechte gibt.
-	 * @todo umsetzung
 	 * @param string $table
 	 * @return boolean
 	 */
-	public static function hasTablePerm($table)
-	{
-		$return = false;
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_4:
-				/* @var $GLOBALS['REX']['USER'] \rex_user */
-				return $GLOBALS['REX']['USER']->hasPerm('xform[]') && $GLOBALS['REX']['USER']->hasPerm('xform[table:'.$table.']');
-				break;
-			case RedaxoCall::REDAXO_VERSION_5:
-				$return = \rex::getUser()->hasPerm('yform[]') && \rex::getUser()->hasPerm('yform[table:'.$table.']');
-				break;
-		}
-
-		return $return;
-	}
+	public abstract function hasTablePerm($table);
 }

@@ -1,22 +1,15 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Datei für die Modul-Actions
+ *
+ * @version       1.0 / 2015-08-09
+ * @author        akrys
  */
+
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
 require_once __DIR__.'/../Permission.php';
-
-/**
- * Datei für ...
- *
- * @version       1.0 / 2015-08-09
- * @package       new_package
- * @subpackage    new_subpackage
- * @author        akrys
- */
 
 /**
  * Description of Modules
@@ -82,9 +75,9 @@ abstract class Actions
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
-		$actionTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('action');
-		$moduleActionTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('module_action');
-		$moduleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('module');
+		$actionTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('action');
+		$moduleActionTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('module_action');
+		$moduleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('module');
 
 		$sql = <<<SQL
 SELECT a.*, group_concat(concat(

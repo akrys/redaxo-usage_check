@@ -1,22 +1,14 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Datei für das Template-Modul
+ *
+ * @version       1.0 / 2015-08-09
+ * @author        akrys
  */
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
 require_once __DIR__.'/../Permission.php';
-
-/**
- * Datei für ...
- *
- * @version       1.0 / 2015-08-09
- * @package       new_package
- * @subpackage    new_subpackage
- * @author        akrys
- */
 
 /**
  * Description of Templates
@@ -57,6 +49,7 @@ abstract class Templates
 	 * Nicht genutze Module holen
 	 *
 	 * @param boolean $show_all
+	 * @param boolean $show_inactive
 	 * @return array
 	 *
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
@@ -131,20 +124,20 @@ abstract class Templates
 
 		$return['showAllParam'] = '';
 		$return['showAllParamCurr'] = '&showall=true';
-		$return['showAllLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_template_link_show_unused');
+		$return['showAllLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_unused');
 		if (!$showAll) {
 			$return['showAllParam'] = '&showall=true';
 			$return['showAllParamCurr'] = '';
-			$return['showAllLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_template_link_show_all');
+			$return['showAllLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_all');
 		}
 
 		$return['showInactiveParam'] = '';
 		$return['showInactiveParamCurr'] = '&showinactive=true';
-		$return['showInactiveLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_template_link_show_active');
+		$return['showInactiveLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_active');
 		if (!$showInactive) {
 			$return['showInactiveParam'] = '&showinactive=true';
 			$return['showInactiveParamCurr'] = '';
-			$return['showInactiveLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_template_link_show_active_inactive');
+			$return['showInactiveLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_active_inactive');
 		}
 		return $return;
 	}

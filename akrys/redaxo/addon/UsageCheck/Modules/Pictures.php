@@ -1,22 +1,14 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Datei für Medienmodul
+ *
+ * @version       1.0 / 2015-08-08
+ * @author        akrys
  */
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
 require_once __DIR__.'/../Permission.php';
-
-/**
- * Datei für ...
- *
- * @version       1.0 / 2015-08-08
- * @package       new_package
- * @subpackage    new_subpackage
- * @author        akrys
- */
 
 /**
  * Description of Pictures
@@ -61,8 +53,6 @@ abstract class Pictures
 	 *
 	 * @todo bei Instanzen mit vielen Dateien im Medienpool testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
-	 *
-	 * @todo die Funktion sollte daten in einem anderen Objekt aufrufen, so dass ein Objekt zurückgegeben werden kann. Da kann man mit getResult() und getFields() besser auf die Daten zugreifen.
 	 */
 	public function getPictures($show_all = false)
 	{
@@ -127,7 +117,6 @@ abstract class Pictures
 	/**
 	 * SQL Partsfür XForm/YForm generieren.
 	 *
-	 * @todo Da so viele Daten im return-array gesammelt werden, könnte man auch über ein weiteres Objekt nachdenken, wo diese Daten als instanz hinterlegt werden.
 	 * @return array
 	 */
 	protected function getXFormTableSQLParts()
@@ -267,6 +256,13 @@ abstract class Pictures
 	 */
 	protected abstract function getPictureSQL($additionalSelect, $additionalJoins);
 
+	/**
+	 * Holt ein Medium-Objekt mit Prüfung der Rechte
+	 *
+	 * @param array $item Idezes: category_id, filename
+	 * @return \rex_media
+	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
+	 */
 	public abstract function getMedium($item);
 
 	/**

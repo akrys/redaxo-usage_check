@@ -1,20 +1,15 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+
+/**
+ * Datei für das Template-Modul
+ *
+ * @version       1.0 / 2016-05-08
+ * @author        akrys
  */
+
 namespace akrys\redaxo\addon\UsageCheck\RexV4\Modules;
 
 require_once __DIR__.'/../../Modules/Templates.php';
-/**
- * Datei für ...
- *
- * @version       1.0 / 2016-05-08
- * @package       new_package
- * @subpackage    new_subpackage
- * @author        akrys
- */
 
 /**
  * Description of Templates
@@ -37,8 +32,8 @@ class Templates
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
 
-		$templateTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('template');
-		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article');
+		$templateTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('template');
+		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
 
 		$sql = <<<SQL
 SELECT

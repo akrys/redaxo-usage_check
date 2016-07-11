@@ -1,21 +1,13 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Datei für das Medienmodul
+ *
+ * @version       1.0 / 2016-05-05
+ * @author        akrys
  */
 namespace akrys\redaxo\addon\UsageCheck\RexV5\Modules;
 
 require_once __DIR__.'/../../Modules/Pictures.php';
-
-/**
- * Datei für ...
- *
- * @version       1.0 / 2016-05-05
- * @package       new_package
- * @subpackage    new_subpackage
- * @author        akrys
- */
 
 /**
  * Description of Pictures
@@ -45,8 +37,8 @@ class Pictures
 			return $tabels;
 		}
 
-		$yformTableTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('yform_table');
-		$yformFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('yform_field');
+		$yformTableTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('yform_table');
+		$yformFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('yform_field');
 
 		$xformtable = $rexSQL->getArray("show table status like '$yformTableTable'");
 		$xformfield = $rexSQL->getArray("show table status like '$yformFieldTable'");
@@ -90,9 +82,9 @@ SQL;
 	 */
 	protected function getPictureSQL($additionalSelect, $additionalJoins)
 	{
-		$mediaTable = \ akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('media');
-		$articleSliceTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article_slice');
-		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article');
+		$mediaTable = \ akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('media');
+		$articleSliceTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article_slice');
+		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
 
 		$sql = <<<SQL
 SELECT f.*,count(s.id) as count,
@@ -138,6 +130,13 @@ SQL;
 		return $sql;
 	}
 
+	/**
+	 * Holt ein Medium-Objekt mit Prüfung der Rechte
+	 *
+	 * @param array $item Idezes: category_id, filename
+	 * @return \rex_media
+	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
+	 */
 	public function getMedium($item)
 	{
 		$user = \rex::getUser();
@@ -185,7 +184,7 @@ SQL;
 		<p class="rex-tx1">
 			<a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>/<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a>
 		</p>
-		<p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_images_intro_text'); ?></p>
+		<p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_intro_text'); ?></p>
 
 		<?php
 	}
@@ -270,9 +269,9 @@ SQL;
 	{
 		$rexSQL = \rex_sql::factory();
 
-		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article');
-		$metainfoFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('metainfo_field');
-		$metainfoTypeTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('metainfo_type');
+		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
+		$metainfoFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('metainfo_field');
+		$metainfoTypeTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('metainfo_type');
 
 		$sql = <<<SQL
 select f.name, t.label as type

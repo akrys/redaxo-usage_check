@@ -1,22 +1,15 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Datei für das Modul "Module"
+ *
+ * @version       1.0 / 2015-08-09
+ * @author        akrys
  */
+
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
 require_once __DIR__.'/../Permission.php';
 
-/**
- * Datei für ...
- *
- * @version       1.0 / 2015-08-09
- * @package       new_package
- * @subpackage    new_subpackage
- * @author        akrys
- */
 
 /**
  * Description of Modules

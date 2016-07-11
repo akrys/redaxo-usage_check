@@ -1,18 +1,21 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Config-Datei
+ * @author akrys
  */
 namespace akrys\redaxo\addon\UsageCheck;
 
+/**
+ * Config-Klasse mit Konstanten für die Runtime
+ * @author akrys
+ */
 class Config
 {
 	/**
 	 * AddonID
-	 * @todo Addon registrieren um eine echte ID zu bekommen
 	 * @var int
+	 * @deprecated ID braucht es nur für Redaxo 4, daher kann auch Config::NAME genutzt werden
 	 */
 	const ID = 'usage_check';
 
@@ -33,7 +36,7 @@ class Config
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.0 Beta 5';
+	const VERSION = '1.0 Beta 6';
 
 	/**
 	 * release state

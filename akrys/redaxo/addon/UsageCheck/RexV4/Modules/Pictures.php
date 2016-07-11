@@ -1,21 +1,13 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Datei für das Medienmodul
+ *
+ * @version       1.0 / 2016-05-05
+ * @author        akrys
  */
 namespace akrys\redaxo\addon\UsageCheck\RexV4\Modules;
 
 require_once __DIR__.'/../../Modules/Pictures.php';
-
-/**
- * Datei für ...
- *
- * @version       1.0 / 2016-05-05
- * @package       new_package
- * @subpackage    new_subpackage
- * @author        akrys
- */
 
 /**
  * Description of Pictures
@@ -44,8 +36,8 @@ class Pictures
 			return $tables;
 		}
 
-		$xformTableTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('xform_table');
-		$xformFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('xform_field');
+		$xformTableTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('xform_table');
+		$xformFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('xform_field');
 
 		$xformtable = $rexSQL->getArray("show table status like '$xformTableTable'");
 		$xformfield = $rexSQL->getArray("show table status like '$xformFieldTable'");
@@ -93,9 +85,9 @@ SQL;
 //Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 // -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
 
-		$fileTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('file');
-		$articleSliceTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article_slice');
-		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article');
+		$fileTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('file');
+		$articleSliceTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article_slice');
+		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
 
 		$sql = <<<SQL
 SELECT f.*,count(s.id) as count,
@@ -141,6 +133,13 @@ SQL;
 		return $sql;
 	}
 
+	/**
+	 * Holt ein Medium-Objekt mit Prüfung der Rechte
+	 *
+	 * @param array $item Idezes: category_id, filename
+	 * @return \rex_media
+	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
+	 */
 	public function getMedium($item)
 	{
 		if (!$GLOBALS['REX']['USER']->isAdmin() && !$GLOBALS['REX']['USER']->hasPerm('media['.$item['category_id'].']')) {
@@ -186,7 +185,7 @@ SQL;
 		<p class="rex-tx1">
 			<a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a>
 		</p>
-		<p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_images_intro_text'); ?></p>
+		<p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_intro_text'); ?></p>
 
 		<?php
 	}
@@ -292,9 +291,9 @@ SQL;
 	{
 		$rexSQL = new \rex_sql;
 
-		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article');
-		$metainfoFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('62_params');
-		$metainfoTypeTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('62_type');
+		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
+		$metainfoFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('62_params');
+		$metainfoTypeTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('62_type');
 
 		$sql = <<<SQL
 select f.name, t.label as type

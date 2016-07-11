@@ -1,21 +1,20 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-namespace akrys\redaxo\addon\UsageCheck;
-
 /**
- * Datei für ...
+ * Datei für die Error-Klasse
  *
  * @version       1.0 / 2015-10-27
  * @author        akrys
  */
+namespace akrys\redaxo\addon\UsageCheck;
 
 /**
- * Description of Error
+ * Container für Fehlermeldungen
+ *
+ * Hier werden Fehler gesammelt, über die dann später iteriert werden kann.
+ *
+ * Implementiert den PHP-Iterator, so dass man über die Meldungen mit
+ * einem einfachen foreach durlaufen werden können.
  *
  * @author akrys
  */
@@ -39,6 +38,10 @@ class Error
 // <editor-fold defaultstate="collapsed" desc="Iterator Implementation">
 
 	/**
+	 * Move forward to next element
+	 *
+	 * @see \Iterator::next()
+	 * @link https://secure.php.net/manual/en/iterator.next.php
 	 *
 	 * @return int
 	 */
@@ -49,6 +52,10 @@ class Error
 	}
 
 	/**
+	 * Return the current element
+	 *
+	 * @see \Iterator::current()
+	 * @link https://secure.php.net/manual/en/iterator.current.php
 	 *
 	 * @return string
 	 */
@@ -61,7 +68,10 @@ class Error
 	}
 
 	/**
+	 * Rewind the Iterator to the first element
 	 *
+	 * @see \Iterator::rewind()
+	 * @link https://secure.php.net/manual/en/iterator.rewind.php
 	 */
 	public function rewind()
 	{
@@ -69,6 +79,10 @@ class Error
 	}
 
 	/**
+	 * Return the key of the current element
+	 *
+	 * @see \Iterator::key()
+	 * @link https://secure.php.net/manual/en/iterator.key.php
 	 *
 	 * @return int
 	 */
@@ -78,6 +92,10 @@ class Error
 	}
 
 	/**
+	 * Checks if current position is valid
+	 *
+	 * @see \Iterator::valid()
+	 * @link https://secure.php.net/manual/en/iterator.valid.php
 	 *
 	 * @return boolean
 	 */

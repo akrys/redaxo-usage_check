@@ -1,21 +1,13 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Datei für das Modul "Module"
+ *
+ * @version       1.0 / 2016-05-05
+ * @author        akrys
  */
 namespace akrys\redaxo\addon\UsageCheck\RexV5\Modules;
 
 require_once __DIR__.'/../../Modules/Modules.php';
-
-/**
- * Datei für ...
- *
- * @version       1.0 / 2016-05-05
- * @package       new_package
- * @subpackage    new_subpackage
- * @author        akrys
- */
 
 /**
  * Description of Pictures
@@ -36,9 +28,9 @@ class Modules
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
-		$moduleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('module');
-		$articleSliceTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article_slice');
-		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article');
+		$moduleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('module');
+		$articleSliceTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article_slice');
+		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
 
 		$sql = <<<SQL
 SELECT m.name,
@@ -77,7 +69,7 @@ SQL;
 		?>
 
 		<p class="rex-tx1"><a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>/<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
-		<p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module_intro_text'); ?></p>
+		<p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_intro_text'); ?></p>
 
 		<?php
 	}

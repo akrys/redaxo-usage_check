@@ -1,10 +1,7 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Frontend-Ausagbe für die Seite Tempalte
  */
-
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 
@@ -34,12 +31,12 @@ switch (rex_get('showinactive', 'string', "")) {
 		break;
 }
 
-echo RedaxoCall::rexTitle(Config::NAME_OUT.' / '.RedaxoCall::i18nMsg('akrys_usagecheck_template_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>');
+echo RedaxoCall::getAPI()->rexTitle(Config::NAME_OUT.' / '.RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>');
 $templates = akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
 $items = $templates->getTemplates($showAll, $showInactive);
 
 if ($items === false) {
-	echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_no_rights'), true);
+	echo RedaxoCall::getAPI()->errorMsg(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_no_rights'), true);
 	return;
 }
 ?>
@@ -53,15 +50,15 @@ if ($items === false) {
 <div style='clear:both'></div>
 
 <p class="rex-tx1">
-	<?php echo RedaxoCall::i18nMsg('akrys_usagecheck_template_intro_text'); ?><br />
+	<?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_intro_text'); ?><br />
 	<br />
 </p>
 
-<table class="<?php echo RedaxoCall::getTableClass() ?>">
+<table class="<?php echo RedaxoCall::getAPI()->getTableClass() ?>">
 	<thead>
 		<tr>
-			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_template_table_heading_name'); ?></th>
-			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_template_table_heading_functions'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_table_heading_name'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -76,7 +73,7 @@ if ($items === false) {
 					if ($item['active'] == 0) {
 						?>
 						<br />
-						(<?php echo RedaxoCall::i18nMsg('akrys_usagecheck_template_table_inactive'); ?>)
+						(<?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_table_inactive'); ?>)
 						<br />
 						<?php
 					}
@@ -88,22 +85,22 @@ if ($items === false) {
 
 					<?php
 					if ($item['articles'] === null && $item['templates'] === null) {
-						echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_not_used'));
+						echo RedaxoCall::getAPI()->errorMsg(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_msg_not_used'));
 					} else {
-						echo RedaxoCall::infoMsg(RedaxoCall::i18nMsg('akrys_usagecheck_template_msg_used'));
+						echo RedaxoCall::getAPI()->infoMsg(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_msg_used'));
 					}
 					?>
 
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
-							<strong><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_template_detail_heading'); ?></strong>
+							<strong><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_detail_heading'); ?></strong>
 							<ol>
 
-								<li><?php $templates->outputTemplateEdit($item, RedaxoCall::i18nMsg('akrys_usagecheck_template_linktext_edit_code')); ?></li>
+								<li><?php $templates->outputTemplateEdit($item, RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_linktext_edit_code')); ?></li>
 
 								<?php
 								if ($item['articles'] !== null) {
-									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_template_linktext_edit_article');
+									$linktextRaw = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_linktext_edit_article');
 									$articles = explode("\n", $item['articles']);
 									foreach ($articles as $article) {
 										$usage = explode("\t", $article);
@@ -135,12 +132,12 @@ if ($items === false) {
 
 								//Templates, die in Templates verwendert werden, betrifft
 								//nur die Coder, und das wären Admins
-								$hasPerm = RedaxoCall::isAdmin();
+								$hasPerm = RedaxoCall::getAPI()->isAdmin();
 								if ($hasPerm) {
 
 									if ($item['templates'] !== null) {
 										$templates = explode("\n", $item['templates']);
-										$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_template_linktext_edit_template');
+										$linktextRaw = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_linktext_edit_template');
 										foreach ($templates as $template) {
 											$usage = explode("\t", $template);
 

@@ -10,31 +10,31 @@ use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Pictures.php';
 $pictures = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
 
-echo RedaxoCall::rexTitle(Config::NAME_OUT.' / '.RedaxoCall::i18nMsg('akrys_usagecheck_images_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>');
+echo RedaxoCall::getAPI()->rexTitle(Config::NAME_OUT.' / '.RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>');
 
 $showAll = rex_get('showall', 'string', "");
 $items = $pictures->getPictures($showAll);
 
 if ($items === false) {
-	echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_no_rights'), true);
+	echo RedaxoCall::getAPI()->errorMsg(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_no_rights'), true);
 	return;
 }
 
-$showAllLinktext = RedaxoCall::i18nMsg('akrys_usagecheck_images_link_show_unused');
+$showAllLinktext = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_link_show_unused');
 $showAllParam = '';
 if (!$showAll) {
-	$showAllLinktext = RedaxoCall::i18nMsg('akrys_usagecheck_images_link_show_all');
+	$showAllLinktext = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_link_show_all');
 	$showAllParam = '&showall=true';
 }
 
 $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 ?>
 
-<table class="<?php echo RedaxoCall::getTableClass(); ?>">
+<table class="<?php echo RedaxoCall::getAPI()->getTableClass(); ?>">
 	<thead>
 		<tr>
-			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_images_table_heading_name'); ?></th>
-			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_images_table_heading_functions'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_table_heading_name'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -98,11 +98,11 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 
 					$errors = array();
 					if ($used === false) {
-						$errors[] = RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_not_used');
+						$errors[] = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_msg_not_used');
 					}
 
 					if (!$pictures->exists($item)) {
-						$errors[] = RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_not_found');
+						$errors[] = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_msg_not_found');
 					}
 
 					if (!$used) {
@@ -125,7 +125,7 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 						}
 
 						if ($used) {
-							$errors[] = RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_in_use');
+							$errors[] = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_msg_in_use');
 						}
 					}
 
@@ -140,22 +140,22 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 ERROR;
 							}
 						}
-						echo RedaxoCall::errorMsg($text, false);
+						echo RedaxoCall::getAPI()->errorMsg($text, false);
 					} else {
-						echo RedaxoCall::infoMsg(RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_used'), true);
+						echo RedaxoCall::getAPI()->infoMsg(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_msg_used'), true);
 					}
 					?>
 
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
-								<li><a href="index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>" target="_blank"><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit'); ?></a><br /></li>
+								<li><a href="index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>" target="_blank"><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_linktext_edit'); ?></a><br /></li>
 
 								<?php
 								if ($item['slice_data'] !== null) {
 
 									$usages = explode("\n", $item['slice_data']);
-									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit_in_slice');
+									$linktextRaw = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_linktext_edit_in_slice');
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
 
@@ -166,7 +166,7 @@ ERROR;
 										$clang = $articleData[3];
 										$ctype = $articleData[4];
 
-										$hasPerm = RedaxoCall::hasCategoryPerm($articleID);
+										$hasPerm = RedaxoCall::getAPI()->hasCategoryPerm($articleID);
 										if ($hasPerm) {
 
 											$linktext = $linktextRaw;
@@ -186,7 +186,7 @@ ERROR;
 								if ($item['metaArtIDs'] !== null) {
 
 									$usages = explode("\n", $item['metaArtIDs']);
-									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit_in_metadata_art');
+									$linktextRaw = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_linktext_edit_in_metadata_art');
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
 
@@ -194,8 +194,8 @@ ERROR;
 										$articleName = $articleData[1];
 										$clang = $articleData[2];
 
-										$hasPerm = RedaxoCall::hasCategoryPerm($articleID);
-										$href = RedaxoCall::getArticleMetaUrl($articleID, $clang);
+										$hasPerm = RedaxoCall::getAPI()->hasCategoryPerm($articleID);
+										$href = RedaxoCall::getAPI()->getArticleMetaUrl($articleID, $clang);
 										if ($hasPerm) {
 											$linktext = $linktextRaw;
 											$linktext = str_replace('$articleID$', $articleID, $linktext);
@@ -213,7 +213,7 @@ ERROR;
 								if ($item['metaCatIDs'] !== null) {
 
 									$usages = explode("\n", $item['metaCatIDs']);
-									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit_in_metadata_cat');
+									$linktextRaw = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_linktext_edit_in_metadata_cat');
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
 
@@ -225,7 +225,7 @@ ERROR;
 										$clang = $articleData[2];
 										$parentID = $articleData[3];
 
-										$hasPerm = RedaxoCall::hasCategoryPerm($articleID);
+										$hasPerm = RedaxoCall::getAPI()->hasCategoryPerm($articleID);
 
 										if ($hasPerm) {
 											$linktext = $linktextRaw;
@@ -245,7 +245,7 @@ ERROR;
 								if ($item['metaMedIDs'] !== null) {
 
 									$usages = explode("\n", $item['metaMedIDs']);
-									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit_in_metadata_med');
+									$linktextRaw = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_linktext_edit_in_metadata_med');
 									foreach ($usages as $usage) {
 										$mediaData = explode("\t", $usage);
 
@@ -256,7 +256,7 @@ ERROR;
 										$fileCatID = $mediaData[1];
 										$filename = $mediaData[2];
 
-										$hasPerm = RedaxoCall::hasMediaCategoryPerm($fileCatID);
+										$hasPerm = RedaxoCall::getAPI()->hasMediaCategoryPerm($fileCatID);
 										$hasPerm = true;
 
 										if ($hasPerm) {
@@ -275,7 +275,7 @@ ERROR;
 
 
 
-								$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit_in_xformtable');
+								$linktextRaw = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_linktext_edit_in_xformtable');
 								foreach ($items['fields'] as $table => $field) {
 
 									if (!isset($item[$table])) {
@@ -289,10 +289,10 @@ ERROR;
 										$linktext = str_replace('$entryID$', $id, $linktext);
 										$linktext = str_replace('$tableName$', $field[0]['table_out'], $linktext);
 
-										$hasPerm = RedaxoCall::hasTablePerm($table);
+										$hasPerm = RedaxoCall::getAPI()->hasTablePerm($table);
 
 										if ($hasPerm) {
-											$href = RedaxoCall::getXFormEditUrl($table, $id);
+											$href = RedaxoCall::getAPI()->getXFormEditUrl($table, $id);
 											if ($href == '') {
 												continue;
 											}
@@ -337,7 +337,7 @@ ERROR;
 
 								<small style="font-size:0.875em;">
 									<br />
-									<strong><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_images_category_header'); ?></strong>
+									<strong><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_category_header'); ?></strong>
 									<br />
 
 									<?php

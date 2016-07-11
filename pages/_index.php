@@ -1,17 +1,10 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
-
 //Fehlerausgabe
 if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
 	$text = '';
@@ -26,7 +19,7 @@ if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
 
 TEXT;
 
-		echo RedaxoCall::errorMsg($text, false);
+		echo RedaxoCall::getAPI()->errorMsg($text, false);
 	}
 }
 
@@ -52,6 +45,6 @@ $contentFile = __DIR__.'/_'.$subpage.'.php';
 if (file_exists($contentFile)) {
 	include $contentFile;
 } else {
-	echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile, true);
+	echo RedaxoCall::getAPI()->errorMsg(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile, true);
 }
 
