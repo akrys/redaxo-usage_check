@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpdocumentor>
 
+    <title>Redaxo Usage Check</title>
 	<parser>
-		<default-package-name>Redaxo Usage Check</default-package-name>
+		<default-package-name>Redaxo-UsageCheck</default-package-name>
 		<target>phpdoc/cache/</target>
 		<encoding>utf-8</encoding>
 		<extensions>
