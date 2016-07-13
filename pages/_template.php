@@ -139,10 +139,10 @@ if ($items === false) {
 								if ($hasPerm) {
 
 									if ($item['templates'] !== null) {
-										$templates = explode("\n", $item['templates']);
+										$templateData = explode("\n", $item['templates']);
 										$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_template_linktext_edit_template');
-										foreach ($templates as $template) {
-											$usage = explode("\t", $template);
+										foreach ($templateData as $templateItem) {
+											$usage = explode("\t", $templateItem);
 
 											$id = $usage[0];
 											$name = $usage[1];
