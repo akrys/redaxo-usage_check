@@ -57,15 +57,11 @@ abstract class Pictures
 	public function getPictures($show_all = false)
 	{
 
-		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_MEDIA)) {
+		if (!\akrys\redaxo\addon\UsageCheck\Permission::getVersion()->check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_MEDIA)) {
 			return false;
 		}
 
-		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			$rexSQL = new \rex_sql;
-		} else {
-			$rexSQL = \rex_sql::factory();
-		}
+		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
 
 		$sqlPartsXForm = $this->getXFormTableSQLParts();
 		$sqlPartsMeta = $this->getMetaTableSQLParts();
@@ -128,17 +124,7 @@ abstract class Pictures
 			'havingClauses' => array(),
 		);
 
-		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-				$rexSQL = new \rex_sql;
-				break;
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-				$rexSQL = \rex_sql::factory();
-				break;
-			default:
-				throw new \Exception('no database class created');
-				break;
-		}
+		\akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
 
 		$tables = $this->getXFormSQL($return);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Besonderheiten der unterschiedlichen Redaxo-Versionen abbilden.
  */
@@ -46,18 +47,25 @@ abstract class RedaxoCall
 	 * der enstprechenden Klasse für die jeweilige Redaxo-Version implementiert.
 	 *
 	 * @return RedaxoCall
+	 * @throws Exception\InvalidVersionException
 	 */
 	static function getAPI()
 	{
 		if (!isset(self::$api)) {
-			if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-				// Redaxo 4
-				require_once(__DIR__.'/RexV4/RedaxoCallAPI.php');
-				self::$api = new RexV4\RedaxoCallAPI();
-			} else {
-				// Redaxo 5
-				require_once(__DIR__.'/RexV5/RedaxoCallAPI.php');
-				self::$api = new RexV5\RedaxoCallAPI();
+			switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+					// Redaxo 4
+					require_once(__DIR__.'/RexV4/RedaxoCallAPI.php');
+					self::$api = new RexV4\RedaxoCallAPI();
+					break;
+				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+					// Redaxo 5
+					require_once(__DIR__.'/RexV5/RedaxoCallAPI.php');
+					self::$api = new RexV5\RedaxoCallAPI();
+					break;
+				default:
+					require_once(__DIR__.'/Exception/InvalidVersionException.php');
+					throw new Exception\InvalidVersionException();
 			}
 		}
 		return self::$api;
@@ -249,4 +257,11 @@ TEXT;
 	 * @return boolean
 	 */
 	public abstract function hasTablePerm($table);
+
+	/**
+	 * rex_sql instanz holen
+	 *
+	 * @return \rex_sql
+	 */
+	public abstract function getSQL();
 }

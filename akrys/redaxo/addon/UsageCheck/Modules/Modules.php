@@ -1,15 +1,14 @@
 <?php
+
 /**
  * Datei für das Modul "Module"
  *
  * @version       1.0 / 2015-08-09
  * @author        akrys
  */
-
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
 require_once __DIR__.'/../Permission.php';
-
 
 /**
  * Description of Modules
@@ -57,16 +56,12 @@ abstract class Modules
 	 */
 	public function getModules($show_all = false)
 	{
-		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_STRUCTURE)) {
+		if (!\akrys\redaxo\addon\UsageCheck\Permission::getVersion()->check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_STRUCTURE)) {
 			//\akrys\redaxo\addon\UsageCheck\Permission::PERM_MODUL
 			return false;
 		}
 
-		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			$rexSQL = new \rex_sql;
-		} else {
-			$rexSQL = \rex_sql::factory();
-		}
+		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
 
 		$where = '';
 		if (!$show_all) {

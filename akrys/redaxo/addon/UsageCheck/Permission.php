@@ -9,7 +9,7 @@ namespace akrys\redaxo\addon\UsageCheck;
  * User-Rechte für Zugriffe abfragen.
  *
  */
-class Permission
+abstract class Permission
 {
 	/**
 	 * Name des Rechts für Templates
@@ -48,111 +48,50 @@ class Permission
 	const PERM_STRUCTURE = 'structure';
 
 	/**
+	 * Schnittstellenversion zu Redaxo 4 oder 5
+	 * @var RedaxoCall
+	 */
+	private static $api;
+
+	/**
+	 * Rechteverwaltung nach Redaxo 4 oder Redaxo5 erstellen
+	 * @return Permission
+	 * @throws Exception\InvalidVersionException
+	 */
+	public static function getVersion()
+	{
+		if (!isset(self::$api)) {
+			switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
+				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+					// Redaxo 4
+					require_once __DIR__.'/RexV4/Permission.php';
+					self::$api = new RexV4\Permission();
+					break;
+				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+					// Redaxo 5
+					require_once __DIR__.'/RexV5/Permission.php';
+					self::$api = new RexV5\Permission();
+					break;
+				default:
+					require_once(__DIR__.'/Exception/InvalidVersionException.php');
+					throw new Exception\InvalidVersionException();
+			}
+		}
+		return self::$api;
+	}
+
+	/**
 	 * Prüft die Rechte für den aktuellen User.
 	 *
 	 * @param string $perm eine der PERM-Konstanten
 	 * @return boolean
 	 */
-	public static function check($perm)
-	{
-		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			$perm = self::mapPermRedaxo4($perm);
-			return $GLOBALS['REX']['USER']->isAdmin() || (isset($GLOBALS['REX']['USER']->pages[$perm]) && $GLOBALS['REX']['USER']->pages[$perm]->getPage()->checkPermission($GLOBALS['REX']['USER']));
-		} else {
-			$user = \rex::getUser();
-			$perm = self::mapPermRedaxo5($perm);
-			$complexPerm = $user->getComplexPerm($perm);
-
-			$hasSpecialPerm = true;
-			switch (get_class($complexPerm)) {
-				case 'rex_media_perm':
-					/* @var $complexPerm \rex_media_perm */
-					$hasSpecialPerm = $complexPerm->hasMediaPerm();
-					break;
-				case 'rex_structure_perm':
-					/* @var $complexPerm \rex_structure_perm */
-					$hasSpecialPerm = $complexPerm->hasStructurePerm();
-					break;
-				case 'rex_module_perm':
-//					/* @var $complexPerm \rex_module_perm */
-//					var_dump($complexPerm);
-//					$hasSpecialPerm = false;
-////					$hasSpecialPerm = $complexPerm->hasModulePerm();
-					break;
-				default:
-					throw new \Exception('"'.get_class($complexPerm).'": unknown permission class');
-					break;
-			}
-
-			return $user->isAdmin() || $user->hasPerm($perm) || $hasSpecialPerm /* || (isset($complexPerm) && $complexPerm->hasAll()) */;
-		}
-	}
+	public abstract function check($perm);
 
 	/**
-	 * Permission Mapping (Redaxo 5)
+	 * Permission Mapping
 	 * @param string $perm
 	 * @return string
 	 */
-	private static function mapPermRedaxo4($perm)
-	{
-		$return = '';
-		switch ($perm) {
-			case self::PERM_MEDIAPOOL:
-				$return = 'mediapool';
-				break;
-			case self::PERM_MEDIA:
-				$return = 'mediapool';
-				break;
-			case self::PERM_MODUL:
-				$return = 'module';
-				break;
-			case self::PERM_STRUCTURE:
-				$return = 'structure';
-				break;
-			case self::PERM_TEMPLATE:
-				$return = 'template';
-				break;
-			case self::PERM_XFORM:
-				$return = 'xform';
-				break;
-			default:
-				$return = $perm;
-				break;
-		}
-		return $return;
-	}
-
-	/**
-	 * Permission Mapping (Redaxo 5)
-	 * @param string $perm
-	 * @return string
-	 */
-	private static function mapPermRedaxo5($perm)
-	{
-		$return = '';
-		switch ($perm) {
-			case self::PERM_MEDIAPOOL:
-				$return = 'mediapool';
-				break;
-			case self::PERM_MEDIA:
-				$return = 'media';
-				break;
-			case self::PERM_MODUL:
-				$return = 'modules';
-				break;
-			case self::PERM_STRUCTURE:
-				$return = 'structure';
-				break;
-			case self::PERM_TEMPLATE:
-				$return = 'template';
-				break;
-			case self::PERM_XFORM:
-				$return = 'xform';
-				break;
-			default:
-				$return = $perm;
-				break;
-		}
-		return $return;
-	}
+	protected abstract function mapPerm($perm);
 }

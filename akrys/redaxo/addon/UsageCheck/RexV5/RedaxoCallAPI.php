@@ -224,4 +224,14 @@ MSG;
 	{
 		return \rex::getUser()->hasPerm('yform[]') && \rex::getUser()->hasPerm('yform[table:'.$table.']');
 	}
+
+	/**
+	 * rex_sql instanz holen
+	 *
+	 * @return \rex_sql
+	 */
+	public function getSQL()
+	{
+		return \rex_sql::factory();
+	}
 }

@@ -114,7 +114,7 @@ if ($items === false) {
 											$articleReID = $articleID;
 										}
 
-										$hastPerm = $templates->hasArticlePerm($articleID);
+										$hasPerm = $templates->hasArticlePerm($articleID);
 
 										if ($hasPerm) {
 											$href = 'index.php?page=structure&article_id='.$articleID.'&function=edit_art&category_id='.$articleReID.'&clang='.$clang;
@@ -137,7 +137,7 @@ if ($items === false) {
 
 									if ($item['templates'] !== null) {
 										$templateData = explode("\n", $item['templates']);
-										$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_template_linktext_edit_template');
+										$linktextRaw = RedaxoCall::getApi()->i18nMsg('akrys_usagecheck_template_linktext_edit_template');
 										foreach ($templateData as $templateItem) {
 											$usage = explode("\t", $templateItem);
 

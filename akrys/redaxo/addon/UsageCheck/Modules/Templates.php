@@ -58,7 +58,7 @@ abstract class Templates
 	public function getTemplates($show_all = false, $show_inactive = false)
 	{
 
-		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_STRUCTURE)) {
+		if (!\akrys\redaxo\addon\UsageCheck\Permission::getVersion()->check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_STRUCTURE)) {
 			//\akrys\redaxo\addon\UsageCheck\Permission::PERM_TEMPLATE
 			return false;
 		}
@@ -76,11 +76,7 @@ abstract class Templates
 			}
 		}
 
-		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			$rexSQL = new \rex_sql;
-		} else {
-			$rexSQL = \rex_sql::factory();
-		}
+		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
 
 		$where = '';
 		$having = '';

@@ -27,7 +27,8 @@ class Pictures
 	protected function getXFormSQL(&$return)
 	{
 		$tables = array();
-		$rexSQL = new \rex_sql;
+		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
+
 		if (!\OOAddon::isAvailable('xform')) {
 			return $tables;
 		}
@@ -289,7 +290,7 @@ SQL;
 	 */
 	protected function getMetaNames()
 	{
-		$rexSQL = new \rex_sql;
+		$rexSQL=  \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
 
 		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
 		$metainfoFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('62_params');

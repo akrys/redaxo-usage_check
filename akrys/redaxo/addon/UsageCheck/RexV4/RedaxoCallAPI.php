@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Datei für ...
  *
@@ -231,5 +230,15 @@ MSG;
 	{
 		/* @var $GLOBALS['REX']['USER'] \rex_user */
 		return $GLOBALS['REX']['USER']->hasPerm('xform[]') && $GLOBALS['REX']['USER']->hasPerm('xform[table:'.$table.']');
+	}
+
+	/**
+	 * rex_sql instanz holen
+	 *
+	 * @return \rex_sql
+	 */
+	public function getSQL()
+	{
+		return new \rex_sql;
 	}
 }
