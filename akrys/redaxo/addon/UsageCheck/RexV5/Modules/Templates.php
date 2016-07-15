@@ -119,7 +119,7 @@ SQL;
 	public function hasArticlePerm($articleID)
 	{
 		$user = \rex::getUser();
-		$perm = rex_structure_perm::get($user, 'structure');
+		$perm = \rex_structure_perm::get($user, 'structure');
 		$hasPerm = $perm->hasCategoryPerm($articleID);
 
 		return $hasPerm;
