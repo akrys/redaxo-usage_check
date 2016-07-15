@@ -64,15 +64,15 @@ class Permission
 			$hasSpecialPerm = true;
 			switch (get_class($complexPerm)) {
 				case 'rex_media_perm':
-					/* @var $complexPerm rex_media_perm */
+					/* @var $complexPerm \rex_media_perm */
 					$hasSpecialPerm = $complexPerm->hasMediaPerm();
 					break;
 				case 'rex_structure_perm':
-					/* @var $complexPerm rex_structure_perm */
+					/* @var $complexPerm \rex_structure_perm */
 					$hasSpecialPerm = $complexPerm->hasStructurePerm();
 					break;
 				case 'rex_module_perm':
-//					/* @var $complexPerm rex_module_perm */
+//					/* @var $complexPerm \rex_module_perm */
 //					var_dump($complexPerm);
 //					$hasSpecialPerm = false;
 ////					$hasSpecialPerm = $complexPerm->hasModulePerm();
