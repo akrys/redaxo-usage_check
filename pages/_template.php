@@ -117,7 +117,7 @@ if ($items === false) {
 											$articleReID = $articleID;
 										}
 
-										$hastPerm = $templates->hasArticlePerm($articleID);
+										$hasPerm = $templates->hasArticlePerm($articleID);
 
 										if ($hasPerm) {
 											$href = 'index.php?page=structure&article_id='.$articleID.'&function=edit_art&category_id='.$articleReID.'&clang='.$clang;
