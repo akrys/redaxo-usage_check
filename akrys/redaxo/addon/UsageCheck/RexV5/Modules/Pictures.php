@@ -146,7 +146,7 @@ SQL;
 			//keine Rechte am Medium
 		} else {
 			//Das Medium wird später gebraucht.
-			/* @var $medium rex_media */
+			/* @var $medium \rex_media */
 			$medium = \rex_media::get($item['filename']);
 			return $medium;
 		}
