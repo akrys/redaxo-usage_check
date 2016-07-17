@@ -8,7 +8,8 @@
  */
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
-require_once __DIR__.'/../Permission.php';
+use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
+use \akrys\redaxo\addon\UsageCheck\Permission;
 
 /**
  * Description of Templates
@@ -17,21 +18,33 @@ require_once __DIR__.'/../Permission.php';
  */
 abstract class Templates
 {
+	/**
+	 * Anzeigemodus für "Alle Anzeigen"
+	 * @var boolean
+	 */
+	private $showAll = false;
+
+	/**
+	 * Anzeigemodus für "Ianktive zeigen"
+	 * @var boolean
+	 */
+	private $showInactive = false;
 
 	/**
 	 * Redaxo-Spezifische Version wählen.
 	 * @return \akrys\redaxo\addon\UsageCheck\Modules\Templates
 	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public static function create()
 	{
 		$object = null;
-		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+		switch (RedaxoCall::getRedaxoVersion()) {
+			case RedaxoCall::REDAXO_VERSION_4:
 				require_once __DIR__.'/../RexV4/Modules/Templates.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV4\Modules\Templates();
 				break;
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+			case RedaxoCall::REDAXO_VERSION_5:
 				require_once __DIR__.'/../RexV5/Modules/Templates.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Templates();
 				break;
@@ -46,46 +59,68 @@ abstract class Templates
 	}
 
 	/**
+	 * Anzeigemodus "alle zeigen" umstellen
+	 * @param boolean $bln
+	 */
+	public function showAll($bln)
+	{
+		$this->showAll = (boolean) $bln;
+	}
+
+	/**
+	 * Anzeigemodus "inaktive zeigen" umstellen
+	 * @param boolean $bln
+	 */
+	public function showInactive($bln)
+	{
+		$this->showInactive = (boolean) $bln;
+	}
+
+	/**
 	 * Nicht genutze Module holen
 	 *
-	 * @param boolean $show_all
-	 * @param boolean $show_inactive
 	 * @return array
 	 *
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public function getTemplates($show_all = false, $show_inactive = false)
+	public function getTemplates()
 	{
 
-		if (!\akrys\redaxo\addon\UsageCheck\Permission::getVersion()->check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_STRUCTURE)) {
-			//\akrys\redaxo\addon\UsageCheck\Permission::PERM_TEMPLATE
+		$showAll = $this->showAll;
+		$showInactive = $this->showInactive;
+
+		if (!Permission::getVersion()->check(Permission::PERM_STRUCTURE)) {
+			//Permission::PERM_TEMPLATE
 			return false;
 		}
 
 		//Parameter-Korrektur, wenn der User KEIN Admin ist
 		//Der darf die inaktiven Templats nämlich sowieso nicht sehen.
-		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			if (!$GLOBALS['REX']['USER']->isAdmin() && $show_inactive === true) {
-				$show_inactive = false;
-			}
-		} else {
-			$user = \rex::getUser();
-			if (!$user->isAdmin() && $show_inactive === true) {
-				$show_inactive = false;
-			}
+		switch (RedaxoCall::getRedaxoVersion()) {
+			case RedaxoCall::REDAXO_VERSION_4:
+				if (!$GLOBALS['REX']['USER']->isAdmin() && $showInactive === true) {
+					$showInactive = false;
+				}
+				break;
+			case RedaxoCall::REDAXO_VERSION_5:
+				$user = \rex::getUser();
+				if (!$user->isAdmin() && $showInactive === true) {
+					$showInactive = false;
+				}
+				break;
 		}
 
-		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
+		$rexSQL = RedaxoCall::getAPI()->getSQL();
 
 		$where = '';
 		$having = '';
 
-		if (!$show_all) {
+		if (!$showAll) {
 			$having.='articles is null and templates is null';
 		}
-
-		if (!$show_inactive) {
+		if (!$showInactive) {
 			$where.='t.active = 1';
 		}
 
@@ -97,7 +132,13 @@ abstract class Templates
 			$having = 'having '.$having.' ';
 		}
 
-		return $rexSQL->getArray($this->getSQL($where, $having));
+		$sql = $this->getSQL($where, $having);
+		$return = $rexSQL->getArray($sql);
+		if (!$return) {
+			\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($rexSQL->getError());
+		}
+
+		return $return;
 	}
 
 	/**
@@ -106,7 +147,7 @@ abstract class Templates
 	 * @param string $having
 	 * @return string
 	 */
-	protected abstract function getSQL($where, $having);
+	abstract protected function getSQL($where, $having);
 
 	/**
 	 * Menüparameter ermittln
@@ -118,22 +159,26 @@ abstract class Templates
 	{
 		$return = array();
 
+		$text = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_unused');
 		$return['showAllParam'] = '';
 		$return['showAllParamCurr'] = '&showall=true';
-		$return['showAllLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_unused');
+		$return['showAllLinktext'] = $text;
 		if (!$showAll) {
+			$text = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_all');
 			$return['showAllParam'] = '&showall=true';
 			$return['showAllParamCurr'] = '';
-			$return['showAllLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_all');
+			$return['showAllLinktext'] = $text;
 		}
 
+		$text = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_active');
 		$return['showInactiveParam'] = '';
 		$return['showInactiveParamCurr'] = '&showinactive=true';
-		$return['showInactiveLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_active');
+		$return['showInactiveLinktext'] = $text;
 		if (!$showInactive) {
+			$text = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_active_inactive');
 			$return['showInactiveParam'] = '&showinactive=true';
 			$return['showInactiveParamCurr'] = '';
-			$return['showInactiveLinktext'] = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_active_inactive');
+			$return['showInactiveLinktext'] = $text;
 		}
 		return $return;
 	}
@@ -144,26 +189,26 @@ abstract class Templates
 	 * @param boolean $showAll
 	 * @param boolean $showInactive
 	 */
-	public abstract function outputMenu($subpage, $showAll, $showInactive);
+	abstract public function outputMenu($subpage, $showAll, $showInactive);
 
 	/**
 	 * Edit-Link generieren
 	 * @param array $item
-	 * @param string $linktext
+	 * @param string $linkText
 	 */
-	public abstract function outputTemplateEdit($item, $linktext);
+	abstract public function outputTemplateEdit($item, $linkText);
 
 	/**
 	 * ArticlePerm ermitteln
 	 * @param int $articleID
 	 * @return boolean
 	 */
-	public abstract function hasArticlePerm($articleID);
+	abstract public function hasArticlePerm($articleID);
 
 	/**
 	 * Template-EditLink zusammenbauen
-	 * @param int $id
+	 * @param int $tplID
 	 * @return string
 	 */
-	public abstract function getEditLink($id);
+	abstract public function getEditLink($tplID);
 }

@@ -24,7 +24,11 @@ class Permission
 	public function check($perm)
 	{
 		$permReal = $this->mapPerm($perm);
-		return $GLOBALS['REX']['USER']->isAdmin() || (isset($GLOBALS['REX']['USER']->pages[$permReal]) && $GLOBALS['REX']['USER']->pages[$permReal]->getPage()->checkPermission($GLOBALS['REX']['USER']));
+		return $GLOBALS['REX']['USER']->isAdmin() ||
+			(
+			isset($GLOBALS['REX']['USER']->pages[$permReal]) &&
+			$GLOBALS['REX']['USER']->pages[$permReal]->getPage()->checkPermission($GLOBALS['REX']['USER'])
+			);
 	}
 
 	/**

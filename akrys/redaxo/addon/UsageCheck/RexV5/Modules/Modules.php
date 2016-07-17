@@ -7,8 +7,6 @@
  */
 namespace akrys\redaxo\addon\UsageCheck\RexV5\Modules;
 
-require_once __DIR__.'/../../Modules/Modules.php';
-
 /**
  * Description of Pictures
  *
@@ -66,10 +64,12 @@ SQL;
 	 */
 	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
 	{
+		$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.$showAllParam;
+		$text = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_intro_text');
 		?>
 
-		<p class="rex-tx1"><a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>/<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
-		<p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_intro_text'); ?></p>
+		<p class="rex-tx1"><a href="<?php echo $url?>"><?php echo $showAllLinktext; ?></a></p>
+		<p class="rex-tx1"><?php echo $text; ?></p>
 
 		<?php
 	}
@@ -79,6 +79,7 @@ SQL;
 	 *
 	 * @param array $item
 	 * @return boolean
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function hasRights($item)
 	{

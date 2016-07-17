@@ -1,0 +1,20 @@
+{
+	"name": "akrys/redaxo-usage_check",
+	"description": "dev tools",
+	"license": "MIT",
+	"require": {
+		"php": ">=5.3.2",
+		"ext-mbstring": "*",
+		"lib-pcre": "*"
+	},
+	"require": {
+	},
+	"require-dev": {
+		"phpunit/phpunit": "*",
+		"phpdocumentor/phpdocumentor": "*",
+		"sebastian/phpcpd": "*",
+		"squizlabs/php_codesniffer": "*",
+		"phpmd/phpmd": "*",
+		"pdepend/pdepend": "*"
+	}
+}

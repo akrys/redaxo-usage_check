@@ -48,8 +48,9 @@ abstract class RedaxoCall
 	 *
 	 * @return RedaxoCall
 	 * @throws Exception\InvalidVersionException
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	static function getAPI()
+	public static function getAPI()
 	{
 		if (!isset(self::$api)) {
 			switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
@@ -76,13 +77,13 @@ abstract class RedaxoCall
 	 * @param string $text
 	 * @return string
 	 */
-	public abstract function i18nMsg($text);
+	abstract public function i18nMsg($text);
 
 	/**
 	 * Sprachname Code holen.
 	 * @return string
 	 */
-	public abstract function getLang();
+	abstract public function getLang();
 
 	/**
 	 * Tabelle mit Prefix versehen
@@ -98,14 +99,14 @@ abstract class RedaxoCall
 	 * Tabellenprefix holen
 	 * @return string
 	 */
-	public abstract function getTablePrefix();
+	abstract public function getTablePrefix();
 
 	/**
 	 * Titel ändern
 	 * @param string $title
 	 * @return string
 	 */
-	public abstract function rexTitle($title);
+	abstract public function rexTitle($title);
 
 	/**
 	 * Erkennung der Redaxo-Version
@@ -137,6 +138,7 @@ abstract class RedaxoCall
 	 *
 	 *
 	 * @return int
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public static function getRedaxoVersion()
 	{
@@ -148,27 +150,16 @@ abstract class RedaxoCall
 		//Redaxo 5?
 		if (is_callable('\\rex::getVersion')) {
 			$version = \rex::getVersion();
-			if (
-				version_compare('5.0', $version) <= 0 &&
-				version_compare('6.0', $version) > 0 // Bei redaxo4 waren auch quasi alle unter-versionen von der API her kompatibel untereinander.
-			) {
+
+			// Bei redaxo4 waren auch quasi alle unter-versionen von der API her kompatibel untereinander.
+			$versionCompare = version_compare('5.0', $version) <= 0 && version_compare('6.0', $version) > 0;
+
+			if ($versionCompare) {
 				return self::REDAXO_VERSION_5;
 			}
 		}
 		return self::REDAXO_VERSION_INVALID;
 	}
-
-	/**
-	 * Fehlermeldung generieren.
-	 *
-	 * Wurde nur mit dem Standard-Backend-Theme getestet.
-	 * Wer da etwas angepasst hat, läuft u.U. in Probleme.
-	 *
-	 * @param string $text
-	 * @param boolean $addTags
-	 * @return string
-	 */
-	public abstract function errorMsg($text, $addTags = true);
 
 	/**
 	 * Abgrenzungstags hinzugfügen.
@@ -179,11 +170,42 @@ abstract class RedaxoCall
 	 * @param string $text
 	 * @return string
 	 */
-	protected function addTags($text)
+	public function addTags($text)
 	{
 		return <<<TEXT
 <p><span>$text</span></p>
 TEXT;
+	}
+
+	/**
+	 * Fehlermeldung mit zusätzlichen Absatz-Tags
+	 * @param stromg $text
+	 * @return string
+	 */
+	public function errorMsgAddTags($text)
+	{
+		return $this->errorMsg($this->addTags($text));
+	}
+
+	/**
+	 * Fehlermeldung generieren.
+	 *
+	 * Wurde nur mit dem Standard-Backend-Theme getestet.
+	 * Wer da etwas angepasst hat, läuft u.U. in Probleme.
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	abstract public function errorMsg($text);
+
+	/**
+	 * Infomeldung ,ot zusätzlichen Absatz-Tags
+	 * @param string $text
+	 * @return string
+	 */
+	public function infoMsgAddTags($text)
+	{
+		return $this->infoMsg($this->addTags($text));
 	}
 
 	/**
@@ -193,10 +215,9 @@ TEXT;
 	 * Wer da etwas angepasst hat, läuft u.U. in Probleme.
 	 *
 	 * @param string $text
-	 * @param boolean $addTags
 	 * @return string
 	 */
-	public abstract function infoMsg($text, $addTags = true);
+	abstract public function infoMsg($text);
 
 	/**
 	 * Ausgabe-Kasten auf der Addon-Seite erstellen.
@@ -204,7 +225,7 @@ TEXT;
 	 * @param string $text
 	 * @return string
 	 */
-	public abstract function panelOut($title, $text);
+	abstract public function panelOut($title, $text);
 
 	/**
 	 * Table-Klasse anhand der Redaxo-Version ermittln.
@@ -213,13 +234,13 @@ TEXT;
 	 *
 	 * @return string
 	 */
-	public abstract function getTableClass();
+	abstract public function getTableClass();
 
 	/**
 	 * Abfrage, ob der aktuelle User Admin ist
 	 * @return boolean
 	 */
-	public abstract function isAdmin();
+	abstract public function isAdmin();
 
 	/**
 	 * Kategorie-Rechte an einem Artikel abfragen
@@ -227,7 +248,7 @@ TEXT;
 	 * @param type $articleID
 	 * @return boolean
 	 */
-	public abstract function hasCategoryPerm($articleID);
+	abstract public function hasCategoryPerm($articleID);
 
 	/**
 	 * Kategorie-Rechte an einem Medium abfragen
@@ -235,33 +256,33 @@ TEXT;
 	 * @param int $catID
 	 * @return boolean
 	 */
-	public abstract function hasMediaCategoryPerm($catID);
+	abstract public function hasMediaCategoryPerm($catID);
 
 	/**
 	 * URL zur Bearbeitung der Artikel-Metadaten.
 	 * @param int $articleID
 	 * @param int $clang
 	 */
-	public abstract function getArticleMetaUrl($articleID, $clang);
+	abstract public function getArticleMetaUrl($articleID, $clang);
 
 	/**
 	 * URL zur Bearbeitung der Artikel-Metadaten.
 	 * @param string $table
-	 * @param int $id
+	 * @param int $dataID
 	 */
-	public abstract function getXFormEditUrl($table, $id);
+	abstract public function getXFormEditUrl($table, $dataID);
 
 	/**
 	 * Abfrage, ob es Tabellenrechte gibt.
 	 * @param string $table
 	 * @return boolean
 	 */
-	public abstract function hasTablePerm($table);
+	abstract public function hasTablePerm($table);
 
 	/**
 	 * rex_sql instanz holen
 	 *
 	 * @return \rex_sql
 	 */
-	public abstract function getSQL();
+	abstract public function getSQL();
 }

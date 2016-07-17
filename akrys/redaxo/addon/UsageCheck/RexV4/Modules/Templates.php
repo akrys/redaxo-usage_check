@@ -1,15 +1,11 @@
 <?php
-
 /**
  * Datei für das Template-Modul
  *
  * @version       1.0 / 2016-05-08
  * @author        akrys
  */
-
 namespace akrys\redaxo\addon\UsageCheck\RexV4\Modules;
-
-require_once __DIR__.'/../../Modules/Templates.php';
 
 /**
  * Description of Templates
@@ -76,13 +72,21 @@ SQL;
 		?>
 
 		<ul>
-			<li><a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $param['showAllParam'].$param['showInactiveParamCurr']; ?>"><?php echo $param['showAllLinktext']; ?></a></li>
+			<?php
+			$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'&subpage='.$subpage.
+				$param['showAllParam'].$param['showInactiveParamCurr'];
+			?>
+
+			<li><a href="<?php echo $url; ?>"><?php echo $param['showAllLinktext']; ?></a></li>
 
 			<?php
 			if ($GLOBALS['REX']['USER']->isAdmin()) {
+				$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.
+					'&subpage='.$subpage.
+					$param['showAllParamCurr'].$param['showInactiveParam'];
 				?>
 
-				<li><a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $param['showAllParamCurr'].$param['showInactiveParam']; ?>"><?php echo $param['showInactiveLinktext'] ?></a></li>
+				<li><a href="<?php echo $url ?>"><?php echo $param['showInactiveLinktext'] ?></a></li>
 
 				<?php
 			}
@@ -96,13 +100,14 @@ SQL;
 	/**
 	 * Edit-Link generieren
 	 * @param array $item
-	 * @param string $linktext
+	 * @param string $linkText
 	 */
-	public function outputTemplateEdit($item, $linktext)
+	public function outputTemplateEdit($item, $linkText)
 	{
+		$url = 'index.php?page=template&subpage=&function=edit&template_id='.$item['id'];
 		?>
 
-		<a href="index.php?page=template&subpage=&function=edit&template_id=<?php echo $item['id']; ?>"><?php echo $linktext; ?></a>
+		<a href="<?php echo $url; ?>"><?php echo $linkText; ?></a>
 
 		<?php
 	}
@@ -117,7 +122,8 @@ SQL;
 		$hasPerm = false;
 
 		//$REX['USER']->hasPerm('article['.$articleID.']') ist immer false
-		if (/* $REX['USER']->hasPerm('article['.$articleID.']') || */ $GLOBALS['REX']['USER']->hasCategoryPerm($articleID)) {
+		/* $REX['USER']->hasPerm('article['.$articleID.']') || */
+		if ($GLOBALS['REX']['USER']->hasCategoryPerm($articleID)) {
 			$hasPerm = true;
 		}
 		return $hasPerm;
@@ -125,11 +131,11 @@ SQL;
 
 	/**
 	 * Template-EditLink zusammenbauen
-	 * @param int $id
+	 * @param int $tplID
 	 * @return string
 	 */
-	public function getEditLink($id)
+	public function getEditLink($tplID)
 	{
-		return 'index.php?page=template&subpage=&function=edit&template_id='.$id;
+		return 'index.php?page=template&subpage=&function=edit&template_id='.$tplID;
 	}
 }

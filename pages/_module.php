@@ -7,22 +7,29 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 
 /* @var $I18N \i18n */
 
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', true);
-
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
+
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Modules.php';
 $modules = \akrys\redaxo\addon\UsageCheck\Modules\Modules::create();
 
-$showAll = rex_get('showall', 'string', "");
-
-echo RedaxoCall::getAPI()->rexTitle(Config::NAME_OUT.' / '.RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>');
+switch (rex_get('showall', 'string', "")) {
+	case 'true':
+		$modules->showAll(true);
+		break;
+	case 'false':
+	default:
+		//
+		break;
+}
+$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_subpagetitle').
+	' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>';
+echo RedaxoCall::getAPI()->rexTitle($title);
 
 $items = $modules->getModules($showAll);
 
 if ($items === false) {
-	echo RedaxoCall::getAPI()->errorMsg(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_no_rights'), true);
+	echo RedaxoCall::getAPI()->errorMsgAddTags(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_no_rights'));
 	return;
 }
 
@@ -58,9 +65,11 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 
 					<?php
 					if ($item['slice_data'] === null) {
-						echo RedaxoCall::getAPI()->errorMsg(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_msg_not_used'));
+						$index = 'akrys_usagecheck_module_msg_not_used';
+						echo RedaxoCall::getAPI()->errorMsg(RedaxoCall::getAPI()->i18nMsg($index));
 					} else {
-						echo RedaxoCall::getAPI()->infoMsg(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_msg_used'));
+						$index = 'akrys_usagecheck_module_msg_used';
+						echo RedaxoCall::getAPI()->infoMsg(RedaxoCall::getAPI()->i18nMsg($index));
 					}
 					?>
 
@@ -70,9 +79,14 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 
 								<?php
 								if (RedaxoCall::getAPI()->isAdmin()) {
+									$url = 'index.php?page=module&subpage=&function=edit&modul_id='.$item['id'];
+									$index = 'akrys_usagecheck_module_linktext_edit_code';
+									$linkText = RedaxoCall::getAPI()->i18nMsg($index);
 									?>
 
-									<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
+									<li>
+										<a href="<?php echo $url; ?>"><?php echo $linkText; ?></a>
+									</li>
 
 									<?php
 								}
@@ -80,7 +94,8 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 								if ($item['slice_data'] !== null) {
 									$usages = explode("\n", $item['slice_data']);
 
-									$linktextRaw = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_linktext_edit_slice');
+									$index = 'akrys_usagecheck_module_linktext_edit_slice';
+									$linkTextRaw = RedaxoCall::getAPI()->i18nMsg($index);
 									foreach ($usages as $usageRaw) {
 										$usage = explode("\t", $usageRaw);
 										$sliceID = $usage[0];
@@ -94,13 +109,15 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 										$hasPerm = RedaxoCall::getAPI()->hasCategoryPerm($articleID);
 
 										if ($hasPerm) {
-											$href = 'index.php?page=content&article_id='.$articleID.'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.'&function=edit#slice'.$sliceID;
-											$linktext = $linktextRaw;
-											$linktext = str_replace('$sliceID$', $sliceID, $linktext);
-											$linktext = str_replace('$articleName$', $articleName, $linktext);
+											$href = 'index.php?page=content&article_id='.$articleID.
+												'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.
+												'&function=edit#slice'.$sliceID;
+											$linkText = $linkTextRaw;
+											$linkText = str_replace('$sliceID$', $sliceID, $linkText);
+											$linkText = str_replace('$articleName$', $articleName, $linkText);
 											?>
 
-											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+											<li><a href="<?php echo $href; ?>"><?php echo $linkText; ?></a></li>
 
 											<?php
 										}
@@ -112,10 +129,11 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 						</span>
 					</div>
 				</td>
+			</tr>
 
-				<?php
-			}
-			?>
+			<?php
+		}
+		?>
 
 	</tbody>
 </table>

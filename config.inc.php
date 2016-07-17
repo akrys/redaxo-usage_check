@@ -5,19 +5,21 @@
  */
 require_once __DIR__.'/general/config.inc.php';
 
-//REDAXO 4
+use \akrys\redaxo\addon\UsageCheck\Config;
+use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
+//REDAXO 4
 /* Addon Parameter */
 $REX['ADDON']['rxid'][Config::NAME] = Config::ID;
 $REX['ADDON']['name'][Config::NAME] = 'Usage Check';
 $REX['ADDON']['perm'][Config::NAME] = 'usage_check[]';
-$REX['ADDON']['version'][Config::NAME] = akrys\redaxo\addon\UsageCheck\Config::VERSION;
+$REX['ADDON']['version'][Config::NAME] = Config::VERSION;
 $REX['ADDON']['author'][Config::NAME] = 'Axel Krysztofiak <akrys@web.de>';
 $REX['ADDON']['supportpage'][Config::NAME] = 'https://github.com/akrys/redaxo-usage_check';
 $REX['PERM'][] = 'usage_check[]';
 
 //Eigener Error-Status
-$REX['ADDON']['errors'][akrys\redaxo\addon\UsageCheck\Config::NAME] = array();
+$REX['ADDON']['errors'][Config::NAME] = array();
 
 /*
  * I18N gibt es nicht am Frontend, nur im Backend
@@ -43,21 +45,6 @@ $REX['ADDON']['errors'][akrys\redaxo\addon\UsageCheck\Config::NAME] = array();
  *
  */
 if (isset($I18N)) {
-	require_once __DIR__.'/akrys/redaxo/addon/UsageCheck/LangFile.php';
-	try {
-		$langDE = new \akrys\redaxo\addon\UsageCheck\LangFile('de_de');
-		$langDE->createISOFile();
-	} catch (\akrys\redaxo\addon\UsageCheck\Exception\LangFileGenError $e) {
-		\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($e->getMessage());
-	}
-
-	try {
-		$langEN = new \akrys\redaxo\addon\UsageCheck\LangFile('en_gb');
-		$langEN->createISOFile();
-	} catch (\akrys\redaxo\addon\UsageCheck\Exception\LangFileGenError $e) {
-		\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($e->getMessage());
-	}
-
 	/*
 	 * Überestzungen hinzufügen
 	 * lege ich aktuell aber nur in UTF-8
@@ -66,15 +53,15 @@ if (isset($I18N)) {
 	 */
 	$I18N->appendFile($REX['INCLUDE_PATH'].'/addons/'.Config::NAME.'/lang/');
 
-	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME] = array();
-
-
-	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('overview', \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_overview'));
-	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('picture', \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_picture'));
-	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('module', \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module'));
+	$pages = array();
+	$pages[] = array('overview', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_overview'));
+	$pages[] = array('picture', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_picture'));
+	$pages[] = array('module', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module'));
 	if ($REX['USER'] && $REX['USER']->isAdmin()) {
-		$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('action', \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action'));
+		$pages[] = array('action', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action'));
 	}
-	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('template', \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_templates'));
-	$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('changelog', \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_changelog'));
+	$pages[] = array('template', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_templates'));
+	$pages[] = array('changelog', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_changelog'));
+
+	$REX['ADDON']['pages'][Config::NAME] = $pages;
 }

@@ -20,6 +20,7 @@ class Permission
 	 *
 	 * @param string $perm eine der PERM-Konstanten
 	 * @return boolean
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function check($perm)
 	{
@@ -48,7 +49,8 @@ class Permission
 				break;
 		}
 
-		return $user->isAdmin() || $user->hasPerm($permReal) || $hasSpecialPerm /* || (isset($complexPerm) && $complexPerm->hasAll()) */;
+		return $user->isAdmin() || $user->hasPerm($permReal) || $hasSpecialPerm;
+		/* || (isset($complexPerm) && $complexPerm->hasAll()) */
 	}
 
 	/**

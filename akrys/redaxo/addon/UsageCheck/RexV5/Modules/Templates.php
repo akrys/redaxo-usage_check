@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Datei für das Template-Modul
  *
@@ -7,8 +6,6 @@
  * @author        akrys
  */
 namespace akrys\redaxo\addon\UsageCheck\RexV5\Modules;
-
-require_once __DIR__.'/../../Modules/Templates.php';
 
 /**
  * Description of Templates
@@ -69,6 +66,7 @@ SQL;
 	 * @param string $subpage
 	 * @param boolean $showAll
 	 * @param boolean $showInactive
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function outputMenu($subpage, $showAll, $showInactive)
 	{
@@ -76,14 +74,21 @@ SQL;
 		?>
 
 		<ul>
-			<li><a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>/<?php echo $subpage; ?><?php echo $param['showAllParam'].$param['showInactiveParamCurr']; ?>"><?php echo $param['showAllLinktext']; ?></a></li>
+			<?php
+			$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.
+				$subpage.$param['showAllParam'].$param['showInactiveParamCurr'];
+			?>
+
+			<li><a href="<?php echo $url ?>"><?php echo $param['showAllLinktext']; ?></a></li>
 
 			<?php
 			$user = \rex::getUser();
 			if ($user->isAdmin()) {
+				$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
+					$param['showAllParamCurr'].$param['showInactiveParam'];
 				?>
 
-				<li><a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>/<?php echo $subpage; ?><?php echo $param['showAllParamCurr'].$param['showInactiveParam']; ?>"><?php echo $param['showInactiveLinktext'] ?></a></li>
+				<li><a href="<?php echo $url; ?>"><?php echo $param['showInactiveLinktext'] ?></a></li>
 
 				<?php
 			}
@@ -97,15 +102,17 @@ SQL;
 	/**
 	 * Edit-Link generieren
 	 * @param array $item
-	 * @param string $linktext
+	 * @param string $linkText
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public function outputTemplateEdit($item, $linktext)
+	public function outputTemplateEdit($item, $linkText)
 	{
 		$user = \rex::getUser();
 		if ($user->isAdmin()) {
+			$url = 'index.php?page=template&function=edit&template_id='.$item['id'];
 			?>
 
-			<a href="index.php?page=template&function=edit&template_id=<?php echo $item['id']; ?>"><?php echo $linktext; ?></a>
+			<a href="<?php echo $url; ?>"><?php echo $linkText; ?></a>
 
 			<?php
 		}
@@ -115,6 +122,7 @@ SQL;
 	 * ArticlePerm ermitteln
 	 * @param int $articleID
 	 * @return boolean
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function hasArticlePerm($articleID)
 	{
@@ -127,11 +135,11 @@ SQL;
 
 	/**
 	 * Template-EditLink zusammenbauen
-	 * @param int $id
+	 * @param int $tplID
 	 * @return string
 	 */
-	public function getEditLink($id)
+	public function getEditLink($tplID)
 	{
-		return 'index.php?page=templates&function=edit&template_id='.$id;
+		return 'index.php?page=templates&function=edit&template_id='.$tplID;
 	}
 }

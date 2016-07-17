@@ -8,8 +8,6 @@
  */
 namespace akrys\redaxo\addon\UsageCheck;
 
-require_once __DIR__.'/RedaxoCall.php';
-
 /**
  * Description of LangFile
  *
@@ -36,6 +34,7 @@ class LangFile
 	 * ISO file creation, if needed
 	 * @return boolean
 	 * @throws Exception\LangFileGenError
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function createISOFile()
 	{
@@ -66,21 +65,23 @@ class LangFile
 		$isoFile = $langPath.$this->lang.'.lang';
 		$utfFile = $langPath.$this->lang.'_utf8.lang';
 
-		if (!file_exists($isoFile)) {
-			$timeISO = 0;
-		} else {
-			$timeISO = filemtime($isoFile);
-		}
+		$timeISO = file_exists($isoFile) ? filemtime($isoFile) : 0;
 
 		$timeUTF = filemtime($utfFile);
 
 		if ($timeUTF > $timeISO) {
 			if (!is_writeable($langPath) && !file_exists($isoFile)) {
+				$text = '"lang"-Directory not writable. Language file cannot be created '.
+					'(Redaxo 4 ISO-8859-1 file or Redaxo 5 UTF-8)';
+
 				require_once __DIR__.'/Exception/LangFileGenError.php';
-				throw new Exception\LangFileGenError('"lang"-Directory not writable. Language file cannot be created (Redaxo 4 ISO-8859-1 file or Redaxo 5 UTF-8)');
-			} else if (file_exists($isoFile) && !is_writeable($isoFile)) {
+				throw new Exception\LangFileGenError($text);
+			} elseif (file_exists($isoFile) && !is_writeable($isoFile)) {
+				$text = 'Language files cannot be updated as they are not writable '.
+					'(Redaxo 4 ISO-8859-1 file or Redaxo 5 UTF-8)';
+
 				require_once __DIR__.'/Exception/LangFileGenError.php';
-				throw new Exception\LangFileGenError('Language files cannot be updated as they are not writable (Redaxo 4 ISO-8859-1 file or Redaxo 5 UTF-8)');
+				throw new Exception\LangFileGenError($text);
 			}
 
 			$content = file_get_contents($utfFile);

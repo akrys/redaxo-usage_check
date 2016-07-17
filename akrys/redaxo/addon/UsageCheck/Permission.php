@@ -57,6 +57,7 @@ abstract class Permission
 	 * Rechteverwaltung nach Redaxo 4 oder Redaxo5 erstellen
 	 * @return Permission
 	 * @throws Exception\InvalidVersionException
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public static function getVersion()
 	{
@@ -86,12 +87,12 @@ abstract class Permission
 	 * @param string $perm eine der PERM-Konstanten
 	 * @return boolean
 	 */
-	public abstract function check($perm);
+	abstract public function check($perm);
 
 	/**
 	 * Permission Mapping
 	 * @param string $perm
 	 * @return string
 	 */
-	protected abstract function mapPerm($perm);
+	abstract protected function mapPerm($perm);
 }

@@ -32,6 +32,7 @@ class RedaxoCallAPI
 	 * Übersetzung holen
 	 * @param string $text
 	 * @return string
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function i18nMsg($text)
 	{
@@ -41,6 +42,7 @@ class RedaxoCallAPI
 	/**
 	 * Sprachname Code holen.
 	 * @return string
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function getLang()
 	{
@@ -50,6 +52,7 @@ class RedaxoCallAPI
 	/**
 	 * Tabellenprefix holen
 	 * @return string
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function getTablePrefix()
 	{
@@ -60,6 +63,7 @@ class RedaxoCallAPI
 	 * Titel ändern
 	 * @param string $title
 	 * @return string
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function rexTitle($title)
 	{
@@ -73,17 +77,10 @@ class RedaxoCallAPI
 	 * Wer da etwas angepasst hat, läuft u.U. in Probleme.
 	 *
 	 * @param string $text
-	 * @param boolean $addTags
 	 * @return string
 	 */
-	public function errorMsg($text, $addTags = true)
+	public function errorMsg($text)
 	{
-		$out = '';
-
-		if ($addTags) {
-			$text = $this->addTags($text);
-		}
-
 		$out = <<<MSG
 
 <div class="alert alert-danger">
@@ -101,17 +98,10 @@ MSG;
 	 * Wer da etwas angepasst hat, läuft u.U. in Probleme.
 	 *
 	 * @param string $text
-	 * @param boolean $addTags
 	 * @return string
 	 */
-	public function infoMsg($text, $addTags = true)
+	public function infoMsg($text)
 	{
-		$out = '';
-
-		if ($addTags) {
-			$text = $this->addTags($text);
-		}
-
 		$out = <<<MSG
 
 <div class="alert alert-success">
@@ -158,6 +148,7 @@ MSG;
 	/**
 	 * Abfrage, ob der aktuelle User Admin ist
 	 * @return boolean
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function isAdmin()
 	{
@@ -174,6 +165,7 @@ MSG;
 	 * @global type $REX
 	 * @param type $articleID
 	 * @return boolean
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function hasCategoryPerm($articleID)
 	{
@@ -187,6 +179,7 @@ MSG;
 	 * @global array $REX
 	 * @param int $catID
 	 * @return boolean
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function hasMediaCategoryPerm($catID)
 	{
@@ -208,17 +201,18 @@ MSG;
 	/**
 	 * URL zur Bearbeitung der Artikel-Metadaten.
 	 * @param string $table
-	 * @param int $id
+	 * @param int $dataID
 	 */
-	public function getXFormEditUrl($table, $id)
+	public function getXFormEditUrl($table, $dataID)
 	{
-		return 'index.php?page=yform/manager/data_edit&table_name='.$table.'&data_id='.$id.'&func=edit';
+		return 'index.php?page=yform/manager/data_edit&table_name='.$table.'&data_id='.$dataID.'&func=edit';
 	}
 
 	/**
 	 * Abfrage, ob es Tabellenrechte gibt.
 	 * @param string $table
 	 * @return boolean
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function hasTablePerm($table)
 	{
@@ -229,6 +223,7 @@ MSG;
 	 * rex_sql instanz holen
 	 *
 	 * @return \rex_sql
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function getSQL()
 	{

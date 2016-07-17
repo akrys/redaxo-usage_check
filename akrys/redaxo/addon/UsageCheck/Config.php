@@ -56,4 +56,5 @@ class Config
 	 */
 	const RELEASE_STATE_DEV = 0;
 
+	//phpcs glücklich machen
 }

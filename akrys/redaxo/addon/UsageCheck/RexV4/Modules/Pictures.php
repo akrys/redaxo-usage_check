@@ -7,8 +7,6 @@
  */
 namespace akrys\redaxo\addon\UsageCheck\RexV4\Modules;
 
-require_once __DIR__.'/../../Modules/Pictures.php';
-
 /**
  * Description of Pictures
  *
@@ -23,6 +21,7 @@ class Pictures
 	 *
 	 * @return array
 	 * @param array &$return
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	protected function getXFormSQL(&$return)
 	{
@@ -84,7 +83,7 @@ SQL;
 	{
 //Keine integer oder Datumswerte in einem concat!
 //Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
-// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
+//-> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
 
 		$fileTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('file');
 		$articleSliceTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article_slice');
@@ -140,18 +139,20 @@ SQL;
 	 * @param array $item Idezes: category_id, filename
 	 * @return \rex_media
 	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function getMedium($item)
 	{
-		if (!$GLOBALS['REX']['USER']->isAdmin() && !$GLOBALS['REX']['USER']->hasPerm('media['.$item['category_id'].']')) {
+		if (!$GLOBALS['REX']['USER']->isAdmin() &&
+			!$GLOBALS['REX']['USER']->hasPerm('media['.$item['category_id'].']')) {
 			//keine Rechte am Medium
-		} else {
-			//Das Medium wird später gebraucht.
-			/* @var $medium OOMedia */
-			$medium = \OOMedia::getMediaByFileName($item['filename']);
-			return $medium;
+			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
 		}
-		throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
+
+		//Das Medium wird später gebraucht.
+		/* @var $medium OOMedia */
+		$medium = \OOMedia::getMediaByFileName($item['filename']);
+		return $medium;
 	}
 
 	/**
@@ -163,9 +164,10 @@ SQL;
 	public function outputImagePreview($item)
 	{
 		if (stristr($item['filetype'], 'image/')) {
+			$url = 'index.php?rex_img_type=rex_mediapool_preview&rex_img_file='.$item['filename'];
 			?>
 
-			<img alt="" src="index.php?rex_img_type=rex_mediapool_preview&rex_img_file=<?php echo $item['filename']; ?>" style="max-width:150px;max-height: 150px;" />
+			<img alt="" src="<?php echo $url ?>" style="max-width:150px;max-height: 150px;" />
 			<br /><br />
 
 			<?php
@@ -173,27 +175,20 @@ SQL;
 	}
 
 	/**
-	 * Menü ausgeben
-	 * @return void
+	 * Menü URL generieren
+	 * @return string
 	 * @param string $subpage
 	 * @param string $showAllParam
-	 * @param string $showAllLinktext
 	 */
-	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
+	public function getMeuLink($subpage, $showAllParam)
 	{
-		?>
-
-		<p class="rex-tx1">
-			<a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a>
-		</p>
-		<p class="rex-tx1"><?php echo \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_intro_text'); ?></p>
-
-		<?php
+		return 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'&subpage='.$subpage.$showAllParam;
 	}
 
 	/**
-	 * SQL Parts für die Metadaten generieren
+	 * SQL Parts für die Metadaten innerhalb von Redaxo4 generieren
 	 * @return array
+	 * @SuppressWarnings(PHPMD.ElseExpression)
 	 */
 	protected function getMetaTableSQLParts()
 	{
@@ -211,7 +206,7 @@ SQL;
 		$names = $this->getMetaNames();
 
 		foreach ($names as $name) {
-			foreach ($GLOBALS['REX']['ADDON']['prefixes']['metainfo'] as $key => $value) {
+			foreach ($GLOBALS['REX']['ADDON']['prefixes']['metainfo'] as $value) {
 				$continue = true;
 				switch ($value) {
 					case 'art_':
@@ -236,7 +231,7 @@ SQL;
 						}
 						break;
 					default:
-
+						// nothing yet
 						break;
 				}
 				if ($continue) {
@@ -263,22 +258,35 @@ SQL;
 		if ($joinArtMeta == '') {
 			$return['additionalSelect'].=',null as metaArtIDs '.PHP_EOL;
 		} else {
-			$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on (rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
-			$return['additionalSelect'].=',group_concat(distinct concat(rex_article_art_meta.id,"\t",rex_article_art_meta.name,"\t",rex_article_art_meta.clang) Separator "\n") as metaArtIDs '.PHP_EOL;
+			$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on '.
+				'(rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
+			$return['additionalSelect'].=',group_concat(distinct concat('.
+				'rex_article_art_meta.id,"\t",'.
+				'rex_article_art_meta.name,"\t",'.
+				'rex_article_art_meta.clang) Separator "\n") as metaArtIDs '.PHP_EOL;
 		}
 
 		if ($joinCatMeta == '') {
 			$return['additionalSelect'].=',null as metaCatIDs '.PHP_EOL;
 		} else {
-			$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on (rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
-			$return['additionalSelect'].=',group_concat(distinct concat(rex_article_cat_meta.id,"\t",rex_article_cat_meta.catname,"\t",rex_article_cat_meta.clang,"\t",rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
+			$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on '.
+				'(rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
+			$return['additionalSelect'].=',group_concat(distinct concat('.
+				'rex_article_cat_meta.id,"\t",'.
+				'rex_article_cat_meta.catname,"\t",'.
+				'rex_article_cat_meta.clang,"\t",'.
+				'rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
 		}
 
 		if ($joinMedMeta == '') {
 			$return['additionalSelect'].=',null as metaMedIDs '.PHP_EOL;
 		} else {
-			$return['additionalJoins'].='LEFT join rex_file as rex_article_med_meta on (rex_article_med_meta.file_id is not null and ('.$joinMedMeta.'))'.PHP_EOL;
-			$return['additionalSelect'].=',group_concat(distinct concat(rex_article_med_meta.file_id,"\t",rex_article_med_meta.category_id,"\t",rex_article_med_meta.filename) Separator "\n") as metaMedIDs '.PHP_EOL;
+			$return['additionalJoins'].='LEFT join rex_file as rex_article_med_meta on '.
+				'(rex_article_med_meta.file_id is not null and ('.$joinMedMeta.'))'.PHP_EOL;
+			$return['additionalSelect'].=',group_concat(distinct concat('.
+				'rex_article_med_meta.file_id,"\t",'.
+				'rex_article_med_meta.category_id,"\t",'.
+				'rex_article_med_meta.filename) Separator "\n") as metaMedIDs '.PHP_EOL;
 		}
 
 		return $return;
@@ -290,9 +298,9 @@ SQL;
 	 */
 	protected function getMetaNames()
 	{
-		$rexSQL=  \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
+		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
 
-		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
+//		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
 		$metainfoFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('62_params');
 		$metainfoTypeTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('62_type');
 

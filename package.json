@@ -1,0 +1,14 @@
+{
+	"name": "redaxo-usage_check",
+	"description": "",
+	"dependencies": {
+		"gulp": "*"
+	},
+	"devDependencies": {
+		"gulp": "*",
+		"phplint": "*",
+		"gulp-shell": "*",
+		"gulp-phpunit": "*",
+		"gulp-phpcs": "*"
+	}
+}

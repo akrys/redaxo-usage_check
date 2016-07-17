@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Datei für Medienmodul
  *
@@ -8,7 +7,8 @@
  */
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
-require_once __DIR__.'/../Permission.php';
+use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
+use \akrys\redaxo\addon\UsageCheck\Permission;
 
 /**
  * Description of Pictures
@@ -17,21 +17,27 @@ require_once __DIR__.'/../Permission.php';
  */
 abstract class Pictures
 {
+	/**
+	 * Anzeigemodus für "Alle Anzeigen"
+	 * @var boolean
+	 */
+	private $showAll = false;
 
 	/**
 	 * Redaxo-Spezifische Version wählen.
 	 * @return \akrys\redaxo\addon\UsageCheck\Modules\Pictures
 	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public static function create()
 	{
 		$object = null;
-		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
+		switch (RedaxoCall::getRedaxoVersion()) {
+			case RedaxoCall::REDAXO_VERSION_4:
 				require_once __DIR__.'/../RexV4/Modules/Pictures.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV4\Modules\Pictures();
 				break;
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
+			case RedaxoCall::REDAXO_VERSION_5:
 				require_once __DIR__.'/../RexV5/Modules/Pictures.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures();
 				break;
@@ -46,22 +52,31 @@ abstract class Pictures
 	}
 
 	/**
+	 * Anzeigemodus "alle zeigen" umstellen
+	 * @param boolean $bln
+	 */
+	public function showAll($bln)
+	{
+		$this->showAll = (boolean) $bln;
+	}
+
+	/**
 	 * Nicht genutze Bilder holen
 	 *
-	 * @param boolean $show_all
 	 * @return array
 	 *
 	 * @todo bei Instanzen mit vielen Dateien im Medienpool testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
-	public function getPictures($show_all = false)
+	public function getPictures()
 	{
+		$showAll = $this->showAll;
 
-		if (!\akrys\redaxo\addon\UsageCheck\Permission::getVersion()->check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_MEDIA)) {
+		if (!Permission::getVersion()->check(Permission::PERM_MEDIA)) {
 			return false;
 		}
 
-		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
+		$rexSQL = RedaxoCall::getAPI()->getSQL();
 
 		$sqlPartsXForm = $this->getXFormTableSQLParts();
 		$sqlPartsMeta = $this->getMetaTableSQLParts();
@@ -84,14 +99,14 @@ abstract class Pictures
 
 		$sql = $this->getPictureSQL($additionalSelect, $additionalJoins);
 
-		if (!$show_all) {
+		if (!$showAll) {
 			$sql.='where s.id is null ';
 			$havingClauses[] = 'metaCatIDs is null and metaArtIDs is null and metaMedIDs is null';
 		}
 
 		$sql.='group by f.filename ';
 
-		if (!$show_all && isset($havingClauses) && count($havingClauses) > 0) {
+		if (!$showAll && isset($havingClauses) && count($havingClauses) > 0) {
 			$sql.='having '.implode(' and ', $havingClauses).'';
 		}
 
@@ -102,13 +117,13 @@ abstract class Pictures
 	 * SQL Parts für die Metadaten generieren
 	 * @return array
 	 */
-	protected abstract function getMetaTableSQLParts();
+	abstract protected function getMetaTableSQLParts();
 
 	/**
 	 * Meta-Bildfelder ermitteln.
 	 * @return array
 	 */
-	protected abstract function getMetaNames();
+	abstract protected function getMetaNames();
 
 	/**
 	 * SQL Partsfür XForm/YForm generieren.
@@ -124,13 +139,18 @@ abstract class Pictures
 			'havingClauses' => array(),
 		);
 
-		\akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
+		RedaxoCall::getAPI()->getSQL();
 
 		$tables = $this->getXFormSQL($return);
 
 		$xTables = array();
 		foreach ($tables as $table) {
-			$xTables[$table['table_name']][] = array('name' => $table['f1'], 'name_out' => $table['f2'], 'table_out' => $table['table_out'], 'type' => $table['type_name']);
+			$xTables[$table['table_name']][] = array(
+				'name' => $table['f1'],
+				'name_out' => $table['f2'],
+				'table_out' => $table['table_out'],
+				'type' => $table['type_name']
+			);
 		}
 
 		foreach ($xTables as $tableName => $fields) {
@@ -170,7 +190,7 @@ abstract class Pictures
 	 * @return array
 	 * @param array &$return
 	 */
-	protected abstract function getXFormSQL(&$return);
+	abstract protected function getXFormSQL(&$return);
 
 	/**
 	 * Dateigröße ermitteln.
@@ -184,18 +204,18 @@ abstract class Pictures
 	public function getSizeOut($item)
 	{
 		$size = $item['filesize'];
-		$i = 0;
+		$index = 0;
 
 		while ($size > 1024) {
-			$i++;
+			$index++;
 			$size/=1024;
-			if ($i > 6) {
-//WTF????
+			if ($index > 6) {
+				//WTF????
 				break;
 			}
 		}
 		$value = round($size, 2);
-		switch ($i) {
+		switch ($index) {
 			case 0:
 				$unit = 'B';
 				break;
@@ -232,7 +252,7 @@ abstract class Pictures
 	 * @param array $item
 	 * @return boolean
 	 */
-	public abstract function exists($item);
+	abstract public function exists($item);
 
 	/**
 	 * Spezifisches SQL
@@ -240,7 +260,7 @@ abstract class Pictures
 	 * @param string $additionalJoins
 	 * @return string
 	 */
-	protected abstract function getPictureSQL($additionalSelect, $additionalJoins);
+	abstract protected function getPictureSQL($additionalSelect, $additionalJoins);
 
 	/**
 	 * Holt ein Medium-Objekt mit Prüfung der Rechte
@@ -249,7 +269,7 @@ abstract class Pictures
 	 * @return \rex_media
 	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
 	 */
-	public abstract function getMedium($item);
+	abstract public function getMedium($item);
 
 	/**
 	 * Bildvorschau ausgeben
@@ -257,7 +277,15 @@ abstract class Pictures
 	 * @return void
 	 * @param array $item Ein Element der Ergebnismenge
 	 */
-	public abstract function outputImagePreview($item);
+	abstract public function outputImagePreview($item);
+
+	/**
+	 * Menü URL generieren
+	 * @return string
+	 * @param string $subpage
+	 * @param string $showAllParam
+	 */
+	abstract public function getMeuLink($subpage, $showAllParam);
 
 	/**
 	 * Menü ausgeben
@@ -266,5 +294,18 @@ abstract class Pictures
 	 * @param string $showAllParam
 	 * @param string $showAllLinktext
 	 */
-	public abstract function outputMenu($subpage, $showAllParam, $showAllLinktext);
+	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
+	{
+		$url = $this->getMeuLink($subpage, $showAllParam);
+
+		$text = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_intro_text');
+		?>
+
+		<p class="rex-tx1">
+			<a href="<?php echo $url; ?>"><?php echo $showAllLinktext; ?></a>
+		</p>
+		<p class="rex-tx1"><?php echo $text ?></p>
+
+		<?php
+	}
 }

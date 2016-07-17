@@ -10,6 +10,8 @@
  */
 namespace akrys\redaxo\addon\UsageCheck\RexV4;
 
+use akrys\redaxo\addon\UsageCheck\Config;
+
 /**
  * Description of API
  *
@@ -64,17 +66,10 @@ class RedaxoCallAPI
 	 * Wer da etwas angepasst hat, läuft u.U. in Probleme.
 	 *
 	 * @param string $text
-	 * @param boolean $addTags
 	 * @return string
 	 */
-	public function errorMsg($text, $addTags = true)
+	public function errorMsg($text)
 	{
-		$out = '';
-
-		if ($addTags) {
-			$text = $this->addTags($text);
-		}
-
 		$out = <<<MSG
 
 <div class="rex-message">
@@ -95,17 +90,10 @@ MSG;
 	 * Wer da etwas angepasst hat, läuft u.U. in Probleme.
 	 *
 	 * @param string $text
-	 * @param boolean $addTags
 	 * @return string
 	 */
-	public function infoMsg($text, $addTags = true)
+	public function infoMsg($text)
 	{
-		$out = '';
-
-		if ($addTags) {
-			$text = $this->addTags($text);
-		}
-
 		$out = <<<MSG
 
 <div class="rex-message">
@@ -176,7 +164,8 @@ MSG;
 	{
 		$hasPerm = false;
 		//$GLOBALS['REX']['USER']->hasPerm('article['.$articleID.']') ist immer false
-		if (/* $GLOBALS['REX']['USER']->hasPerm('article['.$articleID.']') || */ $GLOBALS['REX']['USER']->hasCategoryPerm($articleID)) {
+		/* $GLOBALS['REX']['USER']->hasPerm('article['.$articleID.']') || */
+		if ($GLOBALS['REX']['USER']->hasCategoryPerm($articleID)) {
 			$hasPerm = true;
 		}
 		return $hasPerm;
@@ -214,11 +203,12 @@ MSG;
 	/**
 	 * URL zur Bearbeitung der Artikel-Metadaten.
 	 * @param string $table
-	 * @param int $id
+	 * @param int $dataID
 	 */
-	public function getXFormEditUrl($table, $id)
+	public function getXFormEditUrl($table, $dataID)
 	{
-		return 'index.php?page=xform&subpage=manager&tripage=data_edit&table_name='.$table.'&rex_xform_search=0&data_id='.$id.'&func=edit&start=';
+		return 'index.php?page=xform&subpage=manager&tripage=data_edit&table_name='.$table.
+			'&rex_xform_search=0&data_id='.$dataID.'&func=edit&start=';
 	}
 
 	/**
@@ -229,7 +219,8 @@ MSG;
 	public function hasTablePerm($table)
 	{
 		/* @var $GLOBALS['REX']['USER'] \rex_user */
-		return $GLOBALS['REX']['USER']->hasPerm('xform[]') && $GLOBALS['REX']['USER']->hasPerm('xform[table:'.$table.']');
+		return $GLOBALS['REX']['USER']->hasPerm('xform[]') &&
+			$GLOBALS['REX']['USER']->hasPerm('xform[table:'.$table.']');
 	}
 
 	/**

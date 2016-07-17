@@ -131,7 +131,7 @@ class Error
 	 */
 	public function __clone()
 	{
-
+		//
 	}
 // </editor-fold>
 }

@@ -7,7 +7,7 @@
  */
 namespace akrys\redaxo\addon\UsageCheck\RexV5\Modules;
 
-require_once __DIR__.'/../../Modules/Actions.php';
+use \akrys\redaxo\addon\UsageCheck\Config;
 
 /**
  * Description of Actions
@@ -26,9 +26,10 @@ class Actions
 	 */
 	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
 	{
+		$url = 'index.php?page='.Config::NAME.'/'.$subpage.$showAllParam;
 		?>
 
-		<p class="rex-tx1"><a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>/<?php echo $subpage; ?><?php echo $showAllParam; ?>"><?php echo $showAllLinktext; ?></a></p>
+		<p class="rex-tx1"><a href="<?php echo $url ?>"><?php echo $showAllLinktext; ?></a></p>
 
 		<?php
 	}
@@ -36,13 +37,14 @@ class Actions
 	/**
 	 * Link Action Editieren
 	 * @param array $item
-	 * @param string $linktext
+	 * @param string $linkText
 	 */
-	public function outputActionEdit($item, $linktext)
+	public function outputActionEdit($item, $linkText)
 	{
+		$url = 'index.php?page=module/actions&action_id='.$item['id'].'&function=edit';
 		?>
 
-		<a href="index.php?page=module/actions&action_id=<?php echo $item['id']; ?>&function=edit"><?php echo $linktext ?></a>
+		<a href="<?php echo $url ?>"><?php echo $linkText ?></a>
 
 		<?php
 	}

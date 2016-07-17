@@ -1,10 +1,10 @@
 <?php
-
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
-
+/**
+ * Grundlegendes Frontend
+ */
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
+
 //Fehlerausgabe
 if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
 	$text = '';
@@ -32,7 +32,6 @@ if (RedaxoCall::getRedaxoVersion() == RedaxoCall::REDAXO_VERSION_4) {
 		header('location: index.php?page='.Config::NAME.'&subpage=overview');
 	}
 } else {
-
 	$subpage = rex_be_controller::getCurrentPagePart(2, 'overview');
 
 //	echo rex_view::title(rex_i18n::msg('backup_title'));
@@ -45,6 +44,6 @@ $contentFile = __DIR__.'/_'.$subpage.'.php';
 if (file_exists($contentFile)) {
 	include $contentFile;
 } else {
-	echo RedaxoCall::getAPI()->errorMsg(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile, true);
+	$msg = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile;
+	echo RedaxoCall::getAPI()->errorMsg($msg, true);
 }
-
