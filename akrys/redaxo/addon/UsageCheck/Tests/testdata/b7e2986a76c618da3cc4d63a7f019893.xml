@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+
+<!--
+-
+- Sequel Pro XML dump
+- Version 4541
+-
+- http://www.sequelpro.com/
+- https://github.com/sequelpro/sequelpro
+-
+- Host: 127.0.0.1 (MySQL 5.6.31-0ubuntu0.15.10.1)
+- Datenbank: redaxo_5_1
+- Erstellt am Time: 2016-08-28 09:53:11 +0000
+-
+-->
+
+<redaxo_5_1>
+
+	<custom>
+	<row>
+		<id>5</id>
+		<category_id>2</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>sky.jpg</filename>
+		<originalname>sky.jpg</originalname>
+		<filesize>147975</filesize>
+		<width>2000</width>
+		<height>1113</height>
+		<title>Sky</title>
+		<createdate>2015-12-20 16:42:11</createdate>
+		<updatedate>2015-12-30 19:26:57</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title></med_gallery_title>
+		<med_gallery_text></med_gallery_text>
+		<med_gallery_link_text></med_gallery_link_text>
+		<med_gallery_link></med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<test>NULL</test>
+		<test_medialist>NULL</test_medialist>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>22</id>
+		<category_id>1</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>snowy_road.jpg</filename>
+		<originalname>snowy_road.jpg</originalname>
+		<filesize>732744</filesize>
+		<width>2000</width>
+		<height>1396</height>
+		<title>Snowy Road</title>
+		<createdate>2015-12-23 16:52:24</createdate>
+		<updatedate>2015-12-23 16:52:24</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title></med_gallery_title>
+		<med_gallery_text></med_gallery_text>
+		<med_gallery_link_text></med_gallery_link_text>
+		<med_gallery_link></med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<test>NULL</test>
+		<test_medialist>NULL</test_medialist>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>25</id>
+		<category_id>0</category_id>
+		<attributes>NULL</attributes>
+		<filetype>text/html</filetype>
+		<filename>socialnet.html</filename>
+		<originalname>socialnet.html</originalname>
+		<filesize></filesize>
+		<width>NULL</width>
+		<height>NULL</height>
+		<title></title>
+		<createdate>2016-02-20 16:20:19</createdate>
+		<updatedate>2016-02-20 16:20:19</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend>NULL</med_gallery_legend>
+		<med_gallery_title>NULL</med_gallery_title>
+		<med_gallery_text>NULL</med_gallery_text>
+		<med_gallery_link_text>NULL</med_gallery_link_text>
+		<med_gallery_link>NULL</med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<test>NULL</test>
+		<test_medialist>NULL</test_medialist>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	</custom>
+
+</redaxo_5_1>

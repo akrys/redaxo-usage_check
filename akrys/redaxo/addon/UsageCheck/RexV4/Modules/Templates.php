@@ -1,20 +1,11 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-namespace akrys\redaxo\addon\UsageCheck\RexV4\Modules;
-
-require_once __DIR__.'/../../Modules/Templates.php';
 /**
- * Datei für ...
+ * Datei für das Template-Modul
  *
  * @version       1.0 / 2016-05-08
- * @package       new_package
- * @subpackage    new_subpackage
  * @author        akrys
  */
+namespace akrys\redaxo\addon\UsageCheck\RexV4\Modules;
 
 /**
  * Description of Templates
@@ -37,8 +28,8 @@ class Templates
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
 
-		$templateTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('template');
-		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('article');
+		$templateTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('template');
+		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
 
 		$sql = <<<SQL
 SELECT
@@ -81,13 +72,21 @@ SQL;
 		?>
 
 		<ul>
-			<li><a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $param['showAllParam'].$param['showInactiveParamCurr']; ?>"><?php echo $param['showAllLinktext']; ?></a></li>
+			<?php
+			$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'&subpage='.$subpage.
+				$param['showAllParam'].$param['showInactiveParamCurr'];
+			?>
+
+			<li><a href="<?php echo $url; ?>"><?php echo $param['showAllLinktext']; ?></a></li>
 
 			<?php
 			if ($GLOBALS['REX']['USER']->isAdmin()) {
+				$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.
+					'&subpage='.$subpage.
+					$param['showAllParamCurr'].$param['showInactiveParam'];
 				?>
 
-				<li><a href="index.php?page=<?php echo \akrys\redaxo\addon\UsageCheck\Config::NAME; ?>&subpage=<?php echo $subpage; ?><?php echo $param['showAllParamCurr'].$param['showInactiveParam']; ?>"><?php echo $param['showInactiveLinktext'] ?></a></li>
+				<li><a href="<?php echo $url ?>"><?php echo $param['showInactiveLinktext'] ?></a></li>
 
 				<?php
 			}
@@ -101,15 +100,18 @@ SQL;
 	/**
 	 * Edit-Link generieren
 	 * @param array $item
-	 * @param string $linktext
+	 * @param string $linkText
 	 */
-	public function outputTemplateEdit($item, $linktext)
+	public function outputTemplateEdit($item, $linkText)
 	{
-		?>
+		if ($GLOBALS['REX']['USER']->isAdmin()) {
+			$url = 'index.php?page=template&subpage=&function=edit&template_id='.$item['id'];
+			?>
 
-		<a href="index.php?page=template&subpage=&function=edit&template_id=<?php echo $item['id']; ?>"><?php echo $linktext; ?></a>
+			<a href="<?php echo $url; ?>"><?php echo $linkText; ?></a>
 
-		<?php
+			<?php
+		}
 	}
 
 	/**
@@ -122,7 +124,8 @@ SQL;
 		$hasPerm = false;
 
 		//$REX['USER']->hasPerm('article['.$articleID.']') ist immer false
-		if (/* $REX['USER']->hasPerm('article['.$articleID.']') || */ $GLOBALS['REX']['USER']->hasCategoryPerm($articleID)) {
+		/* $REX['USER']->hasPerm('article['.$articleID.']') || */
+		if ($GLOBALS['REX']['USER']->hasCategoryPerm($articleID)) {
 			$hasPerm = true;
 		}
 		return $hasPerm;
@@ -130,11 +133,11 @@ SQL;
 
 	/**
 	 * Template-EditLink zusammenbauen
-	 * @param int $id
+	 * @param int $tplID
 	 * @return string
 	 */
-	public function getEditLink($id)
+	public function getEditLink($tplID)
 	{
-		return 'index.php?page=template&subpage=&function=edit&template_id='.$id;
+		return 'index.php?page=template&subpage=&function=edit&template_id='.$tplID;
 	}
 }

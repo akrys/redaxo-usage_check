@@ -1,40 +1,50 @@
 <?php
+
 /**
  * Anzeige der nicht verwendeten Bilder.
  */
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
-
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Pictures.php';
+
 $pictures = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
 
-echo RedaxoCall::rexTitle(Config::NAME_OUT.' / '.RedaxoCall::i18nMsg('akrys_usagecheck_images_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>');
+$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_subpagetitle').
+	' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>';
+echo RedaxoCall::getAPI()->getRexTitle($title);
 
-$showAll = rex_get('showall', 'string', "");
-$items = $pictures->getPictures($showAll);
+$showAll = false;
+switch (rex_get('showall', 'string', "")) {
+	case 'true':
+		$pictures->showAll(true);
+		$showAll = true;
+		break;
+	case 'false':
+	default:
+		//
+		break;
+}
+$items = $pictures->getPictures();
 
 if ($items === false) {
-	echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_no_rights'), true);
+	echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N('akrys_usagecheck_no_rights'));
 	return;
 }
 
-$showAllLinktext = RedaxoCall::i18nMsg('akrys_usagecheck_images_link_show_unused');
+$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_link_show_unused');
 $showAllParam = '';
 if (!$showAll) {
-	$showAllLinktext = RedaxoCall::i18nMsg('akrys_usagecheck_images_link_show_all');
+	$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_link_show_all');
 	$showAllParam = '&showall=true';
 }
 
 $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 ?>
 
-<table class="<?php echo RedaxoCall::getTableClass(); ?>">
+<table class="<?php echo RedaxoCall::getAPI()->getTableClass(); ?>">
 	<thead>
 		<tr>
-			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_images_table_heading_name'); ?></th>
-			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_images_table_heading_functions'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_table_heading_name'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -98,23 +108,25 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 
 					$errors = array();
 					if ($used === false) {
-						$errors[] = RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_not_used');
+						$errors[] = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_msg_not_used');
 					}
 
 					if (!$pictures->exists($item)) {
-						$errors[] = RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_not_found');
+						$errors[] = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_msg_not_found');
 					}
 
+					//Ob ein Medium lt. Medienpool in Nutzung ist, brauchen wir nur zu prüfen,
+					//wenn wir glauben, dass die Datei ungenutzt ist.
+					//Vielleicht wird sie ja dennoch verwendet ;-)
+					//
+					//Hier wird die Funktion verwendet, die auch beim Löschen von Medien aus dem Medienpool aufgerufen
+					//wird.
+					//
+					//ACHTUNG:
+					//XAMPP 5.6.14-4 mit MariaDB unter MacOS hat ein falsch kompiliertes PCRE-Mdoul an Bord, so dass
+					//alle REGEXP-Abfragen abstürzen.
+					//Der Fehler liegt also nicht hier, und auch nicht im Redaxo-Core
 					if (!$used) {
-						//Ob ein Medium lt. Medienpool in Nutzung ist, brauchen wir nur zu prüfen,
-						//wenn wir glauben, dass die Datei ungenutzt ist.
-						//Vielleicht wird sie ja dennoch verwendet ;-)
-						//
-						//Hier wird die Funktion verwendet, die auch beim Löschen von Medien aus dem Medienpool aufgerufen wird.
-						//
-						//ACHTUNG:
-						//XAMPP 5.6.14-4 mit MariaDB unter MacOS hat ein falsch kompiliertes PCRE-Mdoul an Bord, so dass alle REGEXP-Abfragen abstürzen.
-						//Der Fehler liegt also nicht hier, und auch nicht im Redaxo-Core
 						switch (akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 							case akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
 								$used = $medium->isInUse();
@@ -125,7 +137,7 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 						}
 
 						if ($used) {
-							$errors[] = RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_in_use');
+							$errors[] = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_msg_in_use');
 						}
 					}
 
@@ -133,29 +145,32 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 						$text = '';
 						foreach ($errors as $error) {
 							if (trim($error) !== '') {
-								$text.=<<<ERROR
-<p>
-	<span>$error</span>
-</p>
-ERROR;
+								$text.=RedaxoCall::getAPI()->getTaggedMsg($error);
 							}
 						}
-						echo RedaxoCall::errorMsg($text, false);
+						echo RedaxoCall::getAPI()->getErrorMsg($text);
 					} else {
-						echo RedaxoCall::infoMsg(RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_used'), true);
+						$text = 'akrys_usagecheck_images_msg_used';
+						echo RedaxoCall::getAPI()->getTaggedInfoMsg(RedaxoCall::getAPI()->getI18N($text));
 					}
 					?>
 
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
-								<li><a href="index.php?page=mediapool&subpage=detail&file_name=<?php echo $item['filename']; ?>" target="_blank"><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit'); ?></a><br /></li>
+								<?php
+								$url = 'index.php?page=mediapool&subpage=detail&file_name='.$item['filename'];
+								$linkText = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_linktext_edit');
+								?>
+
+								<li><a href="<?php echo $url ?>" target="_blank"><?php echo $linkText; ?></a><br /></li>
 
 								<?php
 								if ($item['slice_data'] !== null) {
-
 									$usages = explode("\n", $item['slice_data']);
-									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit_in_slice');
+
+									$index = 'akrys_usagecheck_images_linktext_edit_in_slice';
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
 
@@ -166,27 +181,29 @@ ERROR;
 										$clang = $articleData[3];
 										$ctype = $articleData[4];
 
-										$hasPerm = RedaxoCall::hasCategoryPerm($articleID);
+										$hasPerm = RedaxoCall::getAPI()->hasCategoryPerm($articleID);
 										if ($hasPerm) {
+											$linkText = $linkTextRaw;
+											$linkText = str_replace('$sliceID$', $sliceID, $linkText);
+											$linkText = str_replace('$articleName$', $articleName, $linkText);
 
-											$linktext = $linktextRaw;
-											$linktext = str_replace('$sliceID$', $sliceID, $linktext);
-											$linktext = str_replace('$articleName$', $articleName, $linktext);
-											$href = 'index.php?page=content&article_id='.$articleID.'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.'&function=edit#slice'.$sliceID;
+											$href = 'index.php?page=content&article_id='.$articleID.
+												'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.
+												'&ctype='.$ctype.'&function=edit#slice'.$sliceID;
 											?>
 
-											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+											<li><a href="<?php echo $href; ?>"><?php echo $linkText; ?></a></li>
 
 											<?php
 										}
-										unset($href, $linktext, $ctype, $clang, $articleID, $articleName, $sliceID);
+										unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
 									}
 								}
 
 								if ($item['metaArtIDs'] !== null) {
-
 									$usages = explode("\n", $item['metaArtIDs']);
-									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit_in_metadata_art');
+									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_art';
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
 
@@ -194,29 +211,29 @@ ERROR;
 										$articleName = $articleData[1];
 										$clang = $articleData[2];
 
-										$hasPerm = RedaxoCall::hasCategoryPerm($articleID);
-										$href = RedaxoCall::getArticleMetaUrl($articleID, $clang);
+										$hasPerm = RedaxoCall::getAPI()->hasCategoryPerm($articleID);
+										$href = RedaxoCall::getAPI()->getArticleMetaUrl($articleID, $clang);
 										if ($hasPerm) {
-											$linktext = $linktextRaw;
-											$linktext = str_replace('$articleID$', $articleID, $linktext);
-											$linktext = str_replace('$articleName$', $articleName, $linktext);
+											$linkText = $linkTextRaw;
+											$linkText = str_replace('$articleID$', $articleID, $linkText);
+											$linkText = str_replace('$articleName$', $articleName, $linkText);
 											?>
 
-											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+											<li><a href="<?php echo $href; ?>"><?php echo $linkText; ?></a></li>
 
 											<?php
 										}
-										unset($href, $linktext, $ctype, $clang, $articleID, $articleName, $sliceID);
+										unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
 									}
 								}
 
 								if ($item['metaCatIDs'] !== null) {
-
 									$usages = explode("\n", $item['metaCatIDs']);
-									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit_in_metadata_cat');
+
+									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_cat';
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
-
 
 										//http://51.redaxo.akrys-dev.local/redaxo/index.php?page=structure&category_id=5&article_id=0&clang=1&edit_id=11&function=edit_cat&catstart=0
 										//s.id,"\\t",s.article_id,"\\t",s.clang,"\\t",s.ctype
@@ -225,80 +242,79 @@ ERROR;
 										$clang = $articleData[2];
 										$parentID = $articleData[3];
 
-										$hasPerm = RedaxoCall::hasCategoryPerm($articleID);
+										$hasPerm = RedaxoCall::getAPI()->hasCategoryPerm($articleID);
 
 										if ($hasPerm) {
-											$linktext = $linktextRaw;
-											$linktext = str_replace('$articleID$', $articleID, $linktext);
-											$linktext = str_replace('$articleName$', $articleName, $linktext);
-											$href = 'index.php?page=structure&category_id='.$parentID.'&article_id=0&clang='.$clang.'&edit_id='.$articleID.'&function=edit_cat&catstart=0';
+											$linkText = $linkTextRaw;
+											$linkText = str_replace('$articleID$', $articleID, $linkText);
+											$linkText = str_replace('$articleName$', $articleName, $linkText);
+											$href = 'index.php?page=structure&category_id='.$parentID.
+												'&article_id=0&clang='.$clang.'&edit_id='.$articleID.
+												'&function=edit_cat&catstart=0';
 											?>
 
-											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+											<li><a href="<?php echo $href; ?>"><?php echo $linkText; ?></a></li>
 
 											<?php
 										}
-										unset($href, $linktext, $ctype, $clang, $articleID, $articleName, $sliceID);
+										unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
 									}
 								}
 
 								if ($item['metaMedIDs'] !== null) {
+									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_med';
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 
 									$usages = explode("\n", $item['metaMedIDs']);
-									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit_in_metadata_med');
 									foreach ($usages as $usage) {
 										$mediaData = explode("\t", $usage);
-
-
 
 										//file_id,"\t",category_id,"\t",filename
 										$fileID = $mediaData[0];
 										$fileCatID = $mediaData[1];
 										$filename = $mediaData[2];
 
-										$hasPerm = RedaxoCall::hasMediaCategoryPerm($fileCatID);
+										$hasPerm = RedaxoCall::getAPI()->hasMediaCategoryPerm($fileCatID);
 										$hasPerm = true;
 
 										if ($hasPerm) {
-											$linktext = $linktextRaw;
-											$linktext = str_replace('$filename$', $filename, $linktext);
+											$linkText = $linkTextRaw;
+											$linkText = str_replace('$filename$', $filename, $linkText);
 											$href = "index.php?page=mediapool&subpage=detail&file_name=".$filename;
 											?>
 
-											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+											<li><a href="<?php echo $href; ?>"><?php echo $linkText; ?></a></li>
 
 											<?php
 										}
-										unset($href, $linktext, $ctype, $clang, $articleID, $articleName, $sliceID);
+										unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
 									}
 								}
 
 
-
-								$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_images_linktext_edit_in_xformtable');
+								$index = 'akrys_usagecheck_images_linktext_edit_in_xformtable';
+								$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 								foreach ($items['fields'] as $table => $field) {
-
 									if (!isset($item[$table])) {
 										continue;
 									}
 
 									$ids = explode("\n", $item[$table]);
 									foreach ($ids as $id) {
+										$linkText = $linkTextRaw;
+										$linkText = str_replace('$entryID$', $id, $linkText);
+										$linkText = str_replace('$tableName$', $field[0]['table_out'], $linkText);
 
-										$linktext = $linktextRaw;
-										$linktext = str_replace('$entryID$', $id, $linktext);
-										$linktext = str_replace('$tableName$', $field[0]['table_out'], $linktext);
-
-										$hasPerm = RedaxoCall::hasTablePerm($table);
+										$hasPerm = RedaxoCall::getAPI()->hasTablePerm($table);
 
 										if ($hasPerm) {
-											$href = RedaxoCall::getXFormEditUrl($table, $id);
+											$href = RedaxoCall::getAPI()->getXFormEditUrl($table, $id);
 											if ($href == '') {
 												continue;
 											}
 											?>
 
-											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+											<li><a href="<?php echo $href; ?>"><?php echo $linkText; ?></a></li>
 
 											<?php
 										}
@@ -332,25 +348,30 @@ ERROR;
 							}
 
 							if (isset($initCat)) {
+								$title = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_category_header');
 								?>
-
 
 								<small style="font-size:0.875em;">
 									<br />
-									<strong><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_images_category_header'); ?></strong>
+									<strong><?php echo $title ?></strong>
 									<br />
 
 									<?php
 									$i = 0;
 									foreach ($initCat->getParentTree() as $category) {
+										$url = 'index.php?page=mediapool&rex_file_category='.$category->getId();
+										$linkText = $category->getName();
 										?>
-										<a href="index.php?page=mediapool&rex_file_category=<?php echo $category->getId(); ?>"><?php echo $category->getName() ?></a>
+										<a href="<?php echo $url ?>"><?php echo $linkText ?></a>
 
 										/
 										<?php
 									}
+
+									$url = 'index.php?page=mediapool&rex_file_category='.$initCat->getId();
+									$linkText = $initCat->getName();
 									?>
-									<a href="index.php?page=mediapool&rex_file_category=<?php echo $initCat->getId(); ?>"><?php echo $initCat->getName() ?></a>
+									<a href="<?php echo $url ?>"><?php echo $linkText ?></a>
 
 								</small>
 								<?php
@@ -360,10 +381,11 @@ ERROR;
 						</span>
 					</div>
 				</td>
+			</tr>
 
-				<?php
-			}
-			?>
+			<?php
+		}
+		?>
 
 	</tbody>
 </table>

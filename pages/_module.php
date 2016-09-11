@@ -1,49 +1,52 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+
+/**
+ * Frontend-Ausagbe für die Seite Module
  */
-
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
-
 /* @var $I18N \i18n */
-
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', true);
 
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Modules.php';
+
 $modules = \akrys\redaxo\addon\UsageCheck\Modules\Modules::create();
 
-$showAll = rex_get('showall', 'string', "");
-
-echo RedaxoCall::rexTitle(Config::NAME_OUT.' / '.RedaxoCall::i18nMsg('akrys_usagecheck_module_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>');
+$showAll = false;
+switch (rex_get('showall', 'string', "")) {
+	case 'true':
+		$modules->showAll(true);
+		$showAll = true;
+		break;
+	case 'false':
+	default:
+		//
+		break;
+}
+$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_subpagetitle').
+	' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>';
+echo RedaxoCall::getAPI()->getRexTitle($title);
 
 $items = $modules->getModules($showAll);
 
 if ($items === false) {
-	echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_no_rights'), true);
+	echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N('akrys_usagecheck_no_rights'));
 	return;
 }
 
 $showAllParam = '&showall=true';
-$showAllLinktext = RedaxoCall::i18nMsg('akrys_usagecheck_module_link_show_all');
+$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_link_show_all');
 if ($showAll) {
 	$showAllParam = '';
-	$showAllLinktext = RedaxoCall::i18nMsg('akrys_usagecheck_module_link_show_unused');
+	$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_link_show_unused');
 }
 
 $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 ?>
 
-<table class="<?php echo RedaxoCall::getTableClass() ?>">
+<table class="<?php echo RedaxoCall::getAPI()->getTableClass() ?>">
 	<thead>
 		<tr>
-			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_module_table_heading_name'); ?></th>
-			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_module_table_heading_functions'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_table_heading_name'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -61,9 +64,11 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 
 					<?php
 					if ($item['slice_data'] === null) {
-						echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_module_msg_not_used'));
+						$index = 'akrys_usagecheck_module_msg_not_used';
+						echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N($index));
 					} else {
-						echo RedaxoCall::infoMsg(RedaxoCall::i18nMsg('akrys_usagecheck_module_msg_used'));
+						$index = 'akrys_usagecheck_module_msg_used';
+						echo RedaxoCall::getAPI()->getTaggedInfoMsg(RedaxoCall::getAPI()->getI18N($index));
 					}
 					?>
 
@@ -72,10 +77,15 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 							<ol>
 
 								<?php
-								if (RedaxoCall::isAdmin()) {
+								if (RedaxoCall::getAPI()->isAdmin()) {
+									$url = 'index.php?page=module&subpage=&function=edit&modul_id='.$item['id'];
+									$index = 'akrys_usagecheck_module_linktext_edit_code';
+									$linkText = RedaxoCall::getAPI()->getI18N($index);
 									?>
 
-									<li><a href="index.php?page=module&subpage=&function=edit&modul_id=<?php echo $item['id'] ?>"><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_module_linktext_edit_code'); ?></a></li>
+									<li>
+										<a href="<?php echo $url; ?>"><?php echo $linkText; ?></a>
+									</li>
 
 									<?php
 								}
@@ -83,7 +93,8 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 								if ($item['slice_data'] !== null) {
 									$usages = explode("\n", $item['slice_data']);
 
-									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_module_linktext_edit_slice');
+									$index = 'akrys_usagecheck_module_linktext_edit_slice';
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 									foreach ($usages as $usageRaw) {
 										$usage = explode("\t", $usageRaw);
 										$sliceID = $usage[0];
@@ -94,16 +105,18 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 										$articleName = $usage[5];
 
 
-										$hasPerm = RedaxoCall::hasCategoryPerm($articleID);
+										$hasPerm = RedaxoCall::getAPI()->hasCategoryPerm($articleID);
 
 										if ($hasPerm) {
-											$href = 'index.php?page=content&article_id='.$articleID.'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.'&function=edit#slice'.$sliceID;
-											$linktext = $linktextRaw;
-											$linktext = str_replace('$sliceID$', $sliceID, $linktext);
-											$linktext = str_replace('$articleName$', $articleName, $linktext);
+											$href = 'index.php?page=content&article_id='.$articleID.
+												'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.
+												'&function=edit#slice'.$sliceID;
+											$linkText = $linkTextRaw;
+											$linkText = str_replace('$sliceID$', $sliceID, $linkText);
+											$linkText = str_replace('$articleName$', $articleName, $linkText);
 											?>
 
-											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+											<li><a href="<?php echo $href; ?>"><?php echo $linkText; ?></a></li>
 
 											<?php
 										}
@@ -115,10 +128,11 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 						</span>
 					</div>
 				</td>
+			</tr>
 
-				<?php
-			}
-			?>
+			<?php
+		}
+		?>
 
 	</tbody>
 </table>
