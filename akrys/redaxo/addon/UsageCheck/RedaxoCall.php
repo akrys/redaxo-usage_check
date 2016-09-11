@@ -56,16 +56,13 @@ abstract class RedaxoCall
 			switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
 					// Redaxo 4
-					require_once(__DIR__.'/RexV4/RedaxoCallAPI.php');
 					self::$api = new RexV4\RedaxoCallAPI();
 					break;
 				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
 					// Redaxo 5
-					require_once(__DIR__.'/RexV5/RedaxoCallAPI.php');
 					self::$api = new RexV5\RedaxoCallAPI();
 					break;
 				default:
-					require_once(__DIR__.'/Exception/InvalidVersionException.php');
 					throw new Exception\InvalidVersionException();
 			}
 		}
@@ -77,7 +74,7 @@ abstract class RedaxoCall
 	 * @param string $text
 	 * @return string
 	 */
-	abstract public function i18nMsg($text);
+	abstract public function getI18N($text);
 
 	/**
 	 * Sprachname Code holen.
@@ -106,7 +103,7 @@ abstract class RedaxoCall
 	 * @param string $title
 	 * @return string
 	 */
-	abstract public function rexTitle($title);
+	abstract public function getRexTitle($title);
 
 	/**
 	 * Erkennung der Redaxo-Version
@@ -143,7 +140,7 @@ abstract class RedaxoCall
 	public static function getRedaxoVersion()
 	{
 		//REDAXO 4?
-		if (isset($GLOBALS['REX']) && $GLOBALS['REX']['VERSION'] == 4) {
+		if (isset($GLOBALS['REX']) && isset($GLOBALS['REX']['VERSION']) && $GLOBALS['REX']['VERSION'] == 4) {
 			return self::REDAXO_VERSION_4;
 		}
 
@@ -170,7 +167,7 @@ abstract class RedaxoCall
 	 * @param string $text
 	 * @return string
 	 */
-	public function addTags($text)
+	public function getTaggedMsg($text)
 	{
 		return <<<TEXT
 <p><span>$text</span></p>
@@ -182,9 +179,9 @@ TEXT;
 	 * @param stromg $text
 	 * @return string
 	 */
-	public function errorMsgAddTags($text)
+	public function getTaggedErrorMsg($text)
 	{
-		return $this->errorMsg($this->addTags($text));
+		return $this->getErrorMsg($this->getTaggedMsg($text));
 	}
 
 	/**
@@ -196,16 +193,16 @@ TEXT;
 	 * @param string $text
 	 * @return string
 	 */
-	abstract public function errorMsg($text);
+	abstract public function getErrorMsg($text);
 
 	/**
 	 * Infomeldung ,ot zusätzlichen Absatz-Tags
 	 * @param string $text
 	 * @return string
 	 */
-	public function infoMsgAddTags($text)
+	public function getTaggedInfoMsg($text)
 	{
-		return $this->infoMsg($this->addTags($text));
+		return $this->getInfoMsg($this->getTaggedMsg($text));
 	}
 
 	/**
@@ -217,7 +214,7 @@ TEXT;
 	 * @param string $text
 	 * @return string
 	 */
-	abstract public function infoMsg($text);
+	abstract public function getInfoMsg($text);
 
 	/**
 	 * Ausgabe-Kasten auf der Addon-Seite erstellen.
@@ -225,7 +222,7 @@ TEXT;
 	 * @param string $text
 	 * @return string
 	 */
-	abstract public function panelOut($title, $text);
+	abstract public function getPanelOut($title, $text);
 
 	/**
 	 * Table-Klasse anhand der Redaxo-Version ermittln.

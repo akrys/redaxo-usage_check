@@ -5,5 +5,6 @@
  */
 require_once __DIR__.'/general/uninstall.inc.php';
 
-//REDAXO 4
+use \akrys\redaxo\addon\UsageCheck\Config;
+
 $REX['ADDON']['install'][Config::NAME] = 0;

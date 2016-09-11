@@ -7,8 +7,6 @@
 		"ext-mbstring": "*",
 		"lib-pcre": "*"
 	},
-	"require": {
-	},
 	"require-dev": {
 		"phpunit/phpunit": "*",
 		"phpdocumentor/phpdocumentor": "*",
@@ -16,5 +14,10 @@
 		"squizlabs/php_codesniffer": "*",
 		"phpmd/phpmd": "*",
 		"pdepend/pdepend": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"": "."
+		}
 	}
 }

@@ -2,15 +2,11 @@
 /**
  * Frontend-Ausagbe für die Seite Tempalte
  */
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 
 /* @var $I18N \i18n */
 
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
-
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Templates.php';
 
 switch (rex_get('showall', 'string', "")) {
 	case 'true':
@@ -32,9 +28,9 @@ switch (rex_get('showinactive', 'string', "")) {
 		break;
 }
 
-$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_subpagetitle').
+$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_subpagetitle').
 	' <span style = "font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>';
-echo RedaxoCall::getAPI()->rexTitle($title);
+echo RedaxoCall::getAPI()->getRexTitle($title);
 $templates = akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
 if ($showAll) {
 	$templates->showAll($showAll);
@@ -45,7 +41,7 @@ if ($showInactive) {
 $items = $templates->getTemplates();
 
 if ($items === false) {
-	echo RedaxoCall::getAPI()->errorMsgAddTags(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_no_rights'));
+	echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N('akrys_usagecheck_no_rights'));
 	return;
 }
 ?>
@@ -59,15 +55,15 @@ if ($items === false) {
 <div style='clear:both'></div>
 
 <p class="rex-tx1">
-	<?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_intro_text'); ?><br />
+	<?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_intro_text'); ?><br />
 	<br />
 </p>
 
 <table class="<?php echo RedaxoCall::getAPI()->getTableClass() ?>">
 	<thead>
 		<tr>
-			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_table_heading_name'); ?></th>
-			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_table_heading_functions'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_table_heading_name'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -82,7 +78,7 @@ if ($items === false) {
 					if ($item['active'] == 0) {
 						?>
 						<br />
-						(<?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_table_inactive'); ?>)
+						(<?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_table_inactive'); ?>)
 						<br />
 						<?php
 					}
@@ -94,23 +90,23 @@ if ($items === false) {
 					<?php
 					if ($item['articles'] === null && $item['templates'] === null) {
 						$index = 'akrys_usagecheck_images_msg_not_used';
-						echo RedaxoCall::getAPI()->errorMsg(RedaxoCall::getAPI()->i18nMsg($index));
+						echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N($index));
 					} else {
 						$index = 'akrys_usagecheck_template_msg_used';
-						echo RedaxoCall::getAPI()->infoMsg(RedaxoCall::getAPI()->i18nMsg($index));
+						echo RedaxoCall::getAPI()->getTaggedInfoMsg(RedaxoCall::getAPI()->getI18N($index));
 					}
 					?>
 
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
 							<?php
-							$text = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_detail_heading');
+							$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_detail_heading');
 							?>
 
 							<strong><?php echo $text ?></strong>
 							<ol>
 								<?php
-								$text = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_linktext_edit_code');
+								$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_linktext_edit_code');
 								?>
 
 								<li><?php $templates->outputTemplateEdit($item, $text); ?></li>
@@ -118,7 +114,7 @@ if ($items === false) {
 								<?php
 								if ($item['articles'] !== null) {
 									$index = 'akrys_usagecheck_template_linktext_edit_article';
-									$linkTextRaw = RedaxoCall::getAPI()->i18nMsg($index);
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 									$articles = explode("\n", $item['articles']);
 									foreach ($articles as $article) {
 										$usage = explode("\t", $article);
@@ -157,7 +153,7 @@ if ($items === false) {
 										$templateData = explode("\n", $item['templates']);
 
 										$index = 'akrys_usagecheck_template_linktext_edit_template';
-										$linkTextRaw = RedaxoCall::getApi()->i18nMsg($index);
+										$linkTextRaw = RedaxoCall::getApi()->getI18N($index);
 										foreach ($templateData as $templateItem) {
 											$usage = explode("\t", $templateItem);
 

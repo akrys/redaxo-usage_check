@@ -18,6 +18,10 @@ class Permission
 	/**
 	 * Prüft die Rechte für den aktuellen User.
 	 *
+	 * Unit Testing
+	 * Die Rechteverwaltung ist zu nah am RedaxoCore, um das auf die Schnelle simulieren zu können.
+	 * @codeCoverageIgnore
+	 *
 	 * @param string $perm eine der PERM-Konstanten
 	 * @return boolean
 	 * @SuppressWarnings(PHPMD.StaticAccess)
@@ -39,10 +43,8 @@ class Permission
 				$hasSpecialPerm = $complexPerm->hasStructurePerm();
 				break;
 			case 'rex_module_perm':
-//					/* @var $complexPerm \rex_module_perm */
-//					var_dump($complexPerm);
-//					$hasSpecialPerm = false;
-////					$hasSpecialPerm = $complexPerm->hasModulePerm();
+					/* @var $complexPerm \rex_module_perm */
+					$hasSpecialPerm = $complexPerm->hasAll();
 				break;
 			default:
 				throw new \Exception('"'.get_class($complexPerm).'": unknown permission class');

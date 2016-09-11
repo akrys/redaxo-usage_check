@@ -1,23 +1,12 @@
 <?php
 
 /**
- * Datei für ...
+ * Datei für die generelle Redaxo Core CallAPI
  *
  * @version       1.0 / 2016-07-10
- * @package       new_package
- * @subpackage    new_subpackage
  * @author        akrys
  */
 namespace akrys\redaxo\addon\UsageCheck\RexV5;
-
-/**
- * Datei für ...
- *
- * @version       1.0 / 2016-07-10
- * @package       new_package
- * @subpackage    new_subpackage
- * @author        akrys
- */
 
 /**
  * Description of API
@@ -34,7 +23,7 @@ class RedaxoCallAPI
 	 * @return string
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public function i18nMsg($text)
+	public function getI18N($text)
 	{
 		return \rex_i18n::rawMsg($text);
 	}
@@ -65,7 +54,7 @@ class RedaxoCallAPI
 	 * @return string
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public function rexTitle($title)
+	public function getRexTitle($title)
 	{
 		return \rex_view::title($title);
 	}
@@ -79,7 +68,7 @@ class RedaxoCallAPI
 	 * @param string $text
 	 * @return string
 	 */
-	public function errorMsg($text)
+	public function getErrorMsg($text)
 	{
 		$out = <<<MSG
 
@@ -100,7 +89,7 @@ MSG;
 	 * @param string $text
 	 * @return string
 	 */
-	public function infoMsg($text)
+	public function getInfoMsg($text)
 	{
 		$out = <<<MSG
 
@@ -118,7 +107,7 @@ MSG;
 	 * @param string $text
 	 * @return string
 	 */
-	public function panelOut($title, $text)
+	public function getPanelOut($title, $text)
 	{
 		return <<<MSG
 
@@ -128,7 +117,6 @@ MSG;
 		$text
 	</div>
 </div>
-
 
 MSG;
 	}
@@ -216,7 +204,9 @@ MSG;
 	 */
 	public function hasTablePerm($table)
 	{
-		return \rex::getUser()->hasPerm('yform[]') && \rex::getUser()->hasPerm('yform[table:'.$table.']');
+		return \rex::getUser()->isAdmin() || (
+			\rex::getUser()->hasPerm('yform[]') && \rex::getUser()->hasPerm('yform[table:'.$table.']')
+			);
 	}
 
 	/**

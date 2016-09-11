@@ -8,9 +8,9 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
-$title=Config::NAME_OUT.' / '.RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_changelog_subpagetitle').
+$title=Config::NAME_OUT.' / '.RedaxoCall::getAPI()->getI18N('akrys_usagecheck_changelog_subpagetitle').
 	' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>';
-echo RedaxoCall::getAPI()->rexTitle($tile, Config::NAME_OUT);
+echo RedaxoCall::getAPI()->getRexTitle($tile, Config::NAME_OUT);
 
 if (!function_exists('\\glob')) {
 	print 'this page requires the glob function';
@@ -29,9 +29,9 @@ rsort($dir);
 <table class="<?php echo RedaxoCall::getAPI()->getTableClass(); ?>">
 	<thead>
 		<tr>
-			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_changelog_header_version'); ?></th>
-			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_changelog_header_date'); ?></th>
-			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_changelog_header_changes'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_changelog_header_version'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_changelog_header_date'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_changelog_header_changes'); ?></th>
 		</tr>
 	</thead>
 	<tbody>

@@ -34,17 +34,14 @@ abstract class Pictures
 		$object = null;
 		switch (RedaxoCall::getRedaxoVersion()) {
 			case RedaxoCall::REDAXO_VERSION_4:
-				require_once __DIR__.'/../RexV4/Modules/Pictures.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV4\Modules\Pictures();
 				break;
 			case RedaxoCall::REDAXO_VERSION_5:
-				require_once __DIR__.'/../RexV5/Modules/Pictures.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures();
 				break;
 		}
 
 		if (!isset($object)) {
-			require_once __DIR__.'/../Exception/FunctionNotCallableException.php';
 			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
 		}
 
@@ -193,6 +190,30 @@ abstract class Pictures
 	abstract protected function getXFormSQL(&$return);
 
 	/**
+	 * kleinste Speichereinheit ermittln.
+	 *
+	 * Dabei zählen, wie oft man sie verkleinern konnte. Daraus ergibt sich die Einheit.
+	 *
+	 * @param int $size
+	 * @return array Indezes: index, size
+	 */
+	private function getSizeReadable($size)
+	{
+		$return = array(
+			'index' => 0,
+			'size' => $size,
+		);
+
+		$return['index'] = 0;
+
+		while ($return['size'] > 1024 && $return['index'] <= 6) {
+			$return['index'] ++;
+			$return['size']/=1024;
+		}
+		return $return;
+	}
+
+	/**
 	 * Dateigröße ermitteln.
 	 *
 	 * Die Größe in Byte auszugeben ist nicht gerade übersichtlich. Daher wird
@@ -203,19 +224,10 @@ abstract class Pictures
 	 */
 	public function getSizeOut($item)
 	{
-		$size = $item['filesize'];
-		$index = 0;
+		$value = $this->getSizeReadable($item['filesize']);
 
-		while ($size > 1024) {
-			$index++;
-			$size/=1024;
-			if ($index > 6) {
-				//WTF????
-				break;
-			}
-		}
-		$value = round($size, 2);
-		switch ($index) {
+		$value['size'] = round($value['size'], 2);
+		switch ($value['index']) {
 			case 0:
 				$unit = 'B';
 				break;
@@ -242,7 +254,7 @@ abstract class Pictures
 				break;
 		}
 
-		return $value.' '.$unit;
+		return $value['size'].' '.$unit;
 	}
 
 	/**
@@ -298,7 +310,7 @@ abstract class Pictures
 	{
 		$url = $this->getMeuLink($subpage, $showAllParam);
 
-		$text = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_intro_text');
+		$text = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_intro_text');
 		?>
 
 		<p class="rex-tx1">

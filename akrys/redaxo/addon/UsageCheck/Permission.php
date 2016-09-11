@@ -65,16 +65,13 @@ abstract class Permission
 			switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
 				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
 					// Redaxo 4
-					require_once __DIR__.'/RexV4/Permission.php';
 					self::$api = new RexV4\Permission();
 					break;
 				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
 					// Redaxo 5
-					require_once __DIR__.'/RexV5/Permission.php';
 					self::$api = new RexV5\Permission();
 					break;
 				default:
-					require_once(__DIR__.'/Exception/InvalidVersionException.php');
 					throw new Exception\InvalidVersionException();
 			}
 		}
@@ -83,6 +80,10 @@ abstract class Permission
 
 	/**
 	 * Prüft die Rechte für den aktuellen User.
+	 *
+	 * Unit Testing
+	 * Die Rechteverwaltung ist zu nah am RedaxoCore, um das auf die Schnelle simulieren zu können.
+	 * @codeCoverageIgnore
 	 *
 	 * @param string $perm eine der PERM-Konstanten
 	 * @return boolean

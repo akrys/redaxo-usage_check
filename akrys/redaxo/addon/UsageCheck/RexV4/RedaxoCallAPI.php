@@ -1,11 +1,9 @@
 <?php
 
 /**
- * Datei für ...
+ * Datei für die generelle Redaxo Core CallAPI
  *
  * @version       1.0 / 2016-07-10
- * @package       new_package
- * @subpackage    new_subpackage
  * @author        akrys
  */
 namespace akrys\redaxo\addon\UsageCheck\RexV4;
@@ -26,7 +24,7 @@ class RedaxoCallAPI
 	 * @param string $text
 	 * @return string
 	 */
-	public function i18nMsg($text)
+	public function getI18N($text)
 	{
 		return $GLOBALS['I18N']->msg($text);
 	}
@@ -54,7 +52,7 @@ class RedaxoCallAPI
 	 * @param string $title
 	 * @return string
 	 */
-	public function rexTitle($title)
+	public function getRexTitle($title)
 	{
 		return \rex_title($title, $GLOBALS['REX']['ADDON']['pages'][Config::NAME]);
 	}
@@ -68,7 +66,7 @@ class RedaxoCallAPI
 	 * @param string $text
 	 * @return string
 	 */
-	public function errorMsg($text)
+	public function getErrorMsg($text)
 	{
 		$out = <<<MSG
 
@@ -92,7 +90,7 @@ MSG;
 	 * @param string $text
 	 * @return string
 	 */
-	public function infoMsg($text)
+	public function getInfoMsg($text)
 	{
 		$out = <<<MSG
 
@@ -112,10 +110,9 @@ MSG;
 	 * @param string $text
 	 * @return string
 	 */
-	public function panelOut($title, $text)
+	public function getPanelOut($title, $text)
 	{
 		return <<<MSG
-
 
 <div class="rex-addon-output">
 	<h2 class="rex-hl2">$title</h2>
@@ -219,8 +216,10 @@ MSG;
 	public function hasTablePerm($table)
 	{
 		/* @var $GLOBALS['REX']['USER'] \rex_user */
-		return $GLOBALS['REX']['USER']->hasPerm('xform[]') &&
-			$GLOBALS['REX']['USER']->hasPerm('xform[table:'.$table.']');
+		return $GLOBALS['REX']['USER']->isAdmin() || (
+			$GLOBALS['REX']['USER']->hasPerm('xform[]') &&
+			$GLOBALS['REX']['USER']->hasPerm('xform[table:'.$table.']')
+			);
 	}
 
 	/**

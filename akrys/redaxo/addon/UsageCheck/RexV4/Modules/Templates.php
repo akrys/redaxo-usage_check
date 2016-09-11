@@ -104,12 +104,14 @@ SQL;
 	 */
 	public function outputTemplateEdit($item, $linkText)
 	{
-		$url = 'index.php?page=template&subpage=&function=edit&template_id='.$item['id'];
-		?>
+		if ($GLOBALS['REX']['USER']->isAdmin()) {
+			$url = 'index.php?page=template&subpage=&function=edit&template_id='.$item['id'];
+			?>
 
-		<a href="<?php echo $url; ?>"><?php echo $linkText; ?></a>
+			<a href="<?php echo $url; ?>"><?php echo $linkText; ?></a>
 
-		<?php
+			<?php
+		}
 	}
 
 	/**

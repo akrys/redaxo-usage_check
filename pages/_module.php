@@ -1,43 +1,42 @@
 <?php
+
 /**
  * Frontend-Ausagbe für die Seite Module
  */
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
-
 /* @var $I18N \i18n */
 
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Modules.php';
 $modules = \akrys\redaxo\addon\UsageCheck\Modules\Modules::create();
 
+$showAll = false;
 switch (rex_get('showall', 'string', "")) {
 	case 'true':
 		$modules->showAll(true);
+		$showAll = true;
 		break;
 	case 'false':
 	default:
 		//
 		break;
 }
-$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_subpagetitle').
+$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_subpagetitle').
 	' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>';
-echo RedaxoCall::getAPI()->rexTitle($title);
+echo RedaxoCall::getAPI()->getRexTitle($title);
 
 $items = $modules->getModules($showAll);
 
 if ($items === false) {
-	echo RedaxoCall::getAPI()->errorMsgAddTags(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_no_rights'));
+	echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N('akrys_usagecheck_no_rights'));
 	return;
 }
 
 $showAllParam = '&showall=true';
-$showAllLinktext = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_link_show_all');
+$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_link_show_all');
 if ($showAll) {
 	$showAllParam = '';
-	$showAllLinktext = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_link_show_unused');
+	$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_link_show_unused');
 }
 
 $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
@@ -46,8 +45,8 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 <table class="<?php echo RedaxoCall::getAPI()->getTableClass() ?>">
 	<thead>
 		<tr>
-			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_table_heading_name'); ?></th>
-			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_table_heading_functions'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_table_heading_name'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -66,10 +65,10 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 					<?php
 					if ($item['slice_data'] === null) {
 						$index = 'akrys_usagecheck_module_msg_not_used';
-						echo RedaxoCall::getAPI()->errorMsg(RedaxoCall::getAPI()->i18nMsg($index));
+						echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N($index));
 					} else {
 						$index = 'akrys_usagecheck_module_msg_used';
-						echo RedaxoCall::getAPI()->infoMsg(RedaxoCall::getAPI()->i18nMsg($index));
+						echo RedaxoCall::getAPI()->getTaggedInfoMsg(RedaxoCall::getAPI()->getI18N($index));
 					}
 					?>
 
@@ -81,7 +80,7 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 								if (RedaxoCall::getAPI()->isAdmin()) {
 									$url = 'index.php?page=module&subpage=&function=edit&modul_id='.$item['id'];
 									$index = 'akrys_usagecheck_module_linktext_edit_code';
-									$linkText = RedaxoCall::getAPI()->i18nMsg($index);
+									$linkText = RedaxoCall::getAPI()->getI18N($index);
 									?>
 
 									<li>
@@ -95,7 +94,7 @@ $modules->outputMenu($subpage, $showAllParam, $showAllLinktext);
 									$usages = explode("\n", $item['slice_data']);
 
 									$index = 'akrys_usagecheck_module_linktext_edit_slice';
-									$linkTextRaw = RedaxoCall::getAPI()->i18nMsg($index);
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 									foreach ($usages as $usageRaw) {
 										$usage = explode("\t", $usageRaw);
 										$sliceID = $usage[0];

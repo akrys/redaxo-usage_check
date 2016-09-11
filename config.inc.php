@@ -10,7 +10,7 @@ use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
 //REDAXO 4
 /* Addon Parameter */
-$REX['ADDON']['rxid'][Config::NAME] = Config::ID;
+$REX['ADDON']['rxid'][Config::NAME] = Config::NAME;
 $REX['ADDON']['name'][Config::NAME] = 'Usage Check';
 $REX['ADDON']['perm'][Config::NAME] = 'usage_check[]';
 $REX['ADDON']['version'][Config::NAME] = Config::VERSION;
@@ -54,14 +54,14 @@ if (isset($I18N)) {
 	$I18N->appendFile($REX['INCLUDE_PATH'].'/addons/'.Config::NAME.'/lang/');
 
 	$pages = array();
-	$pages[] = array('overview', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_overview'));
-	$pages[] = array('picture', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_picture'));
-	$pages[] = array('module', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module'));
+	$pages[] = array('overview', RedaxoCall::getAPI()->getI18N('akrys_usagecheck_overview'));
+	$pages[] = array('picture', RedaxoCall::getAPI()->getI18N('akrys_usagecheck_picture'));
+	$pages[] = array('module', RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module'));
 	if ($REX['USER'] && $REX['USER']->isAdmin()) {
-		$pages[] = array('action', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action'));
+		$pages[] = array('action', RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action'));
 	}
-	$pages[] = array('template', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_templates'));
-	$pages[] = array('changelog', RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_changelog'));
+	$pages[] = array('template', RedaxoCall::getAPI()->getI18N('akrys_usagecheck_templates'));
+	$pages[] = array('changelog', RedaxoCall::getAPI()->getI18N('akrys_usagecheck_changelog'));
 
 	$REX['ADDON']['pages'][Config::NAME] = $pages;
 }

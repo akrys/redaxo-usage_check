@@ -1,23 +1,22 @@
 <?php
+
 /**
  * Anzeige der nicht verwendeten Bilder.
  */
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
-
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Pictures.php';
 $pictures = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
 
-$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_subpagetitle').
+$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_subpagetitle').
 	' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>';
-echo RedaxoCall::getAPI()->rexTitle($title);
+echo RedaxoCall::getAPI()->getRexTitle($title);
 
+$showAll = false;
 switch (rex_get('showall', 'string', "")) {
 	case 'true':
 		$pictures->showAll(true);
+		$showAll = true;
 		break;
 	case 'false':
 	default:
@@ -27,14 +26,14 @@ switch (rex_get('showall', 'string', "")) {
 $items = $pictures->getPictures();
 
 if ($items === false) {
-	echo RedaxoCall::getAPI()->errorMsgAddTags(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_no_rights'));
+	echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N('akrys_usagecheck_no_rights'));
 	return;
 }
 
-$showAllLinktext = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_link_show_unused');
+$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_link_show_unused');
 $showAllParam = '';
 if (!$showAll) {
-	$showAllLinktext = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_link_show_all');
+	$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_link_show_all');
 	$showAllParam = '&showall=true';
 }
 
@@ -44,8 +43,8 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 <table class="<?php echo RedaxoCall::getAPI()->getTableClass(); ?>">
 	<thead>
 		<tr>
-			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_table_heading_name'); ?></th>
-			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_table_heading_functions'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_table_heading_name'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -109,11 +108,11 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 
 					$errors = array();
 					if ($used === false) {
-						$errors[] = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_msg_not_used');
+						$errors[] = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_msg_not_used');
 					}
 
 					if (!$pictures->exists($item)) {
-						$errors[] = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_msg_not_found');
+						$errors[] = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_msg_not_found');
 					}
 
 					//Ob ein Medium lt. Medienpool in Nutzung ist, brauchen wir nur zu prüfen,
@@ -138,7 +137,7 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 						}
 
 						if ($used) {
-							$errors[] = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_msg_in_use');
+							$errors[] = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_msg_in_use');
 						}
 					}
 
@@ -146,13 +145,13 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 						$text = '';
 						foreach ($errors as $error) {
 							if (trim($error) !== '') {
-								$text.=RedaxoCall::getAPI()->addTags($error);
+								$text.=RedaxoCall::getAPI()->getTaggedMsg($error);
 							}
 						}
-						echo RedaxoCall::getAPI()->errorMsg($text);
+						echo RedaxoCall::getAPI()->getErrorMsg($text);
 					} else {
 						$text = 'akrys_usagecheck_images_msg_used';
-						echo RedaxoCall::getAPI()->infoMsgAddTags(RedaxoCall::getAPI()->i18nMsg($text));
+						echo RedaxoCall::getAPI()->getTaggedInfoMsg(RedaxoCall::getAPI()->getI18N($text));
 					}
 					?>
 
@@ -161,7 +160,7 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 							<ol>
 								<?php
 								$url = 'index.php?page=mediapool&subpage=detail&file_name='.$item['filename'];
-								$linkText = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_linktext_edit');
+								$linkText = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_linktext_edit');
 								?>
 
 								<li><a href="<?php echo $url ?>" target="_blank"><?php echo $linkText; ?></a><br /></li>
@@ -171,7 +170,7 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 									$usages = explode("\n", $item['slice_data']);
 
 									$index = 'akrys_usagecheck_images_linktext_edit_in_slice';
-									$linkTextRaw = RedaxoCall::getAPI()->i18nMsg($index);
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
 
@@ -204,7 +203,7 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 								if ($item['metaArtIDs'] !== null) {
 									$usages = explode("\n", $item['metaArtIDs']);
 									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_art';
-									$linkTextRaw = RedaxoCall::getAPI()->i18nMsg($index);
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
 
@@ -232,7 +231,7 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 									$usages = explode("\n", $item['metaCatIDs']);
 
 									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_cat';
-									$linkTextRaw = RedaxoCall::getAPI()->i18nMsg($index);
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
 
@@ -264,7 +263,7 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 
 								if ($item['metaMedIDs'] !== null) {
 									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_med';
-									$linkTextRaw = RedaxoCall::getAPI()->i18nMsg($index);
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 
 									$usages = explode("\n", $item['metaMedIDs']);
 									foreach ($usages as $usage) {
@@ -294,7 +293,7 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 
 
 								$index = 'akrys_usagecheck_images_linktext_edit_in_xformtable';
-								$linkTextRaw = RedaxoCall::getAPI()->i18nMsg($index);
+								$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 								foreach ($items['fields'] as $table => $field) {
 									if (!isset($item[$table])) {
 										continue;
@@ -349,7 +348,7 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 							}
 
 							if (isset($initCat)) {
-								$title = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_images_category_header');
+								$title = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_category_header');
 								?>
 
 								<small style="font-size:0.875em;">

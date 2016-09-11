@@ -19,6 +19,8 @@
 		<ignore>pages/*</ignore>
 		<ignore>general/*</ignore>
 		<ignore>vendor/*</ignore>
+		<!--<ignore>akrys/redaxo/addon/UsageCheck/Tests/*</ignore>-->
+		<ignore>akrys/redaxo/addon/UsageCheck/Tests/bootstrap.php</ignore>
 		<ignore>node_modules/*</ignore>
 		<ignore>server.php</ignore>
 	</files>

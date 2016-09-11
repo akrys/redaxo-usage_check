@@ -65,7 +65,7 @@ SQL;
 	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
 	{
 		$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'&subpage='.$subpage.$showAllParam;
-		$text = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_module_intro_text');
+		$text = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_intro_text');
 		?>
 
 		<p class="rex-tx1"><a href="<?php echo $url; ?>"><?php echo $showAllLinktext; ?></a></p>
@@ -76,6 +76,10 @@ SQL;
 
 	/**
 	 * Abfrage der Rechte für das Modul
+	 *
+	 * Unit Testing
+	 * Die Rechteverwaltung ist zu nah am RedaxoCore, um das auf die Schnelle simulieren zu können.
+	 * @codeCoverageIgnore
 	 *
 	 * @param array $item
 	 * @return boolean

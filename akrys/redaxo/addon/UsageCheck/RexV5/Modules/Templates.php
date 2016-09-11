@@ -109,7 +109,7 @@ SQL;
 	{
 		$user = \rex::getUser();
 		if ($user->isAdmin()) {
-			$url = 'index.php?page=template&function=edit&template_id='.$item['id'];
+			$url = 'index.php?page=templates&function=edit&template_id='.$item['id'];
 			?>
 
 			<a href="<?php echo $url; ?>"><?php echo $linkText; ?></a>

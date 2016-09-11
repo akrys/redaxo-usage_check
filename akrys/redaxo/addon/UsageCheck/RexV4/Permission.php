@@ -18,6 +18,10 @@ class Permission
 	/**
 	 * Prüft die Rechte für den aktuellen User.
 	 *
+	 * Unit Testing
+	 * Die Rechteverwaltung ist zu nah am RedaxoCore, um das auf die Schnelle simulieren zu können.
+	 * @codeCoverageIgnore
+	 *
 	 * @param string $perm eine der PERM-Konstanten
 	 * @return boolean
 	 */

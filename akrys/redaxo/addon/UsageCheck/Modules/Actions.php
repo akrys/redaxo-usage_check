@@ -35,17 +35,14 @@ abstract class Actions
 		$object = null;
 		switch (RedaxoCall::getRedaxoVersion()) {
 			case RedaxoCall::REDAXO_VERSION_4:
-				require_once __DIR__.'/../RexV4/Modules/Actions.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV4\Modules\Actions();
 				break;
 			case RedaxoCall::REDAXO_VERSION_5:
-				require_once __DIR__.'/../RexV5/Modules/Actions.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Actions();
 				break;
 		}
 
 		if (!isset($object)) {
-			require_once __DIR__.'/../Exception/FunctionNotCallableException.php';
 			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
 		}
 

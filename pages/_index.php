@@ -19,7 +19,7 @@ if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
 
 TEXT;
 
-		echo RedaxoCall::getAPI()->errorMsg($text, false);
+		echo RedaxoCall::getAPI()->getErrorMsg($text, false);
 	}
 }
 
@@ -44,6 +44,6 @@ $contentFile = __DIR__.'/_'.$subpage.'.php';
 if (file_exists($contentFile)) {
 	include $contentFile;
 } else {
-	$msg = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile;
-	echo RedaxoCall::getAPI()->errorMsg($msg, true);
+	$msg = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile;
+	echo RedaxoCall::getAPI()->getErrorMsg($msg, true);
 }

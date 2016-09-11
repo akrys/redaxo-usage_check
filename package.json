@@ -9,6 +9,7 @@
 		"phplint": "*",
 		"gulp-shell": "*",
 		"gulp-phpunit": "*",
-		"gulp-phpcs": "*"
+		"gulp-phpcs": "*",
+		"escape-string-regexp": "*"
 	}
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<!--
+-
+- Sequel Pro XML dump
+- Version 4541
+-
+- http://www.sequelpro.com/
+- https://github.com/sequelpro/sequelpro
+-
+- Host: 127.0.0.1 (MySQL 5.6.31-0ubuntu0.15.10.1)
+- Datenbank: redaxo_4_6_1
+- Erstellt am Time: 2016-08-30 21:10:46 +0000
+-
+-->
+
+<redaxo_4_6_1>
+
+	<custom>
+	<row>
+		<Name>rex_xform_field</Name>
+		<Engine>MyISAM</Engine>
+		<Version>10</Version>
+		<Row_format>Dynamic</Row_format>
+		<Rows>5</Rows>
+		<Avg_row_length>72</Avg_row_length>
+		<Data_length>364</Data_length>
+		<Max_data_length>281474976710655</Max_data_length>
+		<Index_length>2048</Index_length>
+		<Data_free>0</Data_free>
+		<Auto_increment>6</Auto_increment>
+		<Create_time>2016-02-28 14:35:27</Create_time>
+		<Update_time>2016-08-28 18:24:07</Update_time>
+		<Check_time>NULL</Check_time>
+		<Collation>utf8_general_ci</Collation>
+		<Checksum>NULL</Checksum>
+		<Create_options></Create_options>
+		<Comment></Comment>
+	</row>
+
+	</custom>
+
+</redaxo_4_6_1>

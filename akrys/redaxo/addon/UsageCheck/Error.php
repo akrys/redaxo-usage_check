@@ -28,6 +28,12 @@ class Error
 	private $errors = array();
 
 	/**
+	 * Iterator-Zählervariable
+	 * @var int
+	 */
+	private $index = 0;
+
+	/**
 	 * add a text to the messages
 	 * @param string $text
 	 */
@@ -47,7 +53,7 @@ class Error
 	 */
 	public function next()
 	{
-		$this->i++;
+		$this->index++;
 		return $this->current();
 	}
 
@@ -64,7 +70,7 @@ class Error
 		if (!$this->valid()) {
 			return false;
 		}
-		return $this->errors[$this->i];
+		return $this->errors[$this->index];
 	}
 
 	/**
@@ -75,7 +81,7 @@ class Error
 	 */
 	public function rewind()
 	{
-		$this->i = 0;
+		$this->index = 0;
 	}
 
 	/**
@@ -88,7 +94,7 @@ class Error
 	 */
 	public function key()
 	{
-		return $this->i;
+		return $this->index;
 	}
 
 	/**
@@ -101,7 +107,7 @@ class Error
 	 */
 	public function valid()
 	{
-		if (!isset($this->errors[$this->i])) {
+		if (!isset($this->errors[$this->index])) {
 			return false;
 		}
 		return true;
@@ -127,11 +133,19 @@ class Error
 	}
 
 	/**
+	 * Konstuktor
+	 */
+	final private function __construct()
+	{
+		$this->errors = array();
+	}
+
+	/**
 	 * forbid cloning
 	 */
-	public function __clone()
+	final public function __clone()
 	{
-		//
+		throw new Exception\CloneException();
 	}
 // </editor-fold>
 }

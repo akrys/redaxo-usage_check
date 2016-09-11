@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<!--
+-
+- Sequel Pro XML dump
+- Version 4541
+-
+- http://www.sequelpro.com/
+- https://github.com/sequelpro/sequelpro
+-
+- Host: 127.0.0.1 (MySQL 5.6.31-0ubuntu0.15.10.1)
+- Datenbank: redaxo_5_1
+- Erstellt am Time: 2016-08-28 09:16:42 +0000
+-
+-->
+
+<redaxo_5_1>
+
+	<custom>
+	<row>
+		<id>11</id>
+		<name>test inaktiv</name>
+		<content>&lt;fydscvysdfsa</content>
+		<active>1</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>2016-08-28 09:40:07</createdate>
+		<updatedate>2016-08-28 09:40:07</updatedate>
+		<attributes>{&quot;ctype&quot;:[],&quot;modules&quot;:{&quot;1&quot;:{&quot;all&quot;:&quot;1&quot;}},&quot;categories&quot;:{&quot;all&quot;:&quot;1&quot;}}</attributes>
+		<revision>0</revision>
+		<article_id>NULL</article_id>
+		<articles>NULL</articles>
+		<templates>NULL</templates>
+	</row>
+
+	</custom>
+
+</redaxo_5_1>

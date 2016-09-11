@@ -41,17 +41,14 @@ abstract class Templates
 		$object = null;
 		switch (RedaxoCall::getRedaxoVersion()) {
 			case RedaxoCall::REDAXO_VERSION_4:
-				require_once __DIR__.'/../RexV4/Modules/Templates.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV4\Modules\Templates();
 				break;
 			case RedaxoCall::REDAXO_VERSION_5:
-				require_once __DIR__.'/../RexV5/Modules/Templates.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Templates();
 				break;
 		}
 
 		if (!isset($object)) {
-			require_once __DIR__.'/../Exception/FunctionNotCallableException.php';
 			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
 		}
 
@@ -87,8 +84,6 @@ abstract class Templates
 	 */
 	public function getTemplates()
 	{
-
-		$showAll = $this->showAll;
 		$showInactive = $this->showInactive;
 
 		if (!Permission::getVersion()->check(Permission::PERM_STRUCTURE)) {
@@ -117,13 +112,48 @@ abstract class Templates
 		$where = '';
 		$having = '';
 
-		if (!$showAll) {
+		$this->addParamCriteria($where, $having);
+		$this->addParamStatementKeywords($where, $having);
+		$sql = $this->getSQL($where, $having);
+		$return = $rexSQL->getArray($sql);
+		// @codeCoverageIgnoreStart
+		//SQL-Fehler an der Stelle recht schwer zu testen, aber dennoch sinnvoll enthalten zu sein.
+		if (!$return) {
+			\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($rexSQL->getError());
+		}
+		// @codeCoverageIgnoreStart
+
+		return $return;
+	}
+
+	/**
+	 * Parameter-Kriterien anwenden.
+	 *
+	 * Die Funktion dient der Komplexitätsminderung, die von phpmd angemahnt wurde.
+	 *
+	 * @param string &$where
+	 * @param string &$having
+	 */
+	private function addParamCriteria(&$where, &$having)
+	{
+		if (!$this->showAll) {
 			$having.='articles is null and templates is null';
 		}
-		if (!$showInactive) {
+		if (!$this->showInactive) {
 			$where.='t.active = 1';
 		}
+	}
 
+	/**
+	 * Keywords anwenden, wenn nötig.
+	 *
+	 * Die Funktion dient der Komplexitätsminderung, die von phpmd angemahnt wurde.
+	 *
+	 * @param string &$where
+	 * @param string &$having
+	 */
+	private function addParamStatementKeywords(&$where, &$having)
+	{
 		if ($where !== '') {
 			$where = 'where '.$where.' ';
 		}
@@ -131,14 +161,6 @@ abstract class Templates
 		if ($having !== '') {
 			$having = 'having '.$having.' ';
 		}
-
-		$sql = $this->getSQL($where, $having);
-		$return = $rexSQL->getArray($sql);
-		if (!$return) {
-			\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($rexSQL->getError());
-		}
-
-		return $return;
 	}
 
 	/**
@@ -159,23 +181,23 @@ abstract class Templates
 	{
 		$return = array();
 
-		$text = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_unused');
+		$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_unused');
 		$return['showAllParam'] = '';
 		$return['showAllParamCurr'] = '&showall=true';
 		$return['showAllLinktext'] = $text;
 		if (!$showAll) {
-			$text = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_all');
+			$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_all');
 			$return['showAllParam'] = '&showall=true';
 			$return['showAllParamCurr'] = '';
 			$return['showAllLinktext'] = $text;
 		}
 
-		$text = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_active');
+		$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_active');
 		$return['showInactiveParam'] = '';
 		$return['showInactiveParamCurr'] = '&showinactive=true';
 		$return['showInactiveLinktext'] = $text;
 		if (!$showInactive) {
-			$text = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_template_link_show_active_inactive');
+			$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_active_inactive');
 			$return['showInactiveParam'] = '&showinactive=true';
 			$return['showInactiveParamCurr'] = '';
 			$return['showInactiveLinktext'] = $text;

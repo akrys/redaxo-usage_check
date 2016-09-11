@@ -10,48 +10,51 @@ require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
-$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action_subpagetitle').
+$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_subpagetitle').
 	' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>';
-echo RedaxoCall::getAPI()->rexTitle($title);
+echo RedaxoCall::getAPI()->getRexTitle($title);
 
-switch (rex_get('showall', 'string', "")) {
-	case 'true':
-		$actions->showAll(true);
-		break;
-	case 'false':
-	default:
-		//
-		break;
-}
 
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Actions.php';
 $actions = \akrys\redaxo\addon\UsageCheck\Modules\Actions::create();
 
+switch (rex_get('showall', 'string', "")) {
+	case 'true':
+		$showAll = true;
+		break;
+	case 'false':
+	default:
+		$showAll = false;
+		break;
+}
+
+$actions->showAll($showAll);
+
 $items = $actions->getActions();
 
 if ($items === false) {
-	echo RedaxoCall::getAPI()->errorMsgAddTags(RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_no_rights'));
+	echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N('akrys_usagecheck_no_rights'));
 	return;
 }
 
 $showAllParam = '&showall=true';
-$showAllLinktext = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action_link_show_all');
+$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_link_show_all');
 if ($showAll) {
 	$showAllParam = '';
-	$showAllLinktext = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action_link_show_unused');
+	$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_link_show_unused');
 }
 
 $actions->outputMenu($subpage, $showAllParam, $showAllLinktext);
 ?>
 
-<p class="rex-tx1"><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action_intro_text'); ?></p>
+<p class="rex-tx1"><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_intro_text'); ?></p>
 
 
 <table class="<?php echo RedaxoCall::getAPI()->getTableClass(); ?>">
 	<thead>
 		<tr>
-			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action_table_heading_name'); ?></th>
-			<th><?php echo RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action_table_heading_functions'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_table_heading_name'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -64,11 +67,11 @@ $actions->outputMenu($subpage, $showAllParam, $showAllLinktext);
 				<td>
 					<?php
 					if ($item['modul'] === null) {
-						$msg = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action_msg_not_used');
-						echo RedaxoCall::getAPI()->errorMsgAddTags($msg);
+						$msg = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_msg_not_used');
+						echo RedaxoCall::getAPI()->getTaggedErrorMsg($msg);
 					} else {
-						$msg = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action_msg_used');
-						echo RedaxoCall::getAPI()->infoMsgAddTags($msg);
+						$msg = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_msg_used');
+						echo RedaxoCall::getAPI()->getTaggedInfoMsg($msg);
 					}
 					?>
 
@@ -76,7 +79,7 @@ $actions->outputMenu($subpage, $showAllParam, $showAllLinktext);
 						<span>
 							<ol>
 								<?php
-								$output = RedaxoCall::getAPI()->i18nMsg('akrys_usagecheck_action_linktext_edit_code');
+								$output = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_linktext_edit_code');
 								?>
 
 								<li><?php $actions->outputActionEdit($item, $output); ?></li>
@@ -85,7 +88,7 @@ $actions->outputMenu($subpage, $showAllParam, $showAllLinktext);
 								if ($item['modul'] !== null) {
 									$usages = explode("\n", $item['modul']);
 									$idex = 'akrys_usagecheck_action_linktext_edit_in_modul';
-									$linkTextRaw = RedaxoCall::getAPI()->i18nMsg($index);
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 									foreach ($usages as $usageRaw) {
 										$usage = (explode("\t", $usageRaw));
 										$modulID = $usage[0];

@@ -50,10 +50,6 @@ SQL;
 		$xformtableExists = count($xformfield) > 0;
 		$xformfieldExists = count($xformtable) > 0;
 
-		if ($xformfieldExists <= 0 || $xformtableExists <= 0) {
-			return $tabels;
-		}
-
 		if ($xformfieldExists && $xformtableExists) {
 			$tabels = $rexSQL->getArray($sql);
 		}
@@ -185,6 +181,33 @@ SQL;
 	}
 
 	/**
+	 * Namen der Tabelle und des Feldes ermitteln.
+	 *
+	 * Wenn das allgemein in in der Funktion getMetaTableSQLParts integriert wäre, meckert phpmd eine zu hohe
+	 * Komplexität an.
+	 *
+	 * @param string $name
+	 * @return string
+	 *
+	 * @return array Indezes field, table
+	 */
+	private function getTableNames($name)
+	{
+		$return = array();
+		if (preg_match('/'.preg_quote(\rex_metainfo_article_handler::PREFIX, '/').'/', $name)) {
+			$return['field'] = 'joinArtMeta';
+			$return['table'] = 'rex_article_art_meta';
+		} elseif (preg_match('/'.preg_quote(\rex_metainfo_category_handler::PREFIX, '/').'/', $name)) {
+			$return['field'] = 'joinCatMeta';
+			$return['table'] = 'rex_article_cat_meta';
+		} elseif (preg_match('/'.preg_quote(\rex_metainfo_media_handler::PREFIX, '/').'/', $name)) {
+			$return['field'] = 'joinMedMeta';
+			$return['table'] = 'rex_article_med_meta';
+		}
+		return $return;
+	}
+
+	/**
 	 * SQL Parts für die Metadaten innerhalb von Redaxo5 generieren
 	 *
 	 * @return array
@@ -206,70 +229,106 @@ SQL;
 		$names = $this->getMetaNames();
 
 		foreach ($names as $name) {
-			if (preg_match('/'.preg_quote(\rex_metainfo_article_handler::PREFIX, '/').'/', $name['name'])) {
-				$fieldname = 'joinArtMeta';
-				$tableName = 'rex_article_art_meta';
-			} elseif (preg_match('/'.preg_quote(\rex_metainfo_category_handler::PREFIX, '/').'/', $name['name'])) {
-				$fieldname = 'joinCatMeta';
-				$tableName = 'rex_article_cat_meta';
-			} elseif (preg_match('/'.preg_quote(\rex_metainfo_media_handler::PREFIX, '/').'/', $name['name'])) {
-				$fieldname = 'joinMedMeta';
-				$tableName = 'rex_article_med_meta';
-			} else {
-				continue;
-			}
+			$table = $this->getTableNames($name['name']);
+			if (isset($table['field']) && isset($table['table'])) {
+				$fieldname = $table['field'];
+				$tablename = $table['table'];
 
-			switch ($name['type']) {
-				case 'REX_MEDIA_WIDGET':
-					if ($$fieldname != '') {
-						$$fieldname.=' or ';
-					}
-					$$fieldname.=''.$tableName.'.'.$name['name'].' = f.filename';
-					break;
-				case 'REX_MEDIALIST_WIDGET':
-					if ($$fieldname != '') {
-						$$fieldname.=' or ';
-					}
-					$$fieldname.='FIND_IN_SET(f.filename, '.$tableName.'.'.$name['name'].')';
-					break;
+				switch ($name['type']) {
+					case 'REX_MEDIA_WIDGET':
+						if ($$fieldname != '') {
+							$$fieldname.=' or ';
+						}
+						$$fieldname.=''.$tablename.'.'.$name['name'].' = f.filename';
+						break;
+					case 'REX_MEDIALIST_WIDGET':
+						if ($$fieldname != '') {
+							$$fieldname.=' or ';
+						}
+						$$fieldname.='FIND_IN_SET(f.filename, '.$tablename.'.'.$name['name'].')';
+						break;
+				}
 			}
 		}
 
-		if ($joinArtMeta == '') {
-			$return['additionalSelect'].=',null as metaArtIDs '.PHP_EOL;
-		} else {
-			$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on '.
-				'(rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
-			$return['additionalSelect'].=',group_concat(distinct concat('.
-				'rex_article_art_meta.id,"\t",'.
-				'rex_article_art_meta.name,"\t",'.
-				'rex_article_art_meta.clang_id) Separator "\n") as metaArtIDs '.PHP_EOL;
-		}
-
-		if ($joinCatMeta == '') {
-			$return['additionalSelect'].=',null as metaCatIDs '.PHP_EOL;
-		} else {
-			$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on '.
-				'(rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
-			$return['additionalSelect'].=',group_concat(distinct concat('.
-				'rex_article_cat_meta.id,"\t",'.
-				'rex_article_cat_meta.catname,"\t",'.
-				'rex_article_cat_meta.clang_id,"\t",'.
-				'rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
-		}
-		if ($joinMedMeta == '') {
-			$return['additionalSelect'].=',null as metaMedIDs '.PHP_EOL;
-		} else {
-			$return['additionalJoins'].='LEFT join rex_media as rex_article_med_meta on '.
-				'(rex_article_med_meta.id is not null and ('.$joinMedMeta.'))'.PHP_EOL;
-			$return['additionalSelect'].=',group_concat(distinct concat('.
-				'rex_article_med_meta.id,"\t",'.
-				'rex_article_med_meta.category_id,"\t",'.
-				'rex_article_med_meta.filename'.
-				') Separator "\n") as metaMedIDs '.PHP_EOL;
-		}
+		$this->addArtSelectAndJoinStatements($return, $joinArtMeta);
+		$this->addCatSelectAndJoinStatements($return, $joinCatMeta);
+		$this->addMedSelectAndJoinStatements($return, $joinMedMeta);
 
 		return $return;
+	}
+
+	/**
+	 * Select und Joinstatments im Array anfügen
+	 *
+	 * Komplexitätsvermeidung von getMetaTableSQLParts
+	 *
+	 * @param array &$return
+	 * @param string $joinArtMeta
+	 */
+	private function addArtSelectAndJoinStatements(&$return, $joinArtMeta)
+	{
+		$selectMetaNull = ',null as metaArtIDs '.PHP_EOL;
+		$selectMetaNotNull = ',group_concat(distinct concat('.
+			'rex_article_art_meta.id,"\t",'.
+			'rex_article_art_meta.name,"\t",'.
+			'rex_article_art_meta.clang_id) Separator "\n") as metaArtIDs '.PHP_EOL;
+		$return['additionalSelect'].=$joinArtMeta == '' ? $selectMetaNull : $selectMetaNotNull;
+
+		if ($joinArtMeta != '') {
+			$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on '.
+				'(rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
+		}
+	}
+
+	/**
+	 * Select und Joinstatments im Array anfügen
+	 *
+	 * Komplexitätsvermeidung von getMetaTableSQLParts
+	 *
+	 * @param array &$return
+	 * @param string $joinCatMeta
+	 */
+	private function addCatSelectAndJoinStatements(&$return, $joinCatMeta)
+	{
+		$selectMetaNull = ',null as metaCatIDs '.PHP_EOL;
+		$selectMetaNotNull = ',group_concat(distinct concat('.
+			'rex_article_cat_meta.id,"\t",'.
+			'rex_article_cat_meta.catname,"\t",'.
+			'rex_article_cat_meta.clang_id,"\t",'.
+			'rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
+
+		$return['additionalSelect'].=$joinCatMeta == '' ? $selectMetaNull : $selectMetaNotNull;
+
+		if ($joinCatMeta != '') {
+			$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on '.
+				'(rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
+		}
+	}
+
+	/**
+	 * Select und Joinstatments im Array anfügen
+	 *
+	 * Komplexitätsvermeidung von getMetaTableSQLParts
+	 *
+	 * @param array &$return
+	 * @param string $joinMedMeta
+	 */
+	private function addMedSelectAndJoinStatements(&$return, $joinMedMeta)
+	{
+		$selectMetaNull = ',null as metaMedIDs '.PHP_EOL;
+		$selectMetaNotNull = ',group_concat(distinct concat('.
+			'rex_article_med_meta.id,"\t",'.
+			'rex_article_med_meta.category_id,"\t",'.
+			'rex_article_med_meta.filename'.
+			') Separator "\n") as metaMedIDs '.PHP_EOL;
+
+		$return['additionalSelect'].=$joinMedMeta == '' ? $selectMetaNull : $selectMetaNotNull;
+
+		if ($joinMedMeta != '') {
+			$return['additionalJoins'].='LEFT join rex_media as rex_article_med_meta on '.
+				'(rex_article_med_meta.id is not null and ('.$joinMedMeta.'))'.PHP_EOL;
+		}
 	}
 
 	/**

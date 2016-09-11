@@ -35,17 +35,14 @@ abstract class Modules
 		$object = null;
 		switch (RedaxoCall::getRedaxoVersion()) {
 			case RedaxoCall::REDAXO_VERSION_4:
-				require_once __DIR__.'/../RexV4/Modules/Modules.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV4\Modules\Modules();
 				break;
 			case RedaxoCall::REDAXO_VERSION_5:
-				require_once __DIR__.'/../RexV5/Modules/Modules.php';
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Modules();
 				break;
 		}
 
 		if (!isset($object)) {
-			require_once __DIR__.'/../Exception/FunctionNotCallableException.php';
 			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
 		}
 
@@ -107,6 +104,10 @@ abstract class Modules
 
 	/**
 	 * Abfrage der Rechte für das Modul
+	 *
+	 * Unit Testing
+	 * Die Rechteverwaltung ist zu nah am RedaxoCore, um das auf die Schnelle simulieren zu können.
+	 * @codeCoverageIgnore
 	 *
 	 * @param array $item
 	 * @return boolean
