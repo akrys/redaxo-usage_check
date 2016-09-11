@@ -1,20 +1,15 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-namespace akrys\redaxo\addon\UsageCheck\Exception;
-
 /**
- * Datei für ...
+ * Datei für die FunctionNotCallableException
+ *
+ * Die Exception wird geworfen, wenn ein Funktionsaufruf ungültig war. z.B. wenn keine gültige Redaxo-Version erkannt
+ * wurde.
  *
  * @version       1.0 / 2016-02-14
- * @package       new_package
- * @subpackage    new_subpackage
  * @author        akrys
  */
+namespace akrys\redaxo\addon\UsageCheck\Exception;
 
 /**
  * Description of FunctionNotCallableException

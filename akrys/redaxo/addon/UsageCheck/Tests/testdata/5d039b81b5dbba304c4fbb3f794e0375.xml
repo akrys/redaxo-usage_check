@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+
+<!--
+-
+- Sequel Pro XML dump
+- Version 4541
+-
+- http://www.sequelpro.com/
+- https://github.com/sequelpro/sequelpro
+-
+- Host: 127.0.0.1 (MySQL 5.6.31-0ubuntu0.15.10.1)
+- Datenbank: redaxo_4_6_1
+- Erstellt am Time: 2016-08-30 21:16:08 +0000
+-
+-->
+
+<redaxo_4_6_1>
+
+	<custom>
+	<row>
+		<id>5</id>
+		<label></label>
+		<name>test2</name>
+		<content></content>
+		<active>1</active>
+		<createuser>admin</createuser>
+		<updateuser></updateuser>
+		<createdate>1443262988</createdate>
+		<updatedate>0</updatedate>
+		<attributes>a:3:{s:5:&quot;ctype&quot;;a:0:{}s:7:&quot;modules&quot;;a:1:{i:1;a:1:{s:3:&quot;all&quot;;s:1:&quot;1&quot;;}}s:10:&quot;categories&quot;;a:1:{s:3:&quot;all&quot;;s:1:&quot;1&quot;;}}</attributes>
+		<revision>0</revision>
+		<article_id>NULL</article_id>
+		<articles>NULL</articles>
+		<templates>NULL</templates>
+	</row>
+
+	<row>
+		<id>1</id>
+		<label></label>
+		<name>default</name>
+		<content>&lt;?php
+
+
+// ------ DESCRIPTION/KEYWORDS
+$OOStartArticle = OOArticle::getArticleById($REX['START_ARTICLE_ID'], $REX['CUR_CLANG']);
+$meta_beschreibung = $OOStartArticle-&gt;getValue(&quot;art_description&quot;);
+$meta_suchbegriffe = $OOStartArticle-&gt;getValue(&quot;art_keywords&quot;);
+
+if($this-&gt;getValue(&quot;art_description&quot;) != &quot;&quot;)
+    $meta_beschreibung = $this-&gt;getValue(&quot;art_description&quot;);
+    
+if($this-&gt;getValue(&quot;art_keywords&quot;) != &quot;&quot;)
+    $meta_suchbegriffe = $this-&gt;getValue(&quot;art_keywords&quot;);
+
+
+?&gt;&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot;
+    &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;
+
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xml:lang=&quot;de&quot; lang=&quot;de&quot;&gt;
+&lt;head&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+    &lt;title&gt;&lt;?php print $REX['SERVERNAME'].' | '.$this-&gt;getValue(&quot;name&quot;); ?&gt;&lt;/title&gt;
+    &lt;meta name=&quot;keywords&quot; content=&quot;&lt;?php print htmlspecialchars($meta_suchbegriffe); ?&gt;&quot; /&gt;
+    &lt;meta name=&quot;description&quot; content=&quot;&lt;?php print htmlspecialchars($meta_beschreibung); ?&gt;&quot; /&gt;
+
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;&lt;?php echo $REX['HTDOCS_PATH'] ?&gt;files/main.css&quot; media=&quot;screen&quot; /&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;&lt;?php echo $REX['HTDOCS_PATH'] ?&gt;files/navigation.css&quot; media=&quot;screen&quot; /&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;&lt;?php echo $REX['HTDOCS_PATH'] ?&gt;files/content.css&quot; media=&quot;screen&quot; /&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;&lt;?php echo $REX['HTDOCS_PATH'] ?&gt;files/default.css&quot; media=&quot;screen&quot; /&gt;
+
+
+&lt;/head&gt;
+
+&lt;body class=&quot;mainPage&quot;&gt;
+    &lt;div&gt;
+        &lt;a name=&quot;top&quot; id=&quot;top&quot;&gt;&lt;/a&gt;
+    &lt;/div&gt;
+
+    &lt;div id=&quot;site-content&quot;&gt;
+        &lt;div id=&quot;column&quot;&gt;
+            
+            &lt;div id=&quot;header&quot;&gt;
+                &lt;div id=&quot;logo&quot;&gt;
+                    &lt;a href=&quot;&lt;?php echo $REX['HTDOCS_PATH'] ?&gt;index.php&quot; title=&quot;Zur&amp;uuml;ck zur Startseite&quot;&gt;REDAXO Demo&lt;/a&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            
+            &lt;div id=&quot;content&quot;&gt;
+
+                &lt;div id=&quot;main-content&quot;&gt;
+
+                    &lt;div id=&quot;nav&quot;&gt;
+                        REX_TEMPLATE[2]
+                        &lt;p class=&quot;copy&quot;&gt;&amp;copy; by &lt;a href=&quot;http://www.redaxo.org&quot;&gt;REDAXO&lt;/a&gt;&lt;/p&gt;
+                    &lt;/div&gt;
+
+                    &lt;div id=&quot;main&quot;&gt;
+                        &lt;div id=&quot;main-block&quot;&gt;
+                            &lt;div id=&quot;main-teaser&quot;&gt;
+                                Slogan: Einfach, flexibel, sinnvoll
+                            &lt;/div&gt;
+
+                            &lt;div id=&quot;main-content-block&quot;&gt;
+                                REX_TEMPLATE[3]
+                                REX_ARTICLE[]
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;br class=&quot;clear&quot; /&gt;
+
+                &lt;/div&gt;
+
+            &lt;/div&gt;
+
+            &lt;div id=&quot;footer&quot;&gt;
+                &lt;p class=&quot;floatRight&quot;&gt;&lt;a href=&quot;http://www.redaxo.org&quot;&gt;REDAXO CMS&lt;/a&gt; - SIMPLE DEMO | XHTML 1.0 Strict | pictures by &lt;a href=&quot;http://www.photocase.com&quot;&gt;photocase.com&lt;/a&gt;&lt;/p&gt;
+                &lt;br class=&quot;clear&quot; /&gt;
+            &lt;/div&gt;
+
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;div style=&quot;display:none;&quot;&gt;Eigene Templates sind besser - REDAXO&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</content>
+		<active>1</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>1274876109</createdate>
+		<updatedate>1274876109</updatedate>
+		<attributes>a:3:{s:10:&quot;categories&quot;;a:1:{s:3:&quot;all&quot;;s:1:&quot;1&quot;;}s:5:&quot;ctype&quot;;a:0:{}s:7:&quot;modules&quot;;a:1:{i:1;a:1:{s:3:&quot;all&quot;;s:1:&quot;1&quot;;}}}</attributes>
+		<revision>0</revision>
+		<article_id>1</article_id>
+		<articles>1	0	1	Home	0
+2	0	1	Team	0
+3	0	1	System	0
+4	0	1	Erste Schritte	0
+5	0	1	FAQ	0
+6	0	1	Kontakt / Impressum	0
+8	3	1	Was ist REDAXO	0
+9	3	1	Für wen ist REDAXO	0
+10	3	1	Features	0
+11	3	1	Screenshots	0
+12	4	1	Doku	0
+13	4	1	Wiki	0
+14	4	1	Forum	0
+15	5	0	Was ist das Besondere an REDAXO?	0
+16	4	1	REDAXO	0
+17	5	0	Was sollte einen dazu bewegen, REDAXO zu nutzen?	0
+18	5	0	Wann wird der Einsatz von REDAXO empfohlen?	0
+19	5	0	Wie viele Internetpräsentationen wurden bereits mit REDAXO erstellt?	0
+20	5	0	Welche Kenntnisse brauche ich, um mit REDAXO arbeiten zu können?	0</articles>
+		<templates>NULL</templates>
+	</row>
+
+	</custom>
+
+</redaxo_4_6_1>

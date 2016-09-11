@@ -1,18 +1,12 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Frontend-Ausagbe für die Seite Tempalte
  */
-
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
 
 /* @var $I18N \i18n */
 
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Templates.php';
 
 switch (rex_get('showall', 'string', "")) {
 	case 'true':
@@ -34,12 +28,20 @@ switch (rex_get('showinactive', 'string', "")) {
 		break;
 }
 
-echo RedaxoCall::rexTitle(Config::NAME_OUT.' / '.RedaxoCall::i18nMsg('akrys_usagecheck_template_subpagetitle').' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>');
+$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_subpagetitle').
+	' <span style = "font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>';
+echo RedaxoCall::getAPI()->getRexTitle($title);
 $templates = akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
-$items = $templates->getTemplates($showAll, $showInactive);
+if ($showAll) {
+	$templates->showAll($showAll);
+}
+if ($showInactive) {
+	$templates->showInactive($showInactive);
+}
+$items = $templates->getTemplates();
 
 if ($items === false) {
-	echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_no_rights'), true);
+	echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N('akrys_usagecheck_no_rights'));
 	return;
 }
 ?>
@@ -53,15 +55,15 @@ if ($items === false) {
 <div style='clear:both'></div>
 
 <p class="rex-tx1">
-	<?php echo RedaxoCall::i18nMsg('akrys_usagecheck_template_intro_text'); ?><br />
+	<?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_intro_text'); ?><br />
 	<br />
 </p>
 
-<table class="<?php echo RedaxoCall::getTableClass() ?>">
+<table class="<?php echo RedaxoCall::getAPI()->getTableClass() ?>">
 	<thead>
 		<tr>
-			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_template_table_heading_name'); ?></th>
-			<th><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_template_table_heading_functions'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_table_heading_name'); ?></th>
+			<th><?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -69,41 +71,50 @@ if ($items === false) {
 		<?php
 		foreach ($items as $item) {
 			?>
-			<tr<?php echo $item['active'] == 1 ? '' : ' style="opacity:0.80;"' ?>>
+			<tr<?php echo $item['active'] == 1 ? '' : ' style = "opacity:0.80;"' ?>>
 				<td>
 					<?php
 					echo $item['name'];
 					if ($item['active'] == 0) {
 						?>
 						<br />
-						(<?php echo RedaxoCall::i18nMsg('akrys_usagecheck_template_table_inactive'); ?>)
+						(<?php echo RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_table_inactive'); ?>)
 						<br />
 						<?php
 					}
 					?>
-
 
 				</td>
 				<td>
 
 					<?php
 					if ($item['articles'] === null && $item['templates'] === null) {
-						echo RedaxoCall::errorMsg(RedaxoCall::i18nMsg('akrys_usagecheck_images_msg_not_used'));
+						$index = 'akrys_usagecheck_images_msg_not_used';
+						echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N($index));
 					} else {
-						echo RedaxoCall::infoMsg(RedaxoCall::i18nMsg('akrys_usagecheck_template_msg_used'));
+						$index = 'akrys_usagecheck_template_msg_used';
+						echo RedaxoCall::getAPI()->getTaggedInfoMsg(RedaxoCall::getAPI()->getI18N($index));
 					}
 					?>
 
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
-							<strong><?php echo RedaxoCall::i18nMsg('akrys_usagecheck_template_detail_heading'); ?></strong>
-							<ol>
+							<?php
+							$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_detail_heading');
+							?>
 
-								<li><?php $templates->outputTemplateEdit($item, RedaxoCall::i18nMsg('akrys_usagecheck_template_linktext_edit_code')); ?></li>
+							<strong><?php echo $text ?></strong>
+							<ol>
+								<?php
+								$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_linktext_edit_code');
+								?>
+
+								<li><?php $templates->outputTemplateEdit($item, $text); ?></li>
 
 								<?php
 								if ($item['articles'] !== null) {
-									$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_template_linktext_edit_article');
+									$index = 'akrys_usagecheck_template_linktext_edit_article';
+									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
 									$articles = explode("\n", $item['articles']);
 									foreach ($articles as $article) {
 										$usage = explode("\t", $article);
@@ -120,13 +131,14 @@ if ($items === false) {
 										$hasPerm = $templates->hasArticlePerm($articleID);
 
 										if ($hasPerm) {
-											$href = 'index.php?page=structure&article_id='.$articleID.'&function=edit_art&category_id='.$articleReID.'&clang='.$clang;
-											$linktext = $linktextRaw;
-											$linktext = str_replace('$articleID$', $articleID, $linktext);
-											$linktext = str_replace('$articleName$', $articleName, $linktext);
+											$href = 'index.php ? page = structure&article_id = '.$articleID.
+												'&function = edit_art&category_id = '.$articleReID.'&clang = '.$clang;
+											$linkText = $linkTextRaw;
+											$linkText = str_replace('$articleID$', $articleID, $linkText);
+											$linkText = str_replace('$articleName$', $articleName, $linkText);
 											?>
 
-											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+											<li><a href="<?php echo $href; ?>"><?php echo $linkText; ?></a></li>
 
 											<?php
 										}
@@ -135,12 +147,13 @@ if ($items === false) {
 
 								//Templates, die in Templates verwendert werden, betrifft
 								//nur die Coder, und das wären Admins
-								$hasPerm = RedaxoCall::isAdmin();
+								$hasPerm = RedaxoCall::getAPI()->isAdmin();
 								if ($hasPerm) {
-
 									if ($item['templates'] !== null) {
 										$templateData = explode("\n", $item['templates']);
-										$linktextRaw = RedaxoCall::i18nMsg('akrys_usagecheck_template_linktext_edit_template');
+
+										$index = 'akrys_usagecheck_template_linktext_edit_template';
+										$linkTextRaw = RedaxoCall::getApi()->getI18N($index);
 										foreach ($templateData as $templateItem) {
 											$usage = explode("\t", $templateItem);
 
@@ -148,12 +161,12 @@ if ($items === false) {
 											$name = $usage[1];
 
 											$href = $templates->getEditLink($id);
-											$linktext = $linktextRaw;
-											$linktext = str_replace('$templateName$', $name, $linktext);
-											$linktext = str_replace('$templateID$', $item['id'], $linktext);
+											$linkText = $linkTextRaw;
+											$linkText = str_replace('$templateName$', $name, $linkText);
+											$linkText = str_replace('$templateID$', $item['id'], $linkText);
 											?>
 
-											<li><a href="<?php echo $href; ?>"><?php echo $linktext; ?></a></li>
+											<li><a href="<?php echo $href; ?>"><?php echo $linkText; ?></a></li>
 
 											<?php
 										}
@@ -165,10 +178,11 @@ if ($items === false) {
 						</span>
 					</div>
 				</td>
+			</tr>
 
-				<?php
-			}
-			?>
+			<?php
+		}
+		?>
 
 	</tbody>
 </table>

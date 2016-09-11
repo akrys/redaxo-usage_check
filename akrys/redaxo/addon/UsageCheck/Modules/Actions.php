@@ -1,22 +1,15 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Datei für die Modul-Actions
+ *
+ * @version       1.0 / 2015-08-09
+ * @author        akrys
  */
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
-require_once __DIR__.'/../Permission.php';
-
-/**
- * Datei für ...
- *
- * @version       1.0 / 2015-08-09
- * @package       new_package
- * @subpackage    new_subpackage
- * @author        akrys
- */
+use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
+use \akrys\redaxo\addon\UsageCheck\Permission;
 
 /**
  * Description of Modules
@@ -25,32 +18,44 @@ require_once __DIR__.'/../Permission.php';
  */
 abstract class Actions
 {
+	/**
+	 * Anzeigemodus
+	 * @var boolean
+	 */
+	private $showAll = false;
 
 	/**
 	 * Redaxo-Spezifische Version wählen.
 	 * @return \akrys\redaxo\addon\UsageCheck\Modules\Actions
 	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public static function create()
 	{
 		$object = null;
-		switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-				require_once __DIR__.'/../RexV4/Modules/Actions.php';
+		switch (RedaxoCall::getRedaxoVersion()) {
+			case RedaxoCall::REDAXO_VERSION_4:
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV4\Modules\Actions();
 				break;
-			case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-				require_once __DIR__.'/../RexV5/Modules/Actions.php';
+			case RedaxoCall::REDAXO_VERSION_5:
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Actions();
 				break;
 		}
 
 		if (!isset($object)) {
-			require_once __DIR__.'/../Exception/FunctionNotCallableException.php';
 			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
 		}
 
 		return $object;
+	}
+
+	/**
+	 * Anzeigemodus umstellen
+	 * @param boolean $bln
+	 */
+	public function showAll($bln)
+	{
+		$this->showAll = (boolean) $bln;
 	}
 
 	/**
@@ -62,29 +67,25 @@ abstract class Actions
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
-	public function getActions($show_all = false)
+	public function getActions()
 	{
-		if (!\akrys\redaxo\addon\UsageCheck\Permission::check(\akrys\redaxo\addon\UsageCheck\Permission::PERM_MODUL)) {
+		if (!Permission::getVersion()->check(Permission::PERM_MODUL)) {
 			return false;
 		}
 
-		if (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion() == \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4) {
-			$rexSQL = new \rex_sql;
-		} else {
-			$rexSQL = \rex_sql::factory();
-		}
+		$rexSQL = RedaxoCall::getAPI()->getSQL();
 
 		$where = '';
-		if (!$show_all) {
+		if (!$this->showAll) {
 			$where.='where ma.id is null';
 		}
 
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
-		$actionTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('action');
-		$moduleActionTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('module_action');
-		$moduleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getTable('module');
+		$actionTable = RedaxoCall::getAPI()->getTable('action');
+		$moduleActionTable = RedaxoCall::getAPI()->getTable('module_action');
+		$moduleTable = RedaxoCall::getAPI()->getTable('module');
 
 		$sql = <<<SQL
 SELECT a.*, group_concat(concat(
@@ -110,12 +111,12 @@ SQL;
 	 * @param string $showAllParam
 	 * @param string $showAllLinktext
 	 */
-	public abstract function outputMenu($subpage, $showAllParam, $showAllLinktext);
+	abstract public function outputMenu($subpage, $showAllParam, $showAllLinktext);
 
 	/**
 	 * Link Action Editieren
 	 * @param array $item
-	 * @param string $linktext
+	 * @param string $linkText
 	 */
-	public abstract function outputActionEdit($item, $linktext);
+	abstract public function outputActionEdit($item, $linkText);
 }

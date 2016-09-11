@@ -1,106 +1,73 @@
 <?php
 
+/**
+ * Generelle Configuration
+ */
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Permission.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Error.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Exception/FunctionNotCallableException.php';
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Exception/LangFileGenError.php';
 
-use akrys\redaxo\addon\UsageCheck\Config;
-switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-		//REDAXO 4
+/*
+ * Sichergehen, dass der rex_autoloader nicht Stundenlang die PHPUnit-Klassen analysiert.
+ *
+ * sollte nur bei Aufrufen vom Webserver passieren. Auf der Console (z.B. während PHPUnit läuft) braucht man das
+ * Verzeichnis.
+ */
+try {
+	\akrys\redaxo\addon\UsageCheck\Config::checkVendorDir();
+} catch (\Exception $e) {
+	if (\rex::isBackend()) {
+		print $e->getMessage();
+	}
+	die();
+}
 
-
-		/* Addon Parameter */
-		$REX['ADDON']['rxid'][Config::NAME] = Config::ID;
-		$REX['ADDON']['name'][Config::NAME] = 'Usage Check';
-		$REX['ADDON']['perm'][Config::NAME] = 'usage_check[]';
-		$REX['ADDON']['version'][Config::NAME] = '1.0-Beta6a';
-		$REX['ADDON']['author'][Config::NAME] = 'Axel Krysztofiak <akrys@web.de>';
-		$REX['ADDON']['supportpage'][Config::NAME] = 'https://github.com/akrys/redaxo-usage_check';
-		$REX['PERM'][] = 'usage_check[]';
-
-//Eigener Error-Status
-		$REX['ADDON']['errors'][akrys\redaxo\addon\UsageCheck\Config::NAME] = array();
-
-		/*
-		 * I18N gibt es nicht am Frontend, nur im Backend
-		 *
-		 * ->
-		 * Fatal error: Call to a member function appendFile()
-		 *
-		 * 2 Möglichkeiten:
-		 * <code>
-		 * if ($REX['REDAXO'])
-		 * {}
-		 * </code>
-		 * oder
-		 *
-		 * <code>
-		 * if (isset($I18N))
-		 * {}
-		 * </code>
-		 *
-		 * Wobei isset($I18N) semantisch genauer ist, als nur zu prüfen, ob man im
-		 * Backend ist, was ja -genau betrachtet- noch nichts über die Verfügbarkeit
-		 * der Übersetzungen aussagt.
-		 *
-		 */
-		if (isset($I18N)) {
-			require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/LangFile.php';
-			try {
-				$langDE = new \akrys\redaxo\addon\UsageCheck\LangFile('de_de');
-				$langDE->createISOFile();
-			} catch (\akrys\redaxo\addon\UsageCheck\Exception\LangFileGenError $e) {
-				\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($e->getMessage());
-			}
-
-			try {
-				$langEN = new \akrys\redaxo\addon\UsageCheck\LangFile('en_gb');
-				$langEN->createISOFile();
-			} catch (\akrys\redaxo\addon\UsageCheck\Exception\LangFileGenError $e) {
-				\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($e->getMessage());
-			}
-
-			/*
-			 * Überestzungen hinzufügen
-			 * lege ich aktuell aber nur in UTF-8
-			 * Wer heute noch ISO nutzt, hat ganz andere Probleme, als fehlende Übersetzungen
-			 * eines Redaxo-Addons…
-			 */
-			$I18N->appendFile($REX['INCLUDE_PATH'].'/addons/'.Config::NAME.'/lang/');
-
-			$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME] = array();
+spl_autoload_register(array('akrys\\redaxo\\addon\\UsageCheck\\Config', 'autoload'), true, true);
 
 
-			$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('overview', \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_overview'));
-			$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('picture', \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_picture'));
-			$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('module', \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_module'));
-			if ($REX['USER'] && $REX['USER']->isAdmin()) {
-				$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('action', \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_action'));
-			}
-			$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('template', \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_templates'));
-			$REX['ADDON']['pages'][akrys\redaxo\addon\UsageCheck\Config::NAME][] = array('changelog', \akrys\redaxo\addon\UsageCheck\RedaxoCall::i18nMsg('akrys_usagecheck_changelog'));
-		}
 
-		break;
-	case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-		//REDAXO 5
-		require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/LangFile.php';
-		try {
-			$langDE = new \akrys\redaxo\addon\UsageCheck\LangFile('de_de');
-			$langDE->createISOFile();
-		} catch (\akrys\redaxo\addon\UsageCheck\Exception\LangFileGenError $e) {
-			\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($e->getMessage());
-		}
+//	//zu aktivieren, wenn es mit dem Autoloader doch nicht funktioniert.
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Permission.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Error.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Exception/CloneException.php';
+//
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/RedaxoCallAPI.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/RedaxoCallAPI.php';
+//
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/LangFile.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Exception/LangFileGenError.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Exception/FunctionNotCallableException.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Exception/InvalidVersionException.php';
+//
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Actions.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/Modules/Actions.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/Modules/Actions.php';
+//
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Modules.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/Modules/Modules.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/Modules/Modules.php';
+//
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Templates.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/Modules/Templates.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/Modules/Templates.php';
+//
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Pictures.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/Modules/Pictures.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/Modules/Pictures.php';
+//
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/Permission.php';
+//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/Permission.php';
+//phpcpd hat den code als duplikat in der Redaxo 4 und in der Redaxo 5 Config gefunden.
+try {
+	$langDE = new \akrys\redaxo\addon\UsageCheck\LangFile('de_de');
+	$langDE->createISOFile();
+} catch (\akrys\redaxo\addon\UsageCheck\Exception\LangFileGenError $e) {
+	\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($e->getMessage());
+}
 
-		try {
-			$langEN = new \akrys\redaxo\addon\UsageCheck\LangFile('en_gb');
-			$langEN->createISOFile();
-		} catch (\akrys\redaxo\addon\UsageCheck\Exception\LangFileGenError $e) {
-			\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($e->getMessage());
-		}
-		break;
+try {
+	$langEN = new \akrys\redaxo\addon\UsageCheck\LangFile('en_gb');
+	$langEN->createISOFile();
+} catch (\akrys\redaxo\addon\UsageCheck\Exception\LangFileGenError $e) {
+	\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($e->getMessage());
 }

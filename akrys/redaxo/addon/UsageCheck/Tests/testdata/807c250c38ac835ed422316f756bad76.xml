@@ -1,0 +1,438 @@
+<?xml version="1.0"?>
+
+<!--
+-
+- Sequel Pro XML dump
+- Version 4541
+-
+- http://www.sequelpro.com/
+- https://github.com/sequelpro/sequelpro
+-
+- Host: 127.0.0.1 (MySQL 5.6.31-0ubuntu0.15.10.1)
+- Datenbank: redaxo_5_1
+- Erstellt am Time: 2016-08-28 09:17:17 +0000
+-
+-->
+
+<redaxo_5_1>
+
+	<custom>
+	<row>
+		<id>7</id>
+		<category_id>3</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>beach_photograph.jpg</filename>
+		<originalname>beach_photograph.jpg</originalname>
+		<filesize>337404</filesize>
+		<width>1800</width>
+		<height>1200</height>
+		<title>Beach photograph</title>
+		<createdate>2015-12-20 16:42:57</createdate>
+		<updatedate>2016-01-15 10:59:43</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken>0.4</med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title>Einfach</med_gallery_title>
+		<med_gallery_text>Ein Redakteur will ein CMS, das einfach zu bedienen ist. Redaxo bietet die Mittel, um Module und Addons für das jeweilige Projekt in minimaler Zeit maßschneidern zu können. Noch Fragen?</med_gallery_text>
+		<med_gallery_link_text>Zum Forum</med_gallery_link_text>
+		<med_gallery_link>http://www.redaxo.org/de/forum/</med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>9</id>
+		<category_id>3</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>fog_mountain.jpg</filename>
+		<originalname>fog_mountain.jpg</originalname>
+		<filesize>121104</filesize>
+		<width>1800</width>
+		<height>1200</height>
+		<title>Fog Mountain</title>
+		<createdate>2015-12-20 16:42:57</createdate>
+		<updatedate>2016-01-15 10:58:29</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken>0.4</med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title>Sinnvoll</med_gallery_title>
+		<med_gallery_text>Das Ziel von Redaxo war es stets, dass man auch die unterschiedlichsten Websites sinnvoll realisieren konnte.</med_gallery_text>
+		<med_gallery_link_text>Einige Redaxo-&quot;Lieblinge&quot;</med_gallery_link_text>
+		<med_gallery_link>http://www.redaxo.org/de/redaxo/lieblinge/</med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>2</id>
+		<category_id>2</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>hazy-field.jpg</filename>
+		<originalname>hazy-field.jpg</originalname>
+		<filesize>78702</filesize>
+		<width>2000</width>
+		<height>831</height>
+		<title>Hazy Field</title>
+		<createdate>2015-12-20 16:42:11</createdate>
+		<updatedate>2015-12-30 19:27:10</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title></med_gallery_title>
+		<med_gallery_text></med_gallery_text>
+		<med_gallery_link_text></med_gallery_link_text>
+		<med_gallery_link></med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>21</id>
+		<category_id>1</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>hut_in_the_wood.jpg</filename>
+		<originalname>hut_in_the_wood.jpg</originalname>
+		<filesize>707193</filesize>
+		<width>2000</width>
+		<height>1146</height>
+		<title>Hütte im Wald</title>
+		<createdate>2015-12-23 16:51:34</createdate>
+		<updatedate>2015-12-23 16:51:34</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title></med_gallery_title>
+		<med_gallery_text></med_gallery_text>
+		<med_gallery_link_text></med_gallery_link_text>
+		<med_gallery_link></med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>17</id>
+		<category_id>1</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>manviewingmountains.jpg</filename>
+		<originalname>manviewingmountains.jpg</originalname>
+		<filesize>244658</filesize>
+		<width>1280</width>
+		<height>853</height>
+		<title>Man viewing  mountains</title>
+		<createdate>2015-12-20 16:43:51</createdate>
+		<updatedate>2015-12-20 16:45:56</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description>Abendidylle</med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title></med_gallery_title>
+		<med_gallery_text></med_gallery_text>
+		<med_gallery_link_text></med_gallery_link_text>
+		<med_gallery_link></med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>26</id>
+		<category_id>0</category_id>
+		<attributes>NULL</attributes>
+		<filetype>text/plain</filetype>
+		<filename>mounting_test.txt</filename>
+		<originalname>mounting + test.txt</originalname>
+		<filesize>129</filesize>
+		<width>NULL</width>
+		<height>NULL</height>
+		<title>test mit plus</title>
+		<createdate>2016-05-15 15:23:19</createdate>
+		<updatedate>2016-05-15 15:23:19</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend>NULL</med_gallery_legend>
+		<med_gallery_title>NULL</med_gallery_title>
+		<med_gallery_text>NULL</med_gallery_text>
+		<med_gallery_link_text>NULL</med_gallery_link_text>
+		<med_gallery_link>NULL</med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>4</id>
+		<category_id>2</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>rainy_sea.jpg</filename>
+		<originalname>rainy_sea.jpg</originalname>
+		<filesize>123961</filesize>
+		<width>2000</width>
+		<height>867</height>
+		<title>Rainy Sea</title>
+		<createdate>2015-12-20 16:42:11</createdate>
+		<updatedate>2015-12-30 19:27:21</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title></med_gallery_title>
+		<med_gallery_text></med_gallery_text>
+		<med_gallery_link_text></med_gallery_link_text>
+		<med_gallery_link></med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>27</id>
+		<category_id>0</category_id>
+		<attributes>NULL</attributes>
+		<filetype>image/png</filetype>
+		<filename>screen_test.png</filename>
+		<originalname>screen + test.png</originalname>
+		<filesize>171846</filesize>
+		<width>251</width>
+		<height>316</height>
+		<title></title>
+		<createdate>2016-05-15 15:24:35</createdate>
+		<updatedate>2016-07-02 14:55:05</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend>NULL</med_gallery_legend>
+		<med_gallery_title>NULL</med_gallery_title>
+		<med_gallery_text>NULL</med_gallery_text>
+		<med_gallery_link_text>NULL</med_gallery_link_text>
+		<med_gallery_link>NULL</med_gallery_link>
+		<med_retina_2x>screen_test.png</med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>5</id>
+		<category_id>2</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>sky.jpg</filename>
+		<originalname>sky.jpg</originalname>
+		<filesize>147975</filesize>
+		<width>2000</width>
+		<height>1113</height>
+		<title>Sky</title>
+		<createdate>2015-12-20 16:42:11</createdate>
+		<updatedate>2015-12-30 19:26:57</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title></med_gallery_title>
+		<med_gallery_text></med_gallery_text>
+		<med_gallery_link_text></med_gallery_link_text>
+		<med_gallery_link></med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>22</id>
+		<category_id>1</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>snowy_road.jpg</filename>
+		<originalname>snowy_road.jpg</originalname>
+		<filesize>732744</filesize>
+		<width>2000</width>
+		<height>1396</height>
+		<title>Snowy Road</title>
+		<createdate>2015-12-23 16:52:24</createdate>
+		<updatedate>2015-12-23 16:52:24</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title></med_gallery_title>
+		<med_gallery_text></med_gallery_text>
+		<med_gallery_link_text></med_gallery_link_text>
+		<med_gallery_link></med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>25</id>
+		<category_id>0</category_id>
+		<attributes>NULL</attributes>
+		<filetype>text/html</filetype>
+		<filename>socialnet.html</filename>
+		<originalname>socialnet.html</originalname>
+		<filesize></filesize>
+		<width>NULL</width>
+		<height>NULL</height>
+		<title></title>
+		<createdate>2016-02-20 16:20:19</createdate>
+		<updatedate>2016-02-20 16:20:19</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend>NULL</med_gallery_legend>
+		<med_gallery_title>NULL</med_gallery_title>
+		<med_gallery_text>NULL</med_gallery_text>
+		<med_gallery_link_text>NULL</med_gallery_link_text>
+		<med_gallery_link>NULL</med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>6</id>
+		<category_id>2</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>tic-tac-toe.jpg</filename>
+		<originalname>tic-tac-toe.jpg</originalname>
+		<filesize>192363</filesize>
+		<width>2000</width>
+		<height>681</height>
+		<title>Tac Tac Toe</title>
+		<createdate>2015-12-20 16:42:11</createdate>
+		<updatedate>2015-12-30 19:27:36</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title></med_gallery_title>
+		<med_gallery_text></med_gallery_text>
+		<med_gallery_link_text></med_gallery_link_text>
+		<med_gallery_link></med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	<row>
+		<id>13</id>
+		<category_id>3</category_id>
+		<attributes></attributes>
+		<filetype>image/jpeg</filetype>
+		<filename>walking_forest.jpg</filename>
+		<originalname>walking_forest.jpg</originalname>
+		<filesize>210004</filesize>
+		<width>1000</width>
+		<height>667</height>
+		<title>Walking in Forest</title>
+		<createdate>2015-12-20 16:42:57</createdate>
+		<updatedate>2015-12-30 19:26:36</updatedate>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<revision>0</revision>
+		<med_description></med_description>
+		<med_darken></med_darken>
+		<med_gallery_legend></med_gallery_legend>
+		<med_gallery_title></med_gallery_title>
+		<med_gallery_text></med_gallery_text>
+		<med_gallery_link_text></med_gallery_link_text>
+		<med_gallery_link></med_gallery_link>
+		<med_retina_2x></med_retina_2x>
+		<med_retina_3x></med_retina_3x>
+		<count>0</count>
+		<slice_data>NULL</slice_data>
+		<metaArtIDs>NULL</metaArtIDs>
+		<metaCatIDs>NULL</metaCatIDs>
+		<metaMedIDs>NULL</metaMedIDs>
+	</row>
+
+	</custom>
+
+</redaxo_5_1>

@@ -9,8 +9,10 @@ Sucht nach verwaisten Medienpool-Dateien, nicht verwendete Module und Templates.
 		<b>4.4.1</b>,
 		<b>4.5</b>,
 		<b>4.6.1</b>,
+		<b>4.7</b>,
 		<b>5.0.1</b>,
-		<b>5.1</b>
+		<b>5.1</b>,
+		<b>5.2</b>
 	</li>
 	<li>Der Code funktioniert für Redaxo 4 und Redaxo 5</li>
 </ul>

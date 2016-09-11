@@ -1,0 +1,609 @@
+<?xml version="1.0"?>
+
+<!--
+-
+- Sequel Pro XML dump
+- Version 4541
+-
+- http://www.sequelpro.com/
+- https://github.com/sequelpro/sequelpro
+-
+- Host: 127.0.0.1 (MySQL 5.6.31-0ubuntu0.15.10.1)
+- Datenbank: redaxo_5_1
+- Erstellt am Time: 2016-08-28 09:14:52 +0000
+-
+-->
+
+<redaxo_5_1>
+
+	<custom>
+	<row>
+		<id>3</id>
+		<name>03 . TEMPLATE</name>
+		<content>REX_TEMPLATE[4]
+&lt;body&gt;
+
+&lt;!-- Fixed navbar --&gt;
+&lt;div class=&quot;navbar navbar-default navbar-fixed-top&quot; role=&quot;navigation&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+	&lt;div class=&quot;navbar-header&quot;&gt;
+	  &lt;button type=&quot;button&quot; class=&quot;navbar-toggle&quot; data-toggle=&quot;collapse&quot; data-target=&quot;.navbar-collapse&quot;&gt;
+		&lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
+		&lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+		&lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+		&lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+	  &lt;/button&gt;
+	  &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;&lt;img src=&quot;/resources/css/images/logo.png&quot; alt=&quot;REDAXO CMS&quot;&gt;&lt;/a&gt;
+	&lt;/div&gt;
+	&lt;div class=&quot;navbar-collapse collapse navbar-right&quot;&gt;
+		&lt;!-- Navigation --&gt;
+		REX_TEMPLATE[6]
+		&lt;!--/Navigation --&gt;
+
+	&lt;/div&gt;&lt;!--/.nav-collapse --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- *******************************************************
+Headerpic
+******************************************************* --&gt;
+REX_TEMPLATE[5]
+
+&lt;?php
+/*
+Wenn das Template &quot;01 . Standard&quot; gewählt ist, geht der Content-Container über die volle Breite.
+*/
+if (SITE_TYPE == 'col1') { ?&gt;
+	&lt;article class=&quot;mtb&quot;&gt;
+		&lt;?php echo $this-&gt;getArticle('1'); ?&gt;
+	&lt;/article&gt;
+&lt;?php }
+
+/*
+Wenn das Template &quot;02 . Zweispalter&quot; gewählt ist, gibt es eine Hauptspalte und eine Seitenspalte in der Teilung 2/3 - 1/3.
+*/
+if (SITE_TYPE == 'col2') { ?&gt;
+	&lt;div class=&quot;container mtb&quot;&gt;
+		&lt;div class=&quot;row&quot;&gt;
+
+			&lt;div class=&quot;col-lg-8 col-sm-12&quot;&gt;
+				&lt;?php echo $this-&gt;getArticle('1'); ?&gt;
+			&lt;/div&gt;
+
+			&lt;div class=&quot;col-lg-3 col-lg-offset-1 sidebar hidden-xs hidden-sm&quot;&gt;
+				&lt;!-- Subnavigation --&gt;
+				REX_TEMPLATE[8]
+				&lt;!-- /Subnavigation --&gt;
+
+				&lt;!-- ggf. weiterer Content --&gt;
+				&lt;?php echo $this-&gt;getArticle('2'); ?&gt;
+			&lt;/div&gt;
+
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;?php } ?&gt;
+
+&lt;!-- *******************************************************
+ FOOTER
+ ******************************************************* --&gt;
+REX_TEMPLATE[7]
+
+&lt;!-- REDAXO 5 rocks! --&gt;
+
+&lt;!-- Javascripts --&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/resources/js/jquery.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/resources/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/resources/js/jquery.hoverdir.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/resources/js/jquery.hoverex.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/resources/js/jquery.prettyPhoto.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/resources/js/jquery.flexslider-min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/resources/js/prettify.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/resources/js/redaxo-demo.js&quot;&gt;&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</content>
+		<active>0</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>2015-12-31 07:30:04</createdate>
+		<updatedate>2016-01-15 12:37:52</updatedate>
+		<attributes>{&quot;ctype&quot;:[],&quot;modules&quot;:{&quot;1&quot;:{&quot;all&quot;:&quot;1&quot;}},&quot;categories&quot;:{&quot;all&quot;:&quot;1&quot;}}</attributes>
+		<revision>0</revision>
+		<article_id>NULL</article_id>
+		<articles>NULL</articles>
+		<templates>1	01 . Standard
+2	02 . Zweispalter</templates>
+	</row>
+
+	<row>
+		<id>4</id>
+		<name>00 . Header</name>
+		<content>&lt;?php
+// error_reporting(0);
+error_reporting(E_ALL);
+// Das Error-Reporting sollte nur während der Entwicklung angeschaltet sein. Bei einer Libe-Website sollte es auf 0 gestellt werden.
+
+// Ist der User nicht eingeloggt?
+if (!rex_backend_login::hasSession()) {
+	// Ist der aufgerufene Artikel offline?
+	if ($this-&gt;getValue('status') == 0) {
+		// dann zur Fehlerseite weiterleiten
+		header ('HTTP/1.1 301 Moved Permanently');
+		header('Location: '.rex_getUrl(rex_article::getNotFoundArticleId(), rex_clang::getCurrentId()));
+		die();
+	}
+}
+
+// Benötigt für Eingabe- und Ausgabe-Modul Tabs und Akkordions
+rex::setProperty('tabs', new ArrayIterator());
+
+header('Content-Type: text/html; charset=utf-8');
+?&gt;&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;&lt;?php echo rex_clang::getCurrent()-&gt;getCode(); ?&gt;&quot;&gt;
+&lt;head&gt;
+	&lt;meta charset=&quot;utf-8&quot;&gt;
+	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+	&lt;?php
+	// Als Title-Tag den Artikelnamen, außer er wird manuell gesetzt
+	if ($this-&gt;getValue(&quot;art_title&quot;) != &quot;&quot;) {
+		$title = htmlspecialchars($this-&gt;getValue('art_title'));
+	} else {
+		$title = htmlspecialchars($this-&gt;getValue('name'));
+	}
+
+	echo '
+	&lt;title&gt;'.$title.'&lt;/title&gt;';
+
+	// Keywords and description
+	// Wenn der aktuelle Artikel kein Keyword und Description besitzt, werden die aus dem Startartikel genommen
+	if ($this-&gt;getValue(&quot;art_keywords&quot;) != &quot;&quot;) {
+		$keywords = $this-&gt;getValue(&quot;art_keywords&quot;);
+	} else {
+		$home = new rex_article_content(rex_article::getSiteStartArticleId());
+		$keywords = $home-&gt;getValue('art_keywords');
+	}
+
+	if ($this-&gt;getValue(&quot;art_description&quot;) != &quot;&quot;) {
+		$description = $this-&gt;getValue(&quot;art_description&quot;);
+	} else {
+		$home = new rex_article_content(rex_article::getSiteStartArticleId());
+		$description = $home-&gt;getValue('art_description');
+	}
+
+	echo '
+	&lt;meta name=&quot;keywords&quot; content=&quot;'.htmlspecialchars($keywords).'&quot;&gt;';
+
+	echo '
+	&lt;meta name=&quot;description&quot; content=&quot;'.htmlspecialchars($description).'&quot;&gt;';
+	?&gt;
+
+	&lt;link rel=&quot;stylesheet&quot; href=&quot;/resources/css/bootstrap.css&quot;&gt;
+	&lt;link rel=&quot;stylesheet&quot; href=&quot;/resources/css/redaxo-demo.css&quot;&gt;
+	&lt;link rel=&quot;stylesheet&quot; href=&quot;/resources/css/font-awesome.min.css&quot;&gt;
+	&lt;link rel=&quot;stylesheet&quot; href=&quot;/resources/css/flexslider.css&quot;&gt;
+	&lt;link rel=&quot;stylesheet&quot; href=&quot;/resources/css/forms.css&quot;&gt;
+	&lt;link rel=&quot;stylesheet&quot; href=&quot;/resources/css/prettify.css&quot;&gt;
+
+	&lt;!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --&gt;
+	&lt;!--[if lt IE 9]&gt;
+		&lt;script src=&quot;https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js&quot;&gt;&lt;/script&gt;
+		&lt;script src=&quot;https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js&quot;&gt;&lt;/script&gt;
+	&lt;![endif]--&gt;
+&lt;/head&gt;
+</content>
+		<active>0</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>2016-01-13 15:03:34</createdate>
+		<updatedate>2016-01-15 11:28:46</updatedate>
+		<attributes>{&quot;ctype&quot;:[],&quot;modules&quot;:{&quot;1&quot;:{&quot;all&quot;:&quot;1&quot;}},&quot;categories&quot;:{&quot;all&quot;:&quot;1&quot;}}</attributes>
+		<revision>0</revision>
+		<article_id>NULL</article_id>
+		<articles>NULL</articles>
+		<templates>3	03 . TEMPLATE</templates>
+	</row>
+
+	<row>
+		<id>5</id>
+		<name>04 . Headerbild</name>
+		<content>&lt;?php
+// Headerbild rekursiv einbinden.
+// Wenn der aktuelle Artikel kein Bild hat, wird das aus den Elternkategorien genommen.
+$header = '';
+$headerpic = $this-&gt;getValue('art_file');
+$darken = $this-&gt;getValue('art_darken');
+
+if ($headerpic == '') {
+    $category = rex_article::getCurrent()-&gt;getCategory();
+    while ($header == '') {
+        if ($category == null) {
+            break;
+        }
+        $headerpic = $category-&gt;getValue('art_file');
+        $darken = $category-&gt;getValue('art_darken');
+        $category = $category-&gt;getParent();
+    } 
+}
+
+if ($headerpic == '') {
+    $headerpic = rex_article::getSiteStartArticle()-&gt;getValue('art_file');
+    $darken = rex_article::getSiteStartArticle()-&gt;getValue('art_file_darken');
+}
+
+
+$header = '
+&lt;div id=&quot;headerpic&quot; style=&quot;background-image: url(media/'.$headerpic.');&quot;&gt;';
+
+	// Abdunkelung des Headerfotos
+	if ($darken != '') {
+		$header .= '
+		&lt;div class=&quot;layer&quot; style=&quot;opacity: '.$darken.';&quot;&gt;&lt;/div&gt;';
+	}
+
+	$header .= '
+	&lt;div class=&quot;container centered&quot;&gt;
+		&lt;div class=&quot;row&quot;&gt;
+			&lt;h3&gt;'.$this-&gt;getValue('name').'&lt;/h3&gt;
+		&lt;/div&gt;&lt;!-- /row --&gt;
+	&lt;/div&gt; &lt;!-- /container --&gt;
+&lt;/div&gt;&lt;!-- /headerpic --&gt;';
+
+
+
+// Falls eine Galerie definiert wurde,
+// wird diese statt eines Headerbils angezeigt.
+if ($this-&gt;getValue('art_gallery') != '') {
+
+	$header = '
+	&lt;section class=&quot;hero-slider slider-fullscreen&quot;&gt;
+		&lt;ul class=&quot;slides&quot;&gt;';
+		
+			$imagelist = explode(',', $this-&gt;getValue('art_gallery'));
+			foreach ($imagelist as $file) {
+			
+				$media = rex_media::get($file);
+				if ($media) {
+				
+					$mediadesc = str_replace(array(&quot;\r\n&quot;, &quot;\n&quot;, &quot;\r&quot;), ' ', $media-&gt;getValue('med_description'));
+					$mediatitle = $media-&gt;getValue('med_gallery_title');
+					$mediatext = $media-&gt;getValue('med_gallery_text');
+					$medialinktext = $media-&gt;getValue('med_gallery_link_text');
+					$medialink = $media-&gt;getValue('med_gallery_link');
+					$mediadarken = $media-&gt;getValue('med_darken');
+			
+					$header .= '
+					&lt;li class=&quot;parallax kenburns&quot;&gt;';
+						
+						// Abdunkelung
+						if ($mediadarken != '') {
+							$header .= '
+							&lt;div class=&quot;overlay&quot; style=&quot;opacity: '.$mediadarken.';&quot;&gt;&lt;/div&gt;';
+						}
+
+						$header .= '
+						&lt;img alt=&quot;'.$mediatitle.'&quot; class=&quot;background-image&quot; src=&quot;/index.php?rex_media_type=fullscreen&amp;rex_media_file='.$file.'&quot;&gt;';
+
+
+						if ($mediatitle != '' || $mediatext != '') {
+							$header .= '
+							&lt;div class=&quot;row slide-content animate&quot;&gt;
+								&lt;div class=&quot;col-lg-6 col-lg-offset-3 text-center&quot;&gt;';
+
+									if ($mediatitle != '') {
+										$header .= '
+										&lt;h1&gt;'.$mediatitle.'&lt;/h1&gt;';
+									}
+									if ($mediatitle != '') {
+										$header .= '
+										&lt;p class=&quot;lead&quot;&gt;'.$mediatext.'&lt;/p&gt;';
+									}
+									if ($medialink != '' &amp;&amp; $medialinktext != '') {
+										$header .= '
+										&lt;a href=&quot;'.$medialink.'&quot; class=&quot;btn btn-theme&quot;&gt;'.$medialinktext.'&lt;/a&gt;';
+									}
+
+									$header .= '
+								&lt;/div&gt;
+							&lt;/div&gt;';
+						}
+
+					$header .= '
+					&lt;/li&gt;';
+				}
+			}
+		
+		$header .= '
+		&lt;/ul&gt;
+	&lt;/section&gt;&lt;!--end of fullscreen slider--&gt;';
+}
+
+echo $header;
+?&gt;
+</content>
+		<active>0</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>2016-01-05 11:12:01</createdate>
+		<updatedate>2016-01-15 10:56:22</updatedate>
+		<attributes>{&quot;ctype&quot;:[],&quot;modules&quot;:{&quot;1&quot;:{&quot;all&quot;:&quot;1&quot;}},&quot;categories&quot;:{&quot;all&quot;:&quot;1&quot;}}</attributes>
+		<revision>0</revision>
+		<article_id>NULL</article_id>
+		<articles>NULL</articles>
+		<templates>3	03 . TEMPLATE</templates>
+	</row>
+
+	<row>
+		<id>6</id>
+		<name>05 . Navigation</name>
+		<content>&lt;?php
+$path = explode(&quot;|&quot;,$this-&gt;getValue(&quot;path&quot;).$this-&gt;getValue(&quot;article_id&quot;).&quot;|&quot;);
+$path1 = ((!empty($path[1])) ? $path[1] : '');
+$path2 = ((!empty($path[2])) ? $path[2] : '');
+
+$nav_main = '';
+
+foreach (rex_category::getRootCategories() as $lev1) {
+
+	$hidden_ids = array(1,6);
+	// Home und Footer-Hilfsartikel sollen nicht in der Navi auftauchen
+	if ($lev1-&gt;isOnline(true) &amp;&amp; (!in_array($lev1-&gt;getId(), $hidden_ids))) {
+		
+		if ($lev1-&gt;getId() == $path1) {
+			$nav_main .= '
+			&lt;li class=&quot;dropdown-toggle active&quot;&gt;&lt;a href=&quot;'.$lev1-&gt;getUrl().'&quot;&gt;'.htmlspecialchars($lev1-&gt;getValue('name')).'&lt;/a&gt;';
+		} else {
+   			$nav_main .= '
+			&lt;li class=&quot;dropdown-toggle&quot;&gt;&lt;a href=&quot;'.$lev1-&gt;getUrl().'&quot;&gt;'.htmlspecialchars($lev1-&gt;getValue('name')).'&lt;/a&gt;';
+		}
+
+		// 1st level start
+		$lev1Size = sizeof($lev1-&gt;getChildren());
+
+			if ($lev1Size != &quot;0&quot;) {
+
+				$nav_main .= '
+				&lt;ul class=&quot;dropdown-menu&quot;&gt;';
+
+					// START 2nd level categories
+					foreach ($lev1-&gt;getChildren() as $lev2):
+						if ($lev2-&gt;isOnline(true)) {
+
+							if ($lev2-&gt;getId() == $path2) {
+								$nav_main .= '
+								&lt;li class=&quot;dropdown-toggle active&quot;&gt;&lt;a href=&quot;'.$lev2-&gt;getUrl().'&quot;&gt;'.htmlspecialchars($lev2-&gt;getValue('name')).'&lt;/a&gt;&lt;/li&gt;';
+							} else {
+								$nav_main .= '
+								&lt;li class=&quot;dropdown-toggle&quot;&gt;&lt;a href=&quot;'.$lev2-&gt;getUrl().'&quot;&gt;'.htmlspecialchars($lev2-&gt;getValue('name')).'&lt;/a&gt;&lt;/li&gt;';
+							}
+						}
+					endforeach;
+
+				$nav_main .= '
+				&lt;/ul&gt;';
+
+			}
+
+		$nav_main .= '
+		&lt;/li&gt;';
+	}
+}
+
+echo '
+&lt;div class=&quot;navbar-collapse collapse navbar-right&quot;&gt;
+	&lt;ul class=&quot;nav navbar-nav&quot;&gt;
+		'.$nav_main.'
+	&lt;/ul&gt;
+&lt;/div&gt;&lt;!--/.nav-collapse --&gt;';
+?&gt;
+</content>
+		<active>0</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>2016-01-13 10:29:41</createdate>
+		<updatedate>2016-01-15 11:31:23</updatedate>
+		<attributes>{&quot;ctype&quot;:[],&quot;modules&quot;:{&quot;1&quot;:{&quot;all&quot;:&quot;1&quot;}},&quot;categories&quot;:{&quot;all&quot;:&quot;1&quot;}}</attributes>
+		<revision>0</revision>
+		<article_id>NULL</article_id>
+		<articles>NULL</articles>
+		<templates>3	03 . TEMPLATE</templates>
+	</row>
+
+	<row>
+		<id>8</id>
+		<name>06 . Subnavigation (Sidebar)</name>
+		<content>&lt;?php
+$path = explode(&quot;|&quot;,$this-&gt;getValue(&quot;path&quot;).$this-&gt;getValue(&quot;article_id&quot;).&quot;|&quot;);
+$path1 = ((!empty($path[1])) ? $path[1] : '');
+$path2 = ((!empty($path[2])) ? $path[2] : '');
+
+$article = rex_article::get($path1);
+$articleUrl = $article-&gt;getUrl();
+$articleName = $article-&gt;getName();
+
+$nav = rex_navigation::factory();
+$subnav = $nav-&gt;get($path1,2,TRUE,TRUE);
+
+if ($subnav != '') {
+
+	echo '
+	&lt;h4 id=&quot;sidenav_title&quot;&gt;&lt;a href=&quot;'.$articleUrl.'&quot;&gt;'.$articleName.'&lt;/a&gt;&lt;/h4&gt;
+	&lt;div class=&quot;hline&quot;&gt;&lt;/div&gt;';
+
+	echo $subnav;
+
+}
+?&gt;
+</content>
+		<active>0</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>2015-12-31 07:50:40</createdate>
+		<updatedate>2016-01-13 13:58:27</updatedate>
+		<attributes>{&quot;ctype&quot;:[],&quot;modules&quot;:{&quot;1&quot;:{&quot;all&quot;:&quot;1&quot;}},&quot;categories&quot;:{&quot;all&quot;:&quot;1&quot;}}</attributes>
+		<revision>0</revision>
+		<article_id>NULL</article_id>
+		<articles>NULL</articles>
+		<templates>3	03 . TEMPLATE</templates>
+	</row>
+
+	<row>
+		<id>10</id>
+		<name>test</name>
+		<content></content>
+		<active>0</active>
+		<createuser>admin</createuser>
+		<updateuser></updateuser>
+		<createdate>2016-03-05 09:53:14</createdate>
+		<updatedate>0000-00-00 00:00:00</updatedate>
+		<attributes>{&quot;ctype&quot;:[],&quot;modules&quot;:{&quot;1&quot;:{&quot;all&quot;:&quot;1&quot;}},&quot;categories&quot;:{&quot;all&quot;:&quot;1&quot;}}</attributes>
+		<revision>0</revision>
+		<article_id>NULL</article_id>
+		<articles>NULL</articles>
+		<templates>NULL</templates>
+	</row>
+
+	<row>
+		<id>11</id>
+		<name>test inaktiv</name>
+		<content>&lt;fydscvysdfsa</content>
+		<active>1</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>2016-08-28 09:40:07</createdate>
+		<updatedate>2016-08-28 09:40:07</updatedate>
+		<attributes>{&quot;ctype&quot;:[],&quot;modules&quot;:{&quot;1&quot;:{&quot;all&quot;:&quot;1&quot;}},&quot;categories&quot;:{&quot;all&quot;:&quot;1&quot;}}</attributes>
+		<revision>0</revision>
+		<article_id>NULL</article_id>
+		<articles>NULL</articles>
+		<templates>NULL</templates>
+	</row>
+
+	<row>
+		<id>1</id>
+		<name>01 . Standard</name>
+		<content>&lt;?php
+define('SITE_TYPE', 'col1');
+?&gt;
+REX_TEMPLATE[3]
+</content>
+		<active>1</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>2015-12-31 00:13:04</createdate>
+		<updatedate>2015-12-31 00:13:04</updatedate>
+		<attributes>{&quot;ctype&quot;:[],&quot;modules&quot;:{&quot;1&quot;:{&quot;0&quot;:&quot;1&quot;,&quot;1&quot;:&quot;2&quot;,&quot;2&quot;:&quot;16&quot;,&quot;3&quot;:&quot;3&quot;,&quot;4&quot;:&quot;4&quot;,&quot;5&quot;:&quot;5&quot;,&quot;6&quot;:&quot;6&quot;,&quot;7&quot;:&quot;7&quot;,&quot;8&quot;:&quot;8&quot;,&quot;9&quot;:&quot;9&quot;,&quot;10&quot;:&quot;18&quot;,&quot;11&quot;:&quot;10&quot;,&quot;12&quot;:&quot;11&quot;,&quot;13&quot;:&quot;17&quot;,&quot;14&quot;:&quot;12&quot;,&quot;all&quot;:0}},&quot;categories&quot;:{&quot;all&quot;:&quot;1&quot;}}</attributes>
+		<revision>0</revision>
+		<article_id>1</article_id>
+		<articles>1	0	1	Home	1
+2	0	1	Struktur	1
+3	0	1	Templates	1
+4	0	1	Module	1
+13	0	0	Fehlerseite	1</articles>
+		<templates>NULL</templates>
+	</row>
+
+	<row>
+		<id>2</id>
+		<name>02 . Zweispalter</name>
+		<content>&lt;?php
+define('SITE_TYPE', 'col2');
+?&gt;
+REX_TEMPLATE[3]
+</content>
+		<active>1</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>2016-01-13 22:57:28</createdate>
+		<updatedate>2016-01-13 22:57:28</updatedate>
+		<attributes>{&quot;ctype&quot;:{&quot;1&quot;:&quot;Hauptspalte&quot;,&quot;2&quot;:&quot;Seitenspalte&quot;},&quot;modules&quot;:{&quot;1&quot;:{&quot;0&quot;:&quot;1&quot;,&quot;1&quot;:&quot;2&quot;,&quot;2&quot;:&quot;16&quot;,&quot;3&quot;:&quot;3&quot;,&quot;4&quot;:&quot;4&quot;,&quot;5&quot;:&quot;5&quot;,&quot;6&quot;:&quot;6&quot;,&quot;7&quot;:&quot;7&quot;,&quot;8&quot;:&quot;8&quot;,&quot;9&quot;:&quot;9&quot;,&quot;10&quot;:&quot;18&quot;,&quot;11&quot;:&quot;10&quot;,&quot;12&quot;:&quot;17&quot;,&quot;13&quot;:&quot;12&quot;,&quot;all&quot;:0},&quot;2&quot;:{&quot;0&quot;:&quot;11&quot;,&quot;all&quot;:0},&quot;3&quot;:{&quot;all&quot;:&quot;1&quot;}},&quot;categories&quot;:{&quot;all&quot;:&quot;1&quot;}}</attributes>
+		<revision>0</revision>
+		<article_id>5</article_id>
+		<articles>5	0	1	AddOns	1
+7	0	1	Kontakt	1
+8	5	1	Editoren	1
+9	5	1	Yform	1
+10	5	1	Developer	1
+11	5	1	Yrewrite	1
+14	5	1	Was noch?	1</articles>
+		<templates>NULL</templates>
+	</row>
+
+	<row>
+		<id>7</id>
+		<name>07 . Footer Hilfstemplate</name>
+		<content> &lt;div id=&quot;footerwrap&quot;&gt;
+	&lt;div class=&quot;container&quot;&gt;
+		&lt;div class=&quot;row&quot;&gt;
+			&lt;div class=&quot;col-md-12&quot;&gt;
+
+			REX_ARTICLE[id=6]
+			&lt;?php
+			// Hier wird der Inhalt des Artikels 6 eingebunden. Man könnte es alternativ auch so schreiben:
+			// $footer = new rex_article_content(6);
+			// echo $footer-&gt;getArticle('1');
+			?&gt;
+
+			&lt;/div&gt;&lt;! --/col --&gt;
+		&lt;/div&gt;&lt;! --/row --&gt;
+	&lt;/div&gt;&lt;! --/container --&gt;
+ &lt;/div&gt;&lt;! --/footerwrap --&gt;
+</content>
+		<active>1</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>2015-12-31 13:03:03</createdate>
+		<updatedate>2015-12-31 13:03:03</updatedate>
+		<attributes>{&quot;ctype&quot;:[],&quot;modules&quot;:{&quot;1&quot;:{&quot;0&quot;:&quot;13&quot;,&quot;1&quot;:&quot;14&quot;,&quot;2&quot;:&quot;15&quot;,&quot;all&quot;:0}},&quot;categories&quot;:{&quot;0&quot;:&quot;6&quot;,&quot;all&quot;:0}}</attributes>
+		<revision>0</revision>
+		<article_id>6</article_id>
+		<articles>6	0	1	Footer	1</articles>
+		<templates>3	03 . TEMPLATE</templates>
+	</row>
+
+	<row>
+		<id>9</id>
+		<name>08 . Download Hilfstemplate</name>
+		<content>&lt;?php
+$file_name = strtolower(preg_replace(&quot;/[^a-zA-Z0-9.\-\$\+]/&quot;,&quot;_&quot;,rex_request('file', 'string')));
+$file_type = &quot;application/octetstream&quot;;
+$file_path = rex_path::media($file_name);
+
+if ($file_name != &quot;&quot; &amp;&amp; $fp = @fopen(&quot;$file_path&quot;, &quot;r&quot;))
+{
+
+header(&quot;Expires: Mon, 01 Jan 2000 01:01:01 GMT&quot;); // Date in the past
+header(&quot;Last-Modified: &quot; . gmdate(&quot;D, d M Y H:i:s&quot;) . &quot; GMT&quot;);// always modified
+header(&quot;Cache-Control: no-store, no-cache, must-revalidate&quot;);// HTTP/1.1
+header(&quot;Cache-Control: post-check=0, pre-check=0&quot;, false);
+header(&quot;Cache-Control: private&quot;);
+header(&quot;Pragma: no-cache&quot;);
+header(&quot;Content-Type: $file_type; name=\&quot;$file_name\&quot;&quot;);
+header(&quot;Content-Disposition: attachment; filename=\&quot;$file_name\&quot;&quot;);
+
+fpassthru ($fp);
+fclose($fp);
+
+}else
+{
+
+echo &quot;&lt;div class=warning&gt;Download fehlgeschlagen&lt;/div&gt;&quot;;
+
+}
+?&gt;</content>
+		<active>1</active>
+		<createuser>admin</createuser>
+		<updateuser>admin</updateuser>
+		<createdate>2015-12-31 13:18:07</createdate>
+		<updatedate>2015-12-31 13:18:07</updatedate>
+		<attributes>{&quot;ctype&quot;:[],&quot;modules&quot;:{&quot;1&quot;:{&quot;all&quot;:0}},&quot;categories&quot;:{&quot;0&quot;:&quot;6&quot;,&quot;all&quot;:0}}</attributes>
+		<revision>0</revision>
+		<article_id>12</article_id>
+		<articles>12	6	0	Download	1</articles>
+		<templates>NULL</templates>
+	</row>
+
+	</custom>
+
+</redaxo_5_1>

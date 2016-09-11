@@ -1,21 +1,20 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-namespace akrys\redaxo\addon\UsageCheck;
-
 /**
- * Datei für ...
+ * Datei für die Error-Klasse
  *
  * @version       1.0 / 2015-10-27
  * @author        akrys
  */
+namespace akrys\redaxo\addon\UsageCheck;
 
 /**
- * Description of Error
+ * Container für Fehlermeldungen
+ *
+ * Hier werden Fehler gesammelt, über die dann später iteriert werden kann.
+ *
+ * Implementiert den PHP-Iterator, so dass man über die Meldungen mit
+ * einem einfachen foreach durlaufen werden können.
  *
  * @author akrys
  */
@@ -29,6 +28,12 @@ class Error
 	private $errors = array();
 
 	/**
+	 * Iterator-Zählervariable
+	 * @var int
+	 */
+	private $index = 0;
+
+	/**
 	 * add a text to the messages
 	 * @param string $text
 	 */
@@ -39,16 +44,24 @@ class Error
 // <editor-fold defaultstate="collapsed" desc="Iterator Implementation">
 
 	/**
+	 * Move forward to next element
+	 *
+	 * @see \Iterator::next()
+	 * @link https://secure.php.net/manual/en/iterator.next.php
 	 *
 	 * @return int
 	 */
 	public function next()
 	{
-		$this->i++;
+		$this->index++;
 		return $this->current();
 	}
 
 	/**
+	 * Return the current element
+	 *
+	 * @see \Iterator::current()
+	 * @link https://secure.php.net/manual/en/iterator.current.php
 	 *
 	 * @return string
 	 */
@@ -57,33 +70,44 @@ class Error
 		if (!$this->valid()) {
 			return false;
 		}
-		return $this->errors[$this->i];
+		return $this->errors[$this->index];
 	}
 
 	/**
+	 * Rewind the Iterator to the first element
 	 *
+	 * @see \Iterator::rewind()
+	 * @link https://secure.php.net/manual/en/iterator.rewind.php
 	 */
 	public function rewind()
 	{
-		$this->i = 0;
+		$this->index = 0;
 	}
 
 	/**
+	 * Return the key of the current element
+	 *
+	 * @see \Iterator::key()
+	 * @link https://secure.php.net/manual/en/iterator.key.php
 	 *
 	 * @return int
 	 */
 	public function key()
 	{
-		return $this->i;
+		return $this->index;
 	}
 
 	/**
+	 * Checks if current position is valid
+	 *
+	 * @see \Iterator::valid()
+	 * @link https://secure.php.net/manual/en/iterator.valid.php
 	 *
 	 * @return boolean
 	 */
 	public function valid()
 	{
-		if (!isset($this->errors[$this->i])) {
+		if (!isset($this->errors[$this->index])) {
 			return false;
 		}
 		return true;
@@ -109,11 +133,19 @@ class Error
 	}
 
 	/**
+	 * Konstuktor
+	 */
+	final private function __construct()
+	{
+		$this->errors = array();
+	}
+
+	/**
 	 * forbid cloning
 	 */
-	public function __clone()
+	final public function __clone()
 	{
-
+		throw new Exception\CloneException();
 	}
 // </editor-fold>
 }
