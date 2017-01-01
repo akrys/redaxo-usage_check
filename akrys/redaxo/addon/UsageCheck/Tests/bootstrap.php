@@ -162,6 +162,11 @@ if (isset($_SERVER['argv'])) {
 		 */
 		public function getProperty($x)
 		{
+			switch($x){
+				case 'db':
+					return array(array('name'=> 'a'),array('name'=> 'b'),);
+					break;
+			}
 			return true;
 		}
 	}

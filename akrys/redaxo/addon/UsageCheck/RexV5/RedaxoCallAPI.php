@@ -39,6 +39,16 @@ class RedaxoCallAPI
 	}
 
 	/**
+	 * DB holen.
+	 * @return array
+	 * @SuppressWarnings(PHPMD.StaticAccess)
+	 */
+	public function getDB()
+	{
+		return \rex::getProperty('db');
+	}
+
+	/**
 	 * Tabellenprefix holen
 	 * @return string
 	 * @SuppressWarnings(PHPMD.StaticAccess)

@@ -40,8 +40,14 @@ class Pictures
 
 		$xformtable = $rexSQL->getArray("show table status like '$yformTableTable'");
 		$xformfield = $rexSQL->getArray("show table status like '$yformFieldTable'");
+
+		$additionalFields = '';
+		if ($this->hasMultiple($yformFieldTable)) {
+			$additionalFields = ', f.multiple';
+		}
+
 		$sql = <<<SQL
-select f.table_name, t.name as table_out,f.name as f1, f.label as f2,f.type_name
+select f.table_name, t.name as table_out,f.name as f1, f.label as f2,f.type_name $additionalFields
 from $yformFieldTable f
 left join $yformTableTable t on t.table_name=f.table_name
 where type_name in ('be_media','be_medialist','mediafile')
@@ -67,6 +73,52 @@ SQL;
 	public function exists($item)
 	{
 		return file_exists(\rex_path::media().DIRECTORY_SEPARATOR.$item['filename']);
+	}
+
+	/**
+	 * Fehler: #10 Anpassung an YForm 2
+	 *
+	 * Änderung:
+	 * a) be_medialist gibt es nicht mehr (Hier unwichtig)
+	 * b) be_media kann mehrere Bilder enthalten.
+	 *
+	 * Dafür gibt es eine neue Spalte in rex_yform_field (multiple)
+	 * Das kann aber nur abgefragt werden, wenn es da ist.
+	 *
+	 * Daher muss man erst im information_schema nachfragen, ob es multiple gibt, sonst geht die Datenabfrage in
+	 * die Binsen.
+	 *
+	 * @param string $yformFieldTable
+	 * @returns boolean
+	 * @SuppressWarnings(PHPMD.StaticAccess)
+	 */
+	private function hasMultiple($yformFieldTable)
+	{
+		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
+
+		$dbs = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getDB();
+		$where = array();
+		foreach ($dbs as $db) {
+			if (isset($db['name']) && $db['name'] != '') {
+				$where[] .= "(TABLE_NAME=? and TABLE_SCHEMA=? and COLUMN_NAME='multiple')";
+				$params[] = $yformFieldTable;
+				$params[] = $db['name'];
+			}
+		}
+		if ($where) {
+			$whereString = implode(' or ', $where);
+			$sql = <<<SQL
+select * from information_schema.COLUMNS
+where $whereString
+SQL;
+			$hasMultipleResult = $rexSQL->getArray($sql, $params);
+			$hasMultiple = count($hasMultipleResult);
+			if ($hasMultiple > 0) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -237,15 +289,15 @@ SQL;
 				switch ($name['type']) {
 					case 'REX_MEDIA_WIDGET':
 						if ($$fieldname != '') {
-							$$fieldname.=' or ';
+							$$fieldname .= ' or ';
 						}
-						$$fieldname.=''.$tablename.'.'.$name['name'].' = f.filename';
+						$$fieldname .= ''.$tablename.'.'.$name['name'].' = f.filename';
 						break;
 					case 'REX_MEDIALIST_WIDGET':
 						if ($$fieldname != '') {
-							$$fieldname.=' or ';
+							$$fieldname .= ' or ';
 						}
-						$$fieldname.='FIND_IN_SET(f.filename, '.$tablename.'.'.$name['name'].')';
+						$$fieldname .= 'FIND_IN_SET(f.filename, '.$tablename.'.'.$name['name'].')';
 						break;
 				}
 			}
@@ -273,10 +325,10 @@ SQL;
 			'rex_article_art_meta.id,"\t",'.
 			'rex_article_art_meta.name,"\t",'.
 			'rex_article_art_meta.clang_id) Separator "\n") as metaArtIDs '.PHP_EOL;
-		$return['additionalSelect'].=$joinArtMeta == '' ? $selectMetaNull : $selectMetaNotNull;
+		$return['additionalSelect'] .= $joinArtMeta == '' ? $selectMetaNull : $selectMetaNotNull;
 
 		if ($joinArtMeta != '') {
-			$return['additionalJoins'].='LEFT join rex_article as rex_article_art_meta on '.
+			$return['additionalJoins'] .= 'LEFT join rex_article as rex_article_art_meta on '.
 				'(rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
 		}
 	}
@@ -298,10 +350,10 @@ SQL;
 			'rex_article_cat_meta.clang_id,"\t",'.
 			'rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
 
-		$return['additionalSelect'].=$joinCatMeta == '' ? $selectMetaNull : $selectMetaNotNull;
+		$return['additionalSelect'] .= $joinCatMeta == '' ? $selectMetaNull : $selectMetaNotNull;
 
 		if ($joinCatMeta != '') {
-			$return['additionalJoins'].='LEFT join rex_article as rex_article_cat_meta on '.
+			$return['additionalJoins'] .= 'LEFT join rex_article as rex_article_cat_meta on '.
 				'(rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
 		}
 	}
@@ -323,10 +375,10 @@ SQL;
 			'rex_article_med_meta.filename'.
 			') Separator "\n") as metaMedIDs '.PHP_EOL;
 
-		$return['additionalSelect'].=$joinMedMeta == '' ? $selectMetaNull : $selectMetaNotNull;
+		$return['additionalSelect'] .= $joinMedMeta == '' ? $selectMetaNull : $selectMetaNotNull;
 
 		if ($joinMedMeta != '') {
-			$return['additionalJoins'].='LEFT join rex_media as rex_article_med_meta on '.
+			$return['additionalJoins'] .= 'LEFT join rex_media as rex_article_med_meta on '.
 				'(rex_article_med_meta.id is not null and ('.$joinMedMeta.'))'.PHP_EOL;
 		}
 	}
