@@ -197,4 +197,18 @@ TEXT;
 		$api = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 		$this->assertTrue($api->getLang());
 	}
+
+	/**
+	 * Sprachensimulation testen
+	 */
+	public function testGetDB()
+	{
+		$api = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
+		$data=$api->getDB();
+
+		$this->asserttrue(is_array($data));
+		$this->assertEquals(2, count($data));
+		$this->assertArrayHasKey('name', $data[0]);
+		$this->assertArrayHasKey('name', $data[1]);
+	}
 }

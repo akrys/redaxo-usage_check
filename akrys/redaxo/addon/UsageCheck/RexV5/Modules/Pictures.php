@@ -88,15 +88,23 @@ SQL;
 	 * Daher muss man erst im information_schema nachfragen, ob es multiple gibt, sonst geht die Datenabfrage in
 	 * die Binsen.
 	 *
+	 * Der 2. Parameter sollte im Normalfall nicht verwendet werden.
+	 * Er dient nur dazu, in Unit-Tests andere Daten injezieren zu können, und somit auch einen Fehlerfall simulieren
+	 * zu können.
+	 *
 	 * @param string $yformFieldTable
+	 * @param array $dbs
 	 * @returns boolean
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	private function hasMultiple($yformFieldTable)
+	private function hasMultiple($yformFieldTable, $dbs = null)
 	{
 		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
 
-		$dbs = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getDB();
+		if (!isset($dbs)) { // Normalfall, wenn wir nicht gerade Unit-Tests laufen lassen
+			$dbs = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getDB();
+		}
+
 		$where = array();
 		foreach ($dbs as $db) {
 			if (isset($db['name']) && $db['name'] != '') {

@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+
+<!--
+-
+- Sequel Pro XML dump
+- Version 4541
+-
+- http://www.sequelpro.com/
+- https://github.com/sequelpro/sequelpro
+-
+- Host: 127.0.0.1 (MySQL 5.6.31-0ubuntu0.15.10.1)
+- Datenbank: redaxo_5_2
+- Erstellt am Time: 2017-01-07 14:03:53 +0000
+-
+-->
+
+<redaxo_5_2>
+
+	<custom>
+	<row>
+		<table_name>test</table_name>
+		<table_out>Test</table_out>
+		<f1>be_media_field</f1>
+		<f2>Feld be_media</f2>
+		<type_name>be_media</type_name>
+	</row>
+
+	<row>
+		<table_name>test</table_name>
+		<table_out>Test</table_out>
+		<f1>be_medialist_field</f1>
+		<f2>Feld be_medialist</f2>
+		<type_name>be_medialist</type_name>
+	</row>
+
+	<row>
+		<table_name>test</table_name>
+		<table_out>Test</table_out>
+		<f1>be_mediafile_field</f1>
+		<f2>Feld be_mediafile</f2>
+		<type_name>mediafile</type_name>
+	</row>
+
+	<row>
+		<table_name>test_medialist</table_name>
+		<table_out>MedialistTest</table_out>
+		<f1>ml1</f1>
+		<f2>Medialist1</f2>
+		<type_name>be_medialist</type_name>
+	</row>
+
+	<row>
+		<table_name>test_medialist</table_name>
+		<table_out>MedialistTest</table_out>
+		<f1>ml2</f1>
+		<f2>Medialist2 (mit types)</f2>
+		<type_name>be_medialist</type_name>
+	</row>
+
+	<row>
+		<table_name>test_medialist</table_name>
+		<table_out>MedialistTest</table_out>
+		<f1>be_media_single</f1>
+		<f2></f2>
+		<type_name>be_media</type_name>
+	</row>
+
+	<row>
+		<table_name>test_medialist</table_name>
+		<table_out>MedialistTest</table_out>
+		<f1>be_media_multiple</f1>
+		<f2></f2>
+		<type_name>be_media</type_name>
+	</row>
+
+	</custom>
+
+</redaxo_5_2>
