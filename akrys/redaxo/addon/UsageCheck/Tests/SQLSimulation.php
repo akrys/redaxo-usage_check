@@ -51,11 +51,13 @@ class SQLSimulation
 	 * Konstruktor
 	 * @param string $version
 	 * @param string $sql
+	 * @param array $data Daten im Fall, dass eine Datenbankabfrage mit Platzhaltern ausgeführt werden soll. (Stichwort: Prepared Statement)
 	 */
-	public function __construct($version, $sql)
+	public function __construct($version, $sql, $data = array())
 	{
 		$this->version = $version;
 		$this->sql = $sql;
+		$this->data = $data;
 		$this->hash = $this->getHash();
 		$this->simulationDataFile = __DIR__.'/testdata/'.$this->hash.'.xml';
 	}
@@ -84,6 +86,10 @@ class SQLSimulation
 
 		$backtrace = debug_backtrace();
 		foreach ($backtrace as $key => $value) {
+			if(!isset($value['file'])) {
+				//Reflection invokes
+				continue;
+			}
 			if (!preg_match('#Test\.php$#msi', $value['file'])) {
 //				print PHP_EOL.$key.PHP_EOL.$value['file'].PHP_EOL;
 				continue;
@@ -92,7 +98,7 @@ class SQLSimulation
 				self::$unKnownSQL[$this->hash] = array(
 					'sql' => $this->sql,
 					'version' => $this->version,
-					'data' => array(),
+					'data' => $this->data,
 					'caller' => array(
 						array(
 							'file' => $value['file'],
@@ -128,6 +134,9 @@ class SQLSimulation
 	public function getData()
 	{
 		if ($this->hasData()) {
+			//Dateien, die bei einem Testlauf nicht angefasst werden können wohl gelöscht werden.
+			touch($this->simulationDataFile);
+
 			$xml = simplexml_load_file($this->simulationDataFile);
 
 			$data = array();
@@ -159,7 +168,11 @@ class SQLSimulation
 	 */
 	private function getHash()
 	{
-		return md5($this->version.'_'.$this->sql);
+		$hashString = $this->version.'_'.$this->sql;
+		if (!empty($this->data)) {
+			$hashString .= '_'.serialize($this->data);
+		}
+		return md5($hashString);
 	}
 
 	/**

@@ -86,7 +86,7 @@ abstract class Pictures
 
 		$havingClauses = array_merge($havingClauses, $sqlPartsXForm['havingClauses']);
 		$additionalSelect .= $sqlPartsXForm['additionalSelect'];
-		$additionalJoins.= $sqlPartsXForm['additionalJoins'];
+		$additionalJoins .= $sqlPartsXForm['additionalJoins'];
 		$tableFields = array_merge($tableFields, $sqlPartsXForm['tableFields']);
 
 		$havingClauses = array_merge($havingClauses, $sqlPartsMeta['havingClauses']);
@@ -97,14 +97,14 @@ abstract class Pictures
 		$sql = $this->getPictureSQL($additionalSelect, $additionalJoins);
 
 		if (!$showAll) {
-			$sql.='where s.id is null ';
+			$sql .= 'where s.id is null ';
 			$havingClauses[] = 'metaCatIDs is null and metaArtIDs is null and metaMedIDs is null';
 		}
 
-		$sql.='group by f.filename ';
+		$sql .= 'group by f.filename ';
 
 		if (!$showAll && isset($havingClauses) && count($havingClauses) > 0) {
-			$sql.='having '.implode(' and ', $havingClauses).'';
+			$sql .= 'having '.implode(' and ', $havingClauses).'';
 		}
 
 		return array('result' => $rexSQL->getArray($sql), 'fields' => $tableFields);
@@ -146,39 +146,67 @@ abstract class Pictures
 				'name' => $table['f1'],
 				'name_out' => $table['f2'],
 				'table_out' => $table['table_out'],
-				'type' => $table['type_name']
+				'type' => $table['type_name'],
+				//in YForm 2, muss man prüfen, ob be_media einen multiple modifier hat.
+				//siehe Kommentare in \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures::getXFormSQL
+				'multiple' => (isset($table['multiple']) && $table['multiple'] == '1'),
 			);
 		}
 
 		foreach ($xTables as $tableName => $fields) {
-			$return['additionalSelect'].=', group_concat(distinct '.$tableName.'.id';
-			$return['additionalJoins'].='LEFT join '.$tableName.' on (';
+			$return['additionalSelect'] .= ', group_concat(distinct '.$tableName.'.id';
+			$return['additionalJoins'] .= 'LEFT join '.$tableName.' on (';
 
 			foreach ($fields as $key => $field) {
 				if ($key > 0) {
-					$return['additionalJoins'].=' OR ';
+					$return['additionalJoins'] .= ' OR ';
 				}
 
-				switch ($field['type']) {
-					case 'be_mediapool': // Redaxo 4
-					case 'be_media': // Redaxo 5
-					case 'mediafile':
-						$return['additionalJoins'].=$tableName.'.'.$field['name'].' = f.filename';
-						break;
-					case 'be_medialist':
-						$return['additionalJoins'].='FIND_IN_SET(f.filename, '.$tableName.'.'.$field['name'].')';
-						break;
-				}
+				$return['additionalJoins'] .= $this->getJoinCondition($field, $tableName);
 			}
 
 			$return['tableFields'][$tableName] = $fields;
-			$return['additionalJoins'].=')'.PHP_EOL;
-			$return['additionalSelect'].=' Separator "\n") as '.$tableName.PHP_EOL;
+			$return['additionalJoins'] .= ')'.PHP_EOL;
+			$return['additionalSelect'] .= ' Separator "\n") as '.$tableName.PHP_EOL;
 			$return['havingClauses'][] = $tableName.' IS NULL';
 		}
 
 
 		return $return;
+	}
+
+	/**
+	 * Auslagerung der Join-Conditions
+	 *
+	 * PHPMD meckert eine zu hohe Komplexität an. (11 satt der maximalen 10)
+	 * Das dürfte an der Anpassung zu YForm 2 liegen, da dort in be_media nun mehrere Dateien angegeben werden dürfen.
+	 * Die Prüfung auf $field['multiple'] ist dann eine ebene zu tief.
+	 *
+	 * @param array $field
+	 * @param string $tableName
+	 * @return string
+	 */
+	private function getJoinCondition($field, $tableName)
+	{
+		$joinCondition = '';
+		switch ($field['type']) {
+			case 'be_mediapool': // Redaxo 4
+			case 'mediafile':
+				$joinCondition = $tableName.'.'.$field['name'].' = f.filename';
+				break;
+			case 'be_medialist': // Redaxo 5, YForm 1
+				$joinCondition = 'FIND_IN_SET(f.filename, '.$tableName.'.'.$field['name'].')';
+				break;
+			case 'be_media': // Redaxo 5
+				$joinCondition = $tableName.'.'.$field['name'].' = f.filename';
+				if ($field['multiple']) {
+					//YForm 2 kann mehrere Dateien aufnehmen
+					//siehe Kommentare in \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures::getXFormSQL
+					$joinCondition = 'FIND_IN_SET(f.filename, '.$tableName.'.'.$field['name'].')';
+				}
+				break;
+		}
+		return $joinCondition;
 	}
 
 	/**
@@ -208,7 +236,7 @@ abstract class Pictures
 
 		while ($return['size'] > 1024 && $return['index'] <= 6) {
 			$return['index'] ++;
-			$return['size']/=1024;
+			$return['size'] /= 1024;
 		}
 		return $return;
 	}

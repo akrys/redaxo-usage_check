@@ -26,11 +26,11 @@ if (isset($_SERVER['argv'])) {
 			return new self();
 		}
 
-		public function getArray($sql)
+		public function getArray($sql, $data=array())
 		{
 			$version = rex::getVersion();
 
-			$sql = new \akrys\redaxo\addon\UsageCheck\Tests\SQLSimulation($version, $sql);
+			$sql = new \akrys\redaxo\addon\UsageCheck\Tests\SQLSimulation($version, $sql, $data);
 
 			if ($sql->getSQLisKnown()) {
 				return $sql->getData();
@@ -162,6 +162,11 @@ if (isset($_SERVER['argv'])) {
 		 */
 		public function getProperty($x)
 		{
+			switch($x){
+				case 'db':
+					return array(array('name'=> 'redaxo_5_2'),array('name'=> 'b'),);
+					break;
+			}
 			return true;
 		}
 	}
@@ -632,6 +637,7 @@ if (isset($_SERVER['argv'])) {
 				print 'Redaxo-Version: '.$value['version'].PHP_EOL;
 				print $key.PHP_EOL;
 				print $value['sql'].PHP_EOL;
+				var_dump($value['data']);
 				print PHP_EOL;
 			}
 

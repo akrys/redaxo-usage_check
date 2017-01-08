@@ -83,6 +83,13 @@ abstract class RedaxoCall
 	abstract public function getLang();
 
 	/**
+	 * DB holen.
+	 * @return array
+	 * @SuppressWarnings(PHPMD.StaticAccess)
+	 */
+	abstract public function getDB();
+
+	/**
 	 * Tabelle mit Prefix versehen
 	 * @param string $name
 	 * @return string
