@@ -48,9 +48,10 @@ class PicturesTest
 		$api = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
 		$this->assertTrue(is_array($api->getPictures()));
 	}
-/**
- * Funktionstest ohne YForm
- */
+
+	/**
+	 * Funktionstest ohne YForm
+	 */
 	public function testGetNoYFrom()
 	{
 		\rex_addon::setAvailable('yform', false);
@@ -80,5 +81,46 @@ class PicturesTest
 		\rex_user::setAdmin(false);
 		$api = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
 		$this->assertFalse($api->getPictures());
+	}
+
+	/**
+	 * Test für die YFORM 2.0 anpassung
+	 *
+	 * Test, wenn das Feld multiple enthalten ist
+	 *
+	 */
+	public function testHasMultipleTrue()
+	{
+		$function = new \ReflectionMethod('akrys\\redaxo\\addon\\UsageCheck\\RexV5\\Modules\\Pictures', 'hasMultiple');
+		$function->setAccessible(true);
+
+		$params = array(
+			'yformFieldTable' => \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('yform_field'),
+			'dbs' => null,
+		);
+
+		$api = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
+		$this->assertTrue($function->invokeArgs($api, $params));
+	}
+
+	/**
+	 * Test für die YFORM 2.0 anpassung
+	 *
+	 * Test, wenn das Feld multiple nicht enthalten ist
+	 *
+	 */
+	public function testHasMultipleFalse()
+	{
+		$function = new \ReflectionMethod('akrys\\redaxo\\addon\\UsageCheck\\RexV5\\Modules\\Pictures', 'hasMultiple');
+		$function->setAccessible(true);
+
+		$params = array(
+			'yformFieldTable' => \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('yform_field'),
+			//In Redaxo 5.1 kann YFORM 2 nicht laufen
+			'dbs' => array(array('name' => 'redaxo_5_1'), array('name' => '')),
+		);
+
+		$api = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
+		$this->assertFalse($function->invokeArgs($api, $params));
 	}
 }

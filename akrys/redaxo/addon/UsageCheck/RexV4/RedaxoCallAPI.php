@@ -39,6 +39,15 @@ class RedaxoCallAPI
 	}
 
 	/**
+	 * DB holen.
+	 * @return array
+	 */
+	public function getDB()
+	{
+		return $GLOBALS['REX']['DB'];
+	}
+
+	/**
 	 * Tabellenprefix holen
 	 * @return string
 	 */

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<!--
+-
+- Sequel Pro XML dump
+- Version 4541
+-
+- http://www.sequelpro.com/
+- https://github.com/sequelpro/sequelpro
+-
+- Host: 127.0.0.1 (MySQL 5.6.31-0ubuntu0.15.10.1)
+- Datenbank: redaxo_5_2
+- Erstellt am Time: 2017-01-07 14:56:52 +0000
+-
+-->
+
+<redaxo_5_2>
+
+	<custom>
+	
+	</custom>
+
+</redaxo_5_2>
