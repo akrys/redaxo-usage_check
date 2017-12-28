@@ -128,9 +128,6 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 					//Der Fehler liegt also nicht hier, und auch nicht im Redaxo-Core
 					if (!$used) {
 						switch (akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-							case akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-								$used = $medium->isInUse();
-								break;
 							case akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
 								$used = rex_mediapool_mediaIsInUse($medium->getFileName());
 								break;
@@ -333,12 +330,6 @@ $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
 							$initCat = null;
 
 							switch (RedaxoCall::getRedaxoVersion()) {
-								case RedaxoCall::REDAXO_VERSION_4:
-									/* @var $medium OOMedia */
-									$medium = OOMedia::getMediaByFileName($item['filename']);
-									/* @var $initCat OOMediaCategory */
-									$initCat = $medium->getCategory();
-									break;
 								case RedaxoCall::REDAXO_VERSION_5:
 									/* @var $medium rex_media */
 									$medium = rex_media::get($item['filename']);

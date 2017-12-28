@@ -19,10 +19,6 @@ namespace akrys\redaxo\addon\UsageCheck;
  */
 abstract class RedaxoCall
 {
-	/**
-	 * @var int
-	 */
-	const REDAXO_VERSION_4 = 4;
 
 	/**
 	 * @var int
@@ -54,10 +50,6 @@ abstract class RedaxoCall
 	{
 		if (!isset(self::$api)) {
 			switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-					// Redaxo 4
-					self::$api = new RexV4\RedaxoCallAPI();
-					break;
 				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
 					// Redaxo 5
 					self::$api = new RexV5\RedaxoCallAPI();
@@ -146,11 +138,6 @@ abstract class RedaxoCall
 	 */
 	public static function getRedaxoVersion()
 	{
-		//REDAXO 4?
-		if (isset($GLOBALS['REX']) && isset($GLOBALS['REX']['VERSION']) && $GLOBALS['REX']['VERSION'] == 4) {
-			return self::REDAXO_VERSION_4;
-		}
-
 		//Redaxo 5?
 		if (is_callable('\\rex::getVersion')) {
 			$version = \rex::getVersion();

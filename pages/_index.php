@@ -23,21 +23,11 @@ TEXT;
 	}
 }
 
-if (RedaxoCall::getRedaxoVersion() == RedaxoCall::REDAXO_VERSION_4) {
-	$page = rex_request('page', 'string');
-	$subpage = rex_request('subpage', 'string');
-
-	if ($subpage === '') {
-		$subpage = 'overview';
-		header('location: index.php?page='.Config::NAME.'&subpage=overview');
-	}
-} else {
 	$subpage = rex_be_controller::getCurrentPagePart(2, 'overview');
 
 //	echo rex_view::title(rex_i18n::msg('backup_title'));
 //	var_dump(rex_be_controller::getCurrentPageObject()->getSubPath());
 //	include rex_be_controller::getCurrentPageObject()->getSubPath();
-}
 
 $contentFile = __DIR__.'/_'.$subpage.'.php';
 

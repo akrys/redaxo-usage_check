@@ -34,9 +34,6 @@ abstract class Actions
 	{
 		$object = null;
 		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_4:
-				$object = new \akrys\redaxo\addon\UsageCheck\RexV4\Modules\Actions();
-				break;
 			case RedaxoCall::REDAXO_VERSION_5:
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Actions();
 				break;
