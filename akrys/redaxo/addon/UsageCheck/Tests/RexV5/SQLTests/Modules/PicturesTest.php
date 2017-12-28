@@ -11,7 +11,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests\RexV5\SQLTests\Modules;
  * @author akrys
  */
 class PicturesTest
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**

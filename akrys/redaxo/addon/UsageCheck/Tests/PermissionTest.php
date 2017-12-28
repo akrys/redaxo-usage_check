@@ -16,7 +16,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests;
  * @author akrys
  */
 class PermissionTest
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**
@@ -37,20 +37,10 @@ class PermissionTest
 	 */
 	public function testCreateNoValidVersion()
 	{
-		$this->setExpectedException('\\akrys\\redaxo\\addon\\UsageCheck\\Exception\\InvalidVersionException');
+		$this->expectException('\\akrys\\redaxo\\addon\\UsageCheck\\Exception\\InvalidVersionException');
 		\rex::setVersion(\rex::VERSION_INVALID);
 		$object = \akrys\redaxo\addon\UsageCheck\Permission::getVersion();
 		$this->assertEquals(-1, $object);
-	}
-
-	/**
-	 * Test create, wenn es Redaxo in Version 4 vorliegt
-	 */
-	public function testCreate4()
-	{
-		\rex::setVersion(\rex::VERSION_4);
-		$object = \akrys\redaxo\addon\UsageCheck\Permission::getVersion();
-		$this->assertEquals('akrys\\redaxo\\addon\\UsageCheck\\RexV4\\Permission', get_class($object));
 	}
 
 	/**

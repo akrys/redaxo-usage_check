@@ -16,7 +16,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests;
  * @author akrys
  */
 class RedaxoCallTest
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**
@@ -24,7 +24,7 @@ class RedaxoCallTest
 	 */
 	public function testGetApiInvalid()
 	{
-		$this->setExpectedException('akrys\\redaxo\\addon\\UsageCheck\\Exception\\InvalidVersionException');
+		$this->expectException('akrys\\redaxo\\addon\\UsageCheck\\Exception\\InvalidVersionException');
 		\rex::setVersion(\rex::VERSION_INVALID);
 		$api = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 		$this->assertFalse(is_object($api));
@@ -39,17 +39,6 @@ class RedaxoCallTest
 		$api = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 		$this->assertTrue(is_object($api));
 		$this->assertEquals(get_class($api), 'akrys\\redaxo\\addon\\UsageCheck\\RexV5\\RedaxoCallAPI');
-	}
-
-	/**
-	 * Funktionstest getApiInvalid für Redaxo4
-	 */
-	public function testGetApiRex4()
-	{
-		\rex::setVersion(\rex::VERSION_4);
-		$api = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
-		$this->assertTrue(is_object($api));
-		$this->assertEquals(get_class($api), 'akrys\\redaxo\\addon\\UsageCheck\\RexV4\\RedaxoCallAPI');
 	}
 
 	/**

@@ -11,7 +11,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests\RexV5\Modules;
  * @author akrys
  */
 class ModulesTest
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**

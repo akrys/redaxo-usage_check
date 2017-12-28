@@ -11,7 +11,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests\RexV5\Modules;
  * @author akrys
  */
 class TemplateTest
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**
@@ -52,7 +52,22 @@ class TemplateTest
 		$reflectionObject->setAccessible(true);
 
 		$templates = \akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
-		$reflectionObject->invokeArgs($templates, array(true, true));
+		$data = $reflectionObject->invokeArgs($templates, array(true, true));
+		$expectedData = array(
+			'showAllParam' => "",
+			'showAllParamCurr' => "&showall=true",
+			'showAllLinktext' => "akrys_usagecheck_template_link_show_unused",
+			'showInactiveParam' => "",
+			'showInactiveParamCurr' => "&showinactive=true",
+			'showInactiveLinktext' => "akrys_usagecheck_template_link_show_active",
+		);
+		$this->assertArrayHasKey('showAllParam', $data);
+		$this->assertArrayHasKey('showAllParamCurr', $data);
+		$this->assertArrayHasKey('showAllLinktext', $data);
+		$this->assertArrayHasKey('showInactiveParam', $data);
+		$this->assertArrayHasKey('showInactiveParamCurr', $data);
+		$this->assertArrayHasKey('showInactiveLinktext', $data);
+		$this->assertEquals($expectedData, $reflectionObject->invokeArgs($templates, array(true, true)));
 	}
 
 	/**
@@ -304,9 +319,7 @@ TEXT;
 	 */
 	public function testShowAllFalse()
 	{
-
-		$templates = \akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
-
+		$templates = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
 		$templates->showAll(false);
 		$property = new \ReflectionProperty('akrys\\redaxo\\addon\\UsageCheck\\Modules\\Pictures', 'showAll');
 		$property->setAccessible(true);

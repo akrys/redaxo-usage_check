@@ -16,7 +16,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests;
  * @author akrys
  */
 class ErrorTest
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**
@@ -65,7 +65,7 @@ class ErrorTest
 	 */
 	public function testClone()
 	{
-		$this->setExpectedException('\\akrys\\redaxo\\addon\\UsageCheck\\Exception\\CloneException');
+		$this->expectException('\\akrys\\redaxo\\addon\\UsageCheck\\Exception\\CloneException');
 
 		$error = \akrys\redaxo\addon\UsageCheck\Error::getInstance();
 		$error2 = clone $error;

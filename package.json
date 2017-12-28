@@ -5,11 +5,11 @@
 		"gulp": "*"
 	},
 	"devDependencies": {
+		"escape-string-regexp": "*",
 		"gulp": "*",
-		"phplint": "*",
-		"gulp-shell": "*",
-		"gulp-phpunit": "*",
-		"gulp-phpcs": "*",
-		"escape-string-regexp": "*"
+		"gulp-phpcs": "^2.1.0",
+		"gulp-phpunit": "^0.24.1",
+		"gulp-shell": "^0.6.3",
+		"phplint": "^1.7.4"
 	}
 }

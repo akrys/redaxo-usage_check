@@ -9,7 +9,8 @@ if (isset($_SERVER['argv'])) {
 	$GLOBALS['REX'] = array();
 	$GLOBALS['REX']['INCLUDE_PATH'] = realpath(__DIR__.'/../../../../../');
 	$GLOBALS['useComposerAutoload'] = true;
-	require_once __DIR__.'/../../../../../general/config.inc.php';
+	require_once __DIR__.'/../../../../../boot.php';
+	require_once __DIR__.'/../../../../../vendor/autoload.php';
 
 	/**
 	 * sql simulation

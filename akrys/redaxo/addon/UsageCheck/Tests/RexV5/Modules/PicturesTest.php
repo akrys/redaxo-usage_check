@@ -11,7 +11,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests\RexV5\Modules;
  * @author akrys
  */
 class PicturesTest
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**
@@ -91,7 +91,7 @@ TEXT;
 	 */
 	public function testGetMediaNoPerm()
 	{
-		$this->setExpectedException('\\akrys\\redaxo\\addon\\UsageCheck\\Exception\\FunctionNotCallableException');
+		$this->expectException('\\akrys\\redaxo\\addon\\UsageCheck\\Exception\\FunctionNotCallableException');
 		\rex_media_perm::setHasNamedRight('1', false);
 		$object = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
 		$text = $object->getMedium(array('category_id' => 1, 'filename' => 'test.php'));

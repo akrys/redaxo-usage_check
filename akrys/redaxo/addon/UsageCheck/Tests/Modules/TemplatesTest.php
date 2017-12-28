@@ -11,7 +11,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests\Modules;
  * @author akrys
  */
 class TemplateTest
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**
@@ -37,7 +37,7 @@ class TemplateTest
 	 */
 	public function testCreateNoValidVersion()
 	{
-		$this->setExpectedException('akrys\\redaxo\\addon\\UsageCheck\\Exception\\FunctionNotCallableException');
+		$this->expectException('akrys\\redaxo\\addon\\UsageCheck\\Exception\\FunctionNotCallableException');
 		\rex::setVersion(\rex::VERSION_INVALID);
 		$templates = \akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
 		$this->assertEquals(-1, $templates);
