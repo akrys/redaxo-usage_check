@@ -27,7 +27,7 @@ your Redaxo copy version.
 After copying the files you'll need to install and activate this addon using the Redaxo backend.
 
 ## Compatibility
-- PHP version: __5.6__ or later
+- PHP version: __5.6.11__ or later
 - tested on Redaxo versions __5.0.1__, __5.1__, __5.2__,  __5.3__,  __5.4__,  __5.5__
 
 ##Notice on code-analyzing tools

@@ -30,7 +30,7 @@ Man kann auch das hier generierte ZIP herunterladen und an die richtige Stelle k
 Dann muss man das Addon nur noch über das Redaxo-Backend installieren und aktivieren.
 
 ## Kompatibilität
-- PHP Version: __5.6__ oder höher
+- PHP Version: __5.6.11__ oder höher
 - getestet mit Redaxo __5.0.1__, __5.1__, __5.2__,  __5.3__,  __5.4__,  __5.5__
 
 ##Hinweis Code-Analyse-Tools
