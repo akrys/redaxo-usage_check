@@ -72,7 +72,7 @@ gulp.task('phpcs', function () {
 
 
 ///////////////////// PHP Unit /////////////////////
-gulp.task('phpunit', function () {
+gulp.task('phpunit', function (done) {
 	var options = {
 		debug: false,
 		statusLine: false,
@@ -81,6 +81,7 @@ gulp.task('phpunit', function () {
 	};
 	gulp.src('phpunit.xml')
 		.pipe(phpunit('./vendor/bin/phpunit', options));
+	done();
 });
 
 gulp.task('phpdoc', shell.task(['vendor/bin/phpdoc']));
