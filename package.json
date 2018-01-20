@@ -2,14 +2,14 @@
 	"name": "redaxo-usage_check",
 	"description": "",
 	"dependencies": {
-		"gulp": "*"
+		"gulp-cli": "^2.0.0"
 	},
 	"devDependencies": {
 		"escape-string-regexp": "*",
-		"gulp": "*",
+		"gulp": "^4.0.0",
 		"gulp-phpcs": "^2.1.0",
 		"gulp-phpunit": "^0.24.1",
-		"gulp-shell": "^0.6.3",
+		"gulp-shell": "^0.6.5",
 		"phplint": "^1.7.4"
 	}
 }
