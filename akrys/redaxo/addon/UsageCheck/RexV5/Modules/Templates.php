@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Datei für das Template-Modul
  *
@@ -71,32 +72,37 @@ SQL;
 	public function outputMenu($subpage, $showAll, $showInactive)
 	{
 		$param = $this->getMenuParameter($showAll, $showInactive);
-		?>
 
-		<ul>
-			<?php
-			$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.
-				$subpage.$param['showAllParam'].$param['showInactiveParamCurr'];
-			?>
+		$link = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
+			$param['showAllParam'].$param['showInactiveParamCurr'];
 
-			<li><a href="<?php echo $url ?>"><?php echo $param['showAllLinktext']; ?></a></li>
+		$adminLink = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
+			$param['showAllParamCurr'].$param['showInactiveParam'];
 
-			<?php
-			$user = \rex::getUser();
-			if ($user->isAdmin()) {
-				$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
-					$param['showAllParamCurr'].$param['showInactiveParam'];
-				?>
+		$links = [
+			[
+				'url' => $link,
+				'text' => $param['showAllLinktext'],
+				'admin' => false,
+			],
+			[
+				'url' => $adminLink,
+				'text' => $param['showInactiveLinktext'],
+				'admin' => true,
+			],
+		];
 
-				<li><a href="<?php echo $url; ?>"><?php echo $param['showInactiveLinktext'] ?></a></li>
+		$texts = [
+			\akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_intro_text'),
+		];
 
-				<?php
-			}
-			?>
-
-		</ul>
-
-		<?php
+		$params = [
+			'links' => $links,
+			'texts' => $texts,
+			'user' => \rex::getUser(),
+		];
+		$menu = new \rex_fragment($params);
+		return $menu->parse('fragments/menu/linklist.php');
 	}
 
 	/**
@@ -110,12 +116,14 @@ SQL;
 		$user = \rex::getUser();
 		if ($user->isAdmin()) {
 			$url = 'index.php?page=templates&function=edit&template_id='.$item['id'];
-			?>
 
-			<a href="<?php echo $url; ?>"><?php echo $linkText; ?></a>
-
-			<?php
+			$fragmet = new \rex_fragment([
+				'href' => $url,
+				'text' => $linkText,
+			]);
+			return $fragmet->parse('fragments/link.php');
 		}
+		return '';
 	}
 
 	/**

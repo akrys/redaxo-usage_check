@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Grundlegendes Frontend
  */
@@ -9,21 +10,16 @@ use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
 	$text = '';
 	foreach (\akrys\redaxo\addon\UsageCheck\Error::getInstance() as $error) {
-		$text.=<<<TEXT
-
-<p>
-	<span>
-		$error
-	</span>
-</p>
-
-TEXT;
+		$fragment = new \rex_fragment([
+			'text' => $error,
+		]);
+		$text .= $fragment->parse('fragments/msg/tagged_msg.php');
 
 		echo RedaxoCall::getAPI()->getErrorMsg($text, false);
 	}
 }
 
-	$subpage = rex_be_controller::getCurrentPagePart(2, 'overview');
+$subpage = rex_be_controller::getCurrentPagePart(2, 'overview');
 
 //	echo rex_view::title(rex_i18n::msg('backup_title'));
 //	var_dump(rex_be_controller::getCurrentPageObject()->getSubPath());

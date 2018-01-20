@@ -19,7 +19,6 @@ namespace akrys\redaxo\addon\UsageCheck;
  */
 abstract class RedaxoCall
 {
-
 	/**
 	 * @var int
 	 */
@@ -163,9 +162,10 @@ abstract class RedaxoCall
 	 */
 	public function getTaggedMsg($text)
 	{
-		return <<<TEXT
-<p><span>$text</span></p>
-TEXT;
+		$fragment = new \rex_fragment([
+			'text' => $text,
+		]);
+		return $fragment->parse('fragments/msg/tagged_msg.php');
 	}
 
 	/**

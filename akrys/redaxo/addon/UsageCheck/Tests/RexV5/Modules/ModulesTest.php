@@ -40,15 +40,18 @@ class ModulesTest
 	{
 		$object = \akrys\redaxo\addon\UsageCheck\Modules\Modules::create();
 
-		$expected = <<<TEXT
-		<p class="rex-tx1"><a href="index.php?page=usage_check/test&b=2">test</a></p>
-		<p class="rex-tx1">akrys_usagecheck_module_intro_text</p>
-TEXT;
+		$result = $object->outputMenu('test', '&b=2', 'test');
+		$this->assertArrayHasKey('setVar', $result);
+		$this->assertEquals(3, count($result['setVar']));
+		$this->assertEquals('url', $result['setVar'][0][0]);
+		$this->assertEquals('index.php?page=usage_check/test&b=2', $result['setVar'][0][1]);
 
-		ob_start();
-		$object->outputMenu('test', '&b=2', 'test');
-		$text = ob_get_clean();
+		$this->assertEquals('linktext', $result['setVar'][1][0]);
+		$this->assertEquals('test', $result['setVar'][1][1]);
 
-		$this->assertEquals(trim($expected), trim($text));
+		$this->assertEquals('texts', $result['setVar'][2][0]);
+		$this->assertEquals('array', gettype($result['setVar'][2][1]));
+		$this->assertEquals(1, count($result['setVar'][2][1]));
+		$this->assertEquals('akrys_usagecheck_module_intro_text', $result['setVar'][2][1][0]);
 	}
 }

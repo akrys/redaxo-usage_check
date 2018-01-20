@@ -41,18 +41,20 @@ class PicturesTest
 		\rex::setVersion(\rex::VERSION_5);
 		$object = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
 
-		$expected = <<<TEXT
-		<p class="rex-tx1">
-			<a href="index.php?page=usage_check/test&b=2">test</a>
-		</p>
-		<p class="rex-tx1">akrys_usagecheck_images_intro_text</p>
-TEXT;
+		$result = $object->outputMenu('test', '&b=2', 'test');
 
-		ob_start();
-		$object->outputMenu('test', '&b=2', 'test');
-		$text = ob_get_clean();
+		$this->assertArrayHasKey('setVar', $result);
+		$this->assertEquals(3, count($result['setVar']));
+		$this->assertEquals('url', $result['setVar'][0][0]);
+		$this->assertEquals('index.php?page=usage_check/test&b=2', $result['setVar'][0][1]);
 
-		$this->assertEquals(trim($expected), trim($text));
+		$this->assertEquals('linktext', $result['setVar'][1][0]);
+		$this->assertEquals('test', $result['setVar'][1][1]);
+
+		$this->assertEquals('array', gettype($result['setVar'][2][1]));
+		$this->assertEquals(1, count($result['setVar'][2][1]));
+		$this->assertEquals('texts', $result['setVar'][2][0]);
+		$this->assertEquals('akrys_usagecheck_images_intro_text', $result['setVar'][2][1][0]);
 	}
 
 	/**
@@ -120,18 +122,17 @@ TEXT;
 	public function testOutputImagePreview()
 	{
 		$object = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
-		ob_start();
-		$text = $object->outputImagePreview(array('filetype' => 'image/png', 'filename' => 'test.png'));
-		$output = ob_get_clean();
+		$result = $object->outputImagePreview(array('filetype' => 'image/png', 'filename' => 'test.png'));
 
-		$expected = <<<TEXT
-			<img alt="" src="index.php?rex_media_type=rex_mediapool_preview&rex_media_file=test.png" style="max-width:150px;max-height: 150px;" />
-			<br /><br />
-TEXT;
+		$this->assertArrayHasKey('setVar', $result);
+		$this->assertEquals(3, count($result['setVar']));
+		$this->assertEquals('src', $result['setVar'][0][0]);
+		$this->assertEquals('index.php?rex_media_type=rex_mediapool_preview&rex_media_file=test.png', $result['setVar'][0][1]);
 
-		$exp = str_replace(array("\r", "\n", "\t"), '', trim($expected));
-		$cur = str_replace(array("\r", "\n", "\t"), '', trim($output));
+		$this->assertEquals('alt', $result['setVar'][1][0]);
+		$this->assertEquals('', $result['setVar'][1][1]);
 
-		$this->assertEquals($exp, $cur);
+		$this->assertEquals('style', $result['setVar'][2][0]);
+		$this->assertEquals('max-width:150px;max-height: 150px;', $result['setVar'][2][1]);
 	}
 }

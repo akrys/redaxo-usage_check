@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Datei für das Medienmodul
  *
@@ -220,13 +221,15 @@ SQL;
 	{
 		if (stristr($item['filetype'], 'image/')) {
 			$url = 'index.php?rex_media_type=rex_mediapool_preview&rex_media_file='.$item['filename'];
-			?>
 
-			<img alt="" src="<?php echo $url ?>" style="max-width:150px;max-height: 150px;" />
-			<br /><br />
-
-			<?php
+			$fragment = new \rex_fragment([
+				'src' => $url,
+				'alt' => '',
+				'style' => 'max-width:150px;max-height: 150px;',
+			]);
+			return $fragment->parse('fragments/image.php');
 		}
+		return '';
 	}
 
 	/**

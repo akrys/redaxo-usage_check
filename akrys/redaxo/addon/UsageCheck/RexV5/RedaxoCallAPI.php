@@ -80,14 +80,10 @@ class RedaxoCallAPI
 	 */
 	public function getErrorMsg($text)
 	{
-		$out = <<<MSG
-
-<div class="alert alert-danger">
-	$text
-</div>
-
-MSG;
-		return $out;
+		$fragment = new \rex_fragment([
+			'text' => $text,
+		]);
+		return $fragment->parse('fragments/msg/error.php');
 	}
 
 	/**
@@ -101,14 +97,10 @@ MSG;
 	 */
 	public function getInfoMsg($text)
 	{
-		$out = <<<MSG
-
-<div class="alert alert-success">
-	$text
-</div>
-
-MSG;
-		return $out;
+		$fragment = new \rex_fragment([
+			'text' => $text,
+		]);
+		return $fragment->parse('fragments/msg/info.php');
 	}
 
 	/**
@@ -119,16 +111,10 @@ MSG;
 	 */
 	public function getPanelOut($title, $text)
 	{
-		return <<<MSG
-
-<div class="panel panel-default">
-	<header class="panel-heading"><div class="panel-title">$title</div></header>
-	<div class="panel-body">
-		$text
-	</div>
-</div>
-
-MSG;
+		$fragment = new \rex_fragment();
+		$fragment->setVar('heading', $title, false);
+		$fragment->setVar('body', $text, false);
+		return $fragment->parse('core/page/section.php');
 	}
 
 	/**

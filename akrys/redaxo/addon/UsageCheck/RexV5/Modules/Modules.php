@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Datei für das Modul "Module"
  *
@@ -65,13 +66,14 @@ SQL;
 	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
 	{
 		$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.$showAllParam;
-		$text = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_intro_text');
-		?>
-
-		<p class="rex-tx1"><a href="<?php echo $url?>"><?php echo $showAllLinktext; ?></a></p>
-		<p class="rex-tx1"><?php echo $text; ?></p>
-
-		<?php
+		$menu = new \rex_fragment([
+			'url' => $url,
+			'linktext' => $showAllLinktext,
+			'texts' => [
+				\akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_intro_text'),
+			],
+		]);
+		return $menu->parse('fragments/menu/linktext.php');
 	}
 
 	/**

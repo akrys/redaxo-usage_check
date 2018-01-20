@@ -22,6 +22,9 @@ try {
 
 spl_autoload_register(array('akrys\\redaxo\\addon\\UsageCheck\\Config', 'autoload'), true, true);
 
+if (class_exists(rex_fragment::class)) {
+	rex_fragment::addDirectory(realpath(__DIR__));
+}
 
 
 //	//zu aktivieren, wenn es mit dem Autoloader doch nicht funktioniert.

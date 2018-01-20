@@ -23,6 +23,7 @@
 					Wenn was schief geht, sollte man es eigentlich sofort sehen. ;-)
 				-->
 				<directory>./pages/</directory>
+				<directory>./fragments/</directory>
 
 
 				<!-- Redaxo 5 Addon Files -->
