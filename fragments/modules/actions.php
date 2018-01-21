@@ -40,7 +40,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 								if ($item['modul'] !== null) {
 									$usages = explode("\n", $item['modul']);
 									$idex = 'akrys_usagecheck_action_linktext_edit_in_modul';
-									$linkTextRaw = RedaxoCall::getAPI()->getI18N($index);
+									$linkTextRaw = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N($index);
 									foreach ($usages as $usageRaw) {
 										$usage = (explode("\t", $usageRaw));
 										$modulID = $usage[0];

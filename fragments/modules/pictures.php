@@ -108,7 +108,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 						echo $api->getErrorMsg($text);
 					} else {
 						$text = 'akrys_usagecheck_images_msg_used';
-						echo $api->getTaggedInfoMsg(RedaxoCall::getAPI()->getI18N($text));
+						echo $api->getTaggedInfoMsg(akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N($text));
 					}
 					?>
 

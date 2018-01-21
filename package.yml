@@ -1,5 +1,5 @@
 package: usage_check
-version: '1.0'
+version: '2.0'
 author: Axel Krysztofiak
 supportpage: https://github.com/akrys/redaxo-usage_check
 #load: early
@@ -7,10 +7,10 @@ supportpage: https://github.com/akrys/redaxo-usage_check
 page:
     title: Usage Check
     perm: usage_check[]
-    block: system
-    prio: 50
+    block: addons
+    prio: 0
     pjax: true
-    icon: rex-icon rex-icon-system
+    icon: rex-icon rex-icon-media
     subpages:
         overview: { title: 'translate:akrys_usagecheck_overview' }
         picture: { title: 'translate:akrys_usagecheck_picture' }
@@ -22,5 +22,5 @@ page:
 requires:
     redaxo: '>5'
     php:
-        version: '>=5.3.2'
+        version: '>=5.6'
         extensions: []
