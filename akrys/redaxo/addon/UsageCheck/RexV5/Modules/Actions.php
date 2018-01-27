@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Datei für die Modul-Actions
  *
@@ -27,11 +28,14 @@ class Actions
 	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
 	{
 		$url = 'index.php?page='.Config::NAME.'/'.$subpage.$showAllParam;
-		?>
-
-		<p class="rex-tx1"><a href="<?php echo $url ?>"><?php echo $showAllLinktext; ?></a></p>
-
-		<?php
+		$menu = new \rex_fragment([
+			'url' => $url,
+			'linktext' => $showAllLinktext,
+			'texts' => [
+				\akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_intro_text'),
+			],
+		]);
+		return $menu->parse('fragments/menu/linktext.php');
 	}
 
 	/**
@@ -41,11 +45,11 @@ class Actions
 	 */
 	public function outputActionEdit($item, $linkText)
 	{
-		$url = 'index.php?page=module/actions&action_id='.$item['id'].'&function=edit';
-		?>
-
-		<a href="<?php echo $url ?>"><?php echo $linkText ?></a>
-
-		<?php
+		$url = 'index.php?page=modules/actions&action_id='.$item['id'].'&function=edit';
+		$fragmet = new \rex_fragment([
+			'href' => $url,
+			'text' => $linkText,
+		]);
+		return $fragmet->parse('fragments/link.php');
 	}
 }

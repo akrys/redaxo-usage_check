@@ -11,7 +11,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests\RexV5\Modules;
  * @author akrys
  */
 class ActionsTest
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**
@@ -49,16 +49,20 @@ class ActionsTest
 	{
 		$object = \akrys\redaxo\addon\UsageCheck\Modules\Actions::create();
 
-		$expected = <<<TEXT
-		<p class="rex-tx1"><a href="index.php?page=usage_check/test&b=2">test</a></p>
-TEXT;
+		$result = $object->outputMenu('test', '&b=2', 'test');
 
-		ob_start();
-		$object->outputMenu('test', '&b=2', 'test');
-		$text = ob_get_clean();
+		$this->assertArrayHasKey('setVar', $result);
+		$this->assertEquals(3, count($result['setVar']));
+		$this->assertEquals('url', $result['setVar'][0][0]);
+		$this->assertEquals('index.php?page=usage_check/test&b=2', $result['setVar'][0][1]);
 
+		$this->assertEquals('linktext', $result['setVar'][1][0]);
+		$this->assertEquals('test', $result['setVar'][1][1]);
 
-		$this->assertEquals(trim($expected), trim($text));
+		$this->assertEquals('array', gettype($result['setVar'][2][1]));
+		$this->assertEquals(1, count($result['setVar'][2][1]));
+		$this->assertEquals('texts', $result['setVar'][2][0]);
+		$this->assertEquals('akrys_usagecheck_action_intro_text', $result['setVar'][2][1][0]);
 	}
 
 	/**
@@ -67,18 +71,17 @@ TEXT;
 	public function testOutputActionEdit()
 	{
 		$object = \akrys\redaxo\addon\UsageCheck\Modules\Actions::create();
-
-		$expected = <<<TEXT
-		<a href="index.php?page=module/actions&action_id=12354&function=edit">testText</a>
-TEXT;
-
 		$item = array('id' => 12354);
 		$linktext = 'testText';
 
-		ob_start();
-		$object->outputActionEdit($item, $linktext);
-		$text = ob_get_clean();
+		$result = $object->outputActionEdit($item, $linktext);
 
-		$this->assertEquals(trim($expected), trim($text));
+		$this->assertArrayHasKey('setVar', $result);
+		$this->assertEquals(2, count($result['setVar']));
+		$this->assertEquals('href', $result['setVar'][0][0]);
+		$this->assertEquals('index.php?page=modules/actions&action_id=12354&function=edit', $result['setVar'][0][1]);
+
+		$this->assertEquals('text', $result['setVar'][1][0]);
+		$this->assertEquals('testText', $result['setVar'][1][1]);
 	}
 }

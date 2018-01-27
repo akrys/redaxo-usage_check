@@ -1,6 +1,15 @@
-<?php
+Sucht nach verwaisten Medienpool-Dateien, nicht verwendete Module und Templates.
 
-/**
- * Help-File Redaxo 4
- */
-require_once __DIR__.'/general/help.inc.php';
+<h3> Kompatibilität</h3>
+<ul>
+	<li>PHP Version: <b>5.6</b> oder höher</li>
+	<li>
+		getestet mit Redaxo
+		<b>5.0.1</b>,
+		<b>5.1</b>,
+		<b>5.2</b>,
+		<b>5.3</b>,
+		<b>5.4</b>,
+		<b>5.5</b>
+	</li>
+</ul>

@@ -11,7 +11,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests\RexV5\Modules;
  * @author akrys
  */
 class TemplateTest
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**
@@ -52,7 +52,22 @@ class TemplateTest
 		$reflectionObject->setAccessible(true);
 
 		$templates = \akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
-		$reflectionObject->invokeArgs($templates, array(true, true));
+		$data = $reflectionObject->invokeArgs($templates, array(true, true));
+		$expectedData = array(
+			'showAllParam' => "",
+			'showAllParamCurr' => "&showall=true",
+			'showAllLinktext' => "akrys_usagecheck_template_link_show_unused",
+			'showInactiveParam' => "",
+			'showInactiveParamCurr' => "&showinactive=true",
+			'showInactiveLinktext' => "akrys_usagecheck_template_link_show_active",
+		);
+		$this->assertArrayHasKey('showAllParam', $data);
+		$this->assertArrayHasKey('showAllParamCurr', $data);
+		$this->assertArrayHasKey('showAllLinktext', $data);
+		$this->assertArrayHasKey('showInactiveParam', $data);
+		$this->assertArrayHasKey('showInactiveParamCurr', $data);
+		$this->assertArrayHasKey('showInactiveLinktext', $data);
+		$this->assertEquals($expectedData, $reflectionObject->invokeArgs($templates, array(true, true)));
 	}
 
 	/**
@@ -156,20 +171,24 @@ class TemplateTest
 	{
 		$object = \akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
 
-		$expected = <<<TEXT
-		<ul>
-			<li><a href="index.php?page=usage_check/test&showinactive=true">akrys_usagecheck_template_link_show_unused</a></li>
-		</ul>
-TEXT;
+		$result = $object->outputMenu('test', '&b=2', 'test');
 
-		ob_start();
-		$object->outputMenu('test', '&b=2', 'test');
-		$text = ob_get_clean();
+		$this->assertArrayHasKey('setVar', $result);
+		$this->assertEquals(3, count($result['setVar']));
 
-		$exp = str_replace(array("\r", "\n", "\t"), '', trim($expected));
-		$cur = str_replace(array("\r", "\n", "\t"), '', trim($text));
+		$this->assertEquals('links', $result['setVar'][0][0]);
+		$this->assertEquals('array', gettype($result['setVar'][0][1]));
+		$this->assertEquals(2, count($result['setVar'][0][1]));
+		$this->assertEquals(['url' => 'index.php?page=usage_check/test&showinactive=true', 'text' => 'akrys_usagecheck_template_link_show_unused', 'admin' => false], $result['setVar'][0][1][0]);
+		$this->assertEquals(['url' => 'index.php?page=usage_check/test&showall=true', 'text' => 'akrys_usagecheck_template_link_show_active', 'admin' => true], $result['setVar'][0][1][1]);
 
-		$this->assertEquals($exp, $cur);
+		$this->assertEquals('texts', $result['setVar'][1][0]);
+		$this->assertEquals(1, count($result['setVar'][1][1]));
+		$this->assertEquals('akrys_usagecheck_template_intro_text', $result['setVar'][1][1][0]);
+
+		$this->assertEquals('user', $result['setVar'][2][0]);
+		$this->assertEquals('object', gettype($result['setVar'][2][1]));
+		$this->assertEquals('rex_user', get_class($result['setVar'][2][1]));
 	}
 
 	/**
@@ -180,18 +199,24 @@ TEXT;
 		\rex_user::setAdmin(true);
 		$object = \akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
 
-		$expected = <<<TEXT
-<ul><li><a href="index.php?page=usage_check/test&showinactive=true">akrys_usagecheck_template_link_show_unused</a></li><li><a href="index.php?page=usage_check/test&showall=true">akrys_usagecheck_template_link_show_active</a></li></ul>
-TEXT;
+		$result = $object->outputMenu('test', '&b=2', 'test');
 
-		ob_start();
-		$object->outputMenu('test', '&b=2', 'test');
-		$text = ob_get_clean();
+		$this->assertArrayHasKey('setVar', $result);
+		$this->assertEquals(3, count($result['setVar']));
 
-		$exp = str_replace(array("\r", "\n", "\t"), '', trim($expected));
-		$cur = str_replace(array("\r", "\n", "\t"), '', trim($text));
+		$this->assertEquals('links', $result['setVar'][0][0]);
+		$this->assertEquals('array', gettype($result['setVar'][0][1]));
+		$this->assertEquals(2, count($result['setVar'][0][1]));
+		$this->assertEquals(['url' => 'index.php?page=usage_check/test&showinactive=true', 'text' => 'akrys_usagecheck_template_link_show_unused', 'admin' => false], $result['setVar'][0][1][0]);
+		$this->assertEquals(['url' => 'index.php?page=usage_check/test&showall=true', 'text' => 'akrys_usagecheck_template_link_show_active', 'admin' => true], $result['setVar'][0][1][1]);
 
-		$this->assertEquals($exp, $cur);
+		$this->assertEquals('texts', $result['setVar'][1][0]);
+		$this->assertEquals(1, count($result['setVar'][1][1]));
+		$this->assertEquals('akrys_usagecheck_template_intro_text', $result['setVar'][1][1][0]);
+
+		$this->assertEquals('user', $result['setVar'][2][0]);
+		$this->assertEquals('object', gettype($result['setVar'][2][1]));
+		$this->assertEquals('rex_user', get_class($result['setVar'][2][1]));
 	}
 
 	/**
@@ -201,40 +226,47 @@ TEXT;
 	{
 		$object = \akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
 
-		$expected = <<<TEXT
-		<a href="index.php?page=templates&function=edit&template_id=test">&b=2</a>
-TEXT;
+		$result = $object->outputTemplateEdit(array('id' => 'test'), '&b=2', 'test');
 
-		ob_start();
-		$object->outputTemplateEdit(array('id' => 'test'), '&b=2', 'test');
-		$text = ob_get_clean();
+		$this->assertArrayHasKey('setVar', $result);
+		$this->assertEquals(2, count($result['setVar']));
 
-		$exp = str_replace(array("\r", "\n", "\t"), '', trim($expected));
-		$cur = str_replace(array("\r", "\n", "\t"), '', trim($text));
+		$this->assertEquals('href', $result['setVar'][0][0]);
+		$this->assertEquals('index.php?page=templates&function=edit&template_id=test', $result['setVar'][0][1]);
 
-		$this->assertEquals($exp, $cur);
+		$this->assertEquals('text', $result['setVar'][1][0]);
+		$this->assertEquals('&b=2', $result['setVar'][1][1]);
 	}
 
 	/**
-	 * Funktionstest OutputMenu asl Admin
+	 * Funktionstest OutputMenu als Admin
 	 */
 	public function testOutputTemplateEditAdmin()
 	{
 		\rex_user::setAdmin(true);
 		$object = \akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
 
-		$expected = <<<TEXT
-<a href="index.php?page=templates&function=edit&template_id=test">&b=2</a>
-TEXT;
+		$result = $object->outputTemplateEdit(array('id' => 'test'), '&b=2', 'test');
 
-		ob_start();
-		$object->outputTemplateEdit(array('id' => 'test'), '&b=2', 'test');
-		$text = ob_get_clean();
+		$this->assertArrayHasKey('setVar', $result);
+		$this->assertEquals(2, count($result['setVar']));
 
-		$exp = str_replace(array("\r", "\n", "\t"), '', trim($expected));
-		$cur = str_replace(array("\r", "\n", "\t"), '', trim($text));
+		$this->assertEquals('href', $result['setVar'][0][0]);
+		$this->assertEquals('index.php?page=templates&function=edit&template_id=test', $result['setVar'][0][1]);
 
-		$this->assertEquals($exp, $cur);
+		$this->assertEquals('text', $result['setVar'][1][0]);
+		$this->assertEquals('&b=2', $result['setVar'][1][1]);
+	}
+
+	/**
+	 * Funktionstest OutputMenu mit Fehler
+	 */
+	public function testOutputTemplateEditFalse()
+	{
+		\rex_user::setAdmin(false);
+		$object = \akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
+		$result = $object->outputTemplateEdit(array('id' => 'test'), '&b=2', 'test');
+		$this->assertEquals('', $result);
 	}
 
 	/**
@@ -304,9 +336,7 @@ TEXT;
 	 */
 	public function testShowAllFalse()
 	{
-
-		$templates = \akrys\redaxo\addon\UsageCheck\Modules\Templates::create();
-
+		$templates = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
 		$templates->showAll(false);
 		$property = new \ReflectionProperty('akrys\\redaxo\\addon\\UsageCheck\\Modules\\Pictures', 'showAll');
 		$property->setAccessible(true);

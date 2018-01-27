@@ -9,7 +9,8 @@ if (isset($_SERVER['argv'])) {
 	$GLOBALS['REX'] = array();
 	$GLOBALS['REX']['INCLUDE_PATH'] = realpath(__DIR__.'/../../../../../');
 	$GLOBALS['useComposerAutoload'] = true;
-	require_once __DIR__.'/../../../../../general/config.inc.php';
+	require_once __DIR__.'/../../../../../boot.php';
+	require_once __DIR__.'/../../../../../vendor/autoload.php';
 
 	/**
 	 * sql simulation
@@ -26,7 +27,7 @@ if (isset($_SERVER['argv'])) {
 			return new self();
 		}
 
-		public function getArray($sql, $data=array())
+		public function getArray($sql, $data = array())
 		{
 			$version = rex::getVersion();
 
@@ -162,9 +163,9 @@ if (isset($_SERVER['argv'])) {
 		 */
 		public function getProperty($x)
 		{
-			switch($x){
+			switch ($x) {
 				case 'db':
-					return array(array('name'=> 'redaxo_5_2'),array('name'=> 'b'),);
+					return array(array('name' => 'redaxo_5_2'), array('name' => 'b'),);
 					break;
 			}
 			return true;
@@ -644,4 +645,28 @@ if (isset($_SERVER['argv'])) {
 			print PHP_EOL.json_encode($data).PHP_EOL;
 		}
 	});
+
+	class rex_fragment
+	{
+		private $data = array();
+
+		public function __construct($vars = [])
+		{
+			foreach ($vars as $key => $value) {
+				$this->setVar($key, $value);
+			}
+		}
+
+		public function __call($name, $params)
+		{
+			$this->data[$name][] = $params;
+		}
+
+		public function parse()
+		{
+			return $this->data;
+		}
+	}
+
 }
+

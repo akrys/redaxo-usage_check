@@ -72,7 +72,7 @@ gulp.task('phpcs', function () {
 
 
 ///////////////////// PHP Unit /////////////////////
-gulp.task('phpunit', function () {
+gulp.task('phpunit', function (done) {
 	var options = {
 		debug: false,
 		statusLine: false,
@@ -81,6 +81,7 @@ gulp.task('phpunit', function () {
 	};
 	gulp.src('phpunit.xml')
 		.pipe(phpunit('./vendor/bin/phpunit', options));
+	done();
 });
 
 gulp.task('phpdoc', shell.task(['vendor/bin/phpdoc']));
@@ -119,11 +120,11 @@ gulp.task('pdepend', shell.task([
 //    gulp.watch(['phpunit.xml', './**/*.php', '!vendor/**/*', '!node_modules/**/*'], ['phplint']);
 //});
 
-gulp.task('default', ['phplint', 'phpcs', 'phpdoc', 'phpmd', 'pdepend', 'phpcpd', 'phpunit']);
-gulp.task('md', ['phpmd']);
-gulp.task('doc', ['phpdoc']);
-gulp.task('lint', ['phplint']);
-gulp.task('cs', ['phpcs']);
-gulp.task('depend', ['pdepend']);
-gulp.task('unit', ['phpunit']);
+gulp.task('default', gulp.parallel('phplint', 'phpcs', 'phpdoc', 'phpmd', 'pdepend', 'phpcpd', 'phpunit'));
+gulp.task('md', gulp.series('phpmd'));
+gulp.task('doc', gulp.series('phpdoc'));
+gulp.task('lint', gulp.series('phplint'));
+gulp.task('cs', gulp.series('phpcs'));
+gulp.task('depend', gulp.series('pdepend'));
+gulp.task('unit', gulp.series('phpunit'));
 

@@ -9,10 +9,11 @@
 use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
-$title = Config::NAME_OUT.' / '.RedaxoCall::getAPI()->getI18N('akrys_usagecheck_overview_subpagetitle').
-	' <span style="font-size:10px;color:#c2c2c2">'.Config::VERSION.'</span>';
-echo RedaxoCall::getAPI()->getRexTitle($title);
-
+$title = new \rex_fragment();
+$title->setVar('name', Config::NAME_OUT);
+$title->setVar('supage_title', RedaxoCall::getAPI()->getI18N('akrys_usagecheck_overview_subpagetitle'));
+$title->setVar('version', Config::VERSION);
+echo RedaxoCall::getAPI()->getRexTitle($title->parse('fragments/title.php'));
 
 $title = Config::NAME_OUT;
 $content = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_overview_intro');

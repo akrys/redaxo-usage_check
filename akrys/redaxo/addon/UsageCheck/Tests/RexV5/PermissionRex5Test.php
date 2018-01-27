@@ -22,7 +22,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests\RexV5;
  * @author akrys
  */
 class PermissionRex5Test
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**

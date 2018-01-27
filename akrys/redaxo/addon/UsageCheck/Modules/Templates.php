@@ -40,9 +40,6 @@ abstract class Templates
 	{
 		$object = null;
 		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_4:
-				$object = new \akrys\redaxo\addon\UsageCheck\RexV4\Modules\Templates();
-				break;
 			case RedaxoCall::REDAXO_VERSION_5:
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Templates();
 				break;
@@ -94,11 +91,6 @@ abstract class Templates
 		//Parameter-Korrektur, wenn der User KEIN Admin ist
 		//Der darf die inaktiven Templats nämlich sowieso nicht sehen.
 		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_4:
-				if (!$GLOBALS['REX']['USER']->isAdmin() && $showInactive === true) {
-					$showInactive = false;
-				}
-				break;
 			case RedaxoCall::REDAXO_VERSION_5:
 				$user = \rex::getUser();
 				if (!$user->isAdmin() && $showInactive === true) {

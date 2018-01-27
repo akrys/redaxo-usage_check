@@ -17,6 +17,7 @@
 	<files>
 		<directory>*</directory>
 		<ignore>pages/*</ignore>
+		<ignore>fragments/*</ignore>
 		<ignore>general/*</ignore>
 		<ignore>vendor/*</ignore>
 		<!--<ignore>akrys/redaxo/addon/UsageCheck/Tests/*</ignore>-->

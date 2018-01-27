@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Datei für Medienmodul
  *
@@ -33,9 +34,6 @@ abstract class Pictures
 	{
 		$object = null;
 		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_4:
-				$object = new \akrys\redaxo\addon\UsageCheck\RexV4\Modules\Pictures();
-				break;
 			case RedaxoCall::REDAXO_VERSION_5:
 				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures();
 				break;
@@ -337,15 +335,13 @@ abstract class Pictures
 	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
 	{
 		$url = $this->getMeuLink($subpage, $showAllParam);
-
-		$text = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_intro_text');
-		?>
-
-		<p class="rex-tx1">
-			<a href="<?php echo $url; ?>"><?php echo $showAllLinktext; ?></a>
-		</p>
-		<p class="rex-tx1"><?php echo $text ?></p>
-
-		<?php
+		$menu = new \rex_fragment([
+			'url' => $url,
+			'linktext' => $showAllLinktext,
+			'texts' => [
+				\akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_intro_text'),
+			],
+		]);
+		return $menu->parse('fragments/menu/linktext.php');
 	}
 }

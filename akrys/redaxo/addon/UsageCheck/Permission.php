@@ -63,10 +63,6 @@ abstract class Permission
 	{
 		if (!isset(self::$api)) {
 			switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_4:
-					// Redaxo 4
-					self::$api = new RexV4\Permission();
-					break;
 				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
 					// Redaxo 5
 					self::$api = new RexV5\Permission();

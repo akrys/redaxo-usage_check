@@ -23,12 +23,8 @@
 					Wenn was schief geht, sollte man es eigentlich sofort sehen. ;-)
 				-->
 				<directory>./pages/</directory>
+				<directory>./fragments/</directory>
 
-				<!-- Redaxo 4 Addon Files -->
-				<file>config.inc.php</file>
-				<file>help.inc.php</file>
-				<file>install.inc.php</file>
-				<file>uninstall.inc.php</file>
 
 				<!-- Redaxo 5 Addon Files -->
 				<file>boot.php</file>

@@ -11,7 +11,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests\Modules;
  * @author akrys
  */
 class PicturesTest
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**
@@ -38,20 +38,10 @@ class PicturesTest
 	 */
 	public function testCreateNoValidVersion()
 	{
-		$this->setExpectedException('akrys\\redaxo\\addon\\UsageCheck\\Exception\\FunctionNotCallableException');
+		$this->expectException('akrys\\redaxo\\addon\\UsageCheck\\Exception\\FunctionNotCallableException');
 		\rex::setVersion(\rex::VERSION_INVALID);
 		$pictures = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
 		$this->assertEquals(-1, $pictures);
-	}
-
-	/**
-	 * Test create, wenn es Redaxo in Version 4 vorliegt
-	 */
-	public function testCreate4()
-	{
-		\rex::setVersion(\rex::VERSION_4);
-		$pictures = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
-		$this->assertEquals('akrys\\redaxo\\addon\\UsageCheck\\RexV4\\Modules\\Pictures', get_class($pictures));
 	}
 
 	/**

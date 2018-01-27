@@ -16,7 +16,7 @@ namespace akrys\redaxo\addon\UsageCheck\Tests\RexV5;
  * @author akrys
  */
 class RedaxoCallRex5Test
-	extends \PHPUnit_Framework_TestCase
+	extends \PHPUnit\Framework\TestCase
 {
 
 	/**
@@ -34,7 +34,8 @@ class RedaxoCallRex5Test
 	public function testGetTaggedMsg()
 	{
 		$api = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
-		$this->assertEquals('<p><span>aa</span></p>', $api->getTaggedMsg('aa'));
+		$result = $api->getTaggedMsg('aa');
+		$this->assertEquals(['setVar' => [['text', 'aa']]], $result);
 	}
 
 	/**
@@ -90,7 +91,14 @@ class RedaxoCallRex5Test
 
 TEXT;
 
-		$this->assertEquals($out, $api->getPanelOut('title', 'text'));
+		$result = ($api->getPanelOut('title', 'text'));
+		$this->assertArrayHasKey('setVar', $result);
+		$this->assertEquals(2, count($result['setVar']));
+		$this->assertEquals('heading', $result['setVar'][0][0]);
+		$this->assertEquals('title', $result['setVar'][0][1]);
+
+		$this->assertEquals('body', $result['setVar'][1][0]);
+		$this->assertEquals('text', $result['setVar'][1][1]);
 	}
 
 	/**
@@ -204,7 +212,7 @@ TEXT;
 	public function testGetDB()
 	{
 		$api = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
-		$data=$api->getDB();
+		$data = $api->getDB();
 
 		$this->asserttrue(is_array($data));
 		$this->assertEquals(2, count($data));
