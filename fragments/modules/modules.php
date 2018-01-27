@@ -38,7 +38,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 
 								<?php
 								if ($api->isAdmin()) {
-									$url = 'index.php?page=module&subpage=&function=edit&modul_id='.$item['id'];
+									$url = 'index.php?page=modules/modules&function=edit&module_id='.$item['id'];
 									$index = 'akrys_usagecheck_module_linktext_edit_code';
 									$linkText = $api->getI18N($index);
 									?>
