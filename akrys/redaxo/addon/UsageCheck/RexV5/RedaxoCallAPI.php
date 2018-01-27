@@ -187,7 +187,7 @@ class RedaxoCallAPI
 	 * @param string $table
 	 * @param int $dataID
 	 */
-	public function getXFormEditUrl($table, $dataID)
+	public function getYFormEditUrl($table, $dataID)
 	{
 		return 'index.php?page=yform/manager/data_edit&table_name='.$table.'&data_id='.$dataID.'&func=edit';
 	}

@@ -79,9 +79,6 @@ class Permission
 			case self::PERM_TEMPLATE:
 				$return = 'template';
 				break;
-			case self::PERM_XFORM:
-				$return = 'xform';
-				break;
 			default:
 				$return = $perm;
 				break;

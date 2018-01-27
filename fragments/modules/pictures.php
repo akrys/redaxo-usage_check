@@ -249,7 +249,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 								}
 
 
-								$index = 'akrys_usagecheck_images_linktext_edit_in_xformtable';
+								$index = 'akrys_usagecheck_images_linktext_edit_in_yformtable';
 								$linkTextRaw = $api->getI18N($index);
 								foreach ($this->items['fields'] as $table => $field) {
 									if (!isset($item[$table])) {
@@ -265,7 +265,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 										$hasPerm = $api->hasTablePerm($table);
 
 										if ($hasPerm) {
-											$href = $api->getXFormEditUrl($table, $id);
+											$href = $api->getYFormEditUrl($table, $id);
 											if ($href == '') {
 												continue;
 											}

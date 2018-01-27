@@ -73,7 +73,7 @@ abstract class Pictures
 
 		$rexSQL = RedaxoCall::getAPI()->getSQL();
 
-		$sqlPartsXForm = $this->getXFormTableSQLParts();
+		$sqlPartsYForm = $this->getYFormTableSQLParts();
 		$sqlPartsMeta = $this->getMetaTableSQLParts();
 
 		$havingClauses = array();
@@ -82,10 +82,10 @@ abstract class Pictures
 		$tableFields = array();
 
 
-		$havingClauses = array_merge($havingClauses, $sqlPartsXForm['havingClauses']);
-		$additionalSelect .= $sqlPartsXForm['additionalSelect'];
-		$additionalJoins .= $sqlPartsXForm['additionalJoins'];
-		$tableFields = array_merge($tableFields, $sqlPartsXForm['tableFields']);
+		$havingClauses = array_merge($havingClauses, $sqlPartsYForm['havingClauses']);
+		$additionalSelect .= $sqlPartsYForm['additionalSelect'];
+		$additionalJoins .= $sqlPartsYForm['additionalJoins'];
+		$tableFields = array_merge($tableFields, $sqlPartsYForm['tableFields']);
 
 		$havingClauses = array_merge($havingClauses, $sqlPartsMeta['havingClauses']);
 		$additionalSelect .= $sqlPartsMeta['additionalSelect'];
@@ -121,11 +121,11 @@ abstract class Pictures
 	abstract protected function getMetaNames();
 
 	/**
-	 * SQL Partsfür XForm/YForm generieren.
+	 * SQL Partsfür YForm generieren.
 	 *
 	 * @return array
 	 */
-	protected function getXFormTableSQLParts()
+	protected function getYFormTableSQLParts()
 	{
 		$return = array(
 			'additionalSelect' => '',
@@ -136,7 +136,7 @@ abstract class Pictures
 
 		RedaxoCall::getAPI()->getSQL();
 
-		$tables = $this->getXFormSQL($return);
+		$tables = $this->getYFormSQL($return);
 
 		$xTables = array();
 		foreach ($tables as $table) {
@@ -146,7 +146,7 @@ abstract class Pictures
 				'table_out' => $table['table_out'],
 				'type' => $table['type_name'],
 				//in YForm 2, muss man prüfen, ob be_media einen multiple modifier hat.
-				//siehe Kommentare in \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures::getXFormSQL
+				//siehe Kommentare in \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures::getYFormSQL
 				'multiple' => (isset($table['multiple']) && $table['multiple'] == '1'),
 			);
 		}
@@ -199,7 +199,7 @@ abstract class Pictures
 				$joinCondition = $tableName.'.'.$field['name'].' = f.filename';
 				if ($field['multiple']) {
 					//YForm 2 kann mehrere Dateien aufnehmen
-					//siehe Kommentare in \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures::getXFormSQL
+					//siehe Kommentare in \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures::getYFormSQL
 					$joinCondition = 'FIND_IN_SET(f.filename, '.$tableName.'.'.$field['name'].')';
 				}
 				break;
@@ -208,12 +208,12 @@ abstract class Pictures
 	}
 
 	/**
-	 * XFormTables holen
+	 * YFormTables holen
 	 *
 	 * @return array
 	 * @param array &$return
 	 */
-	abstract protected function getXFormSQL(&$return);
+	abstract protected function getYFormSQL(&$return);
 
 	/**
 	 * kleinste Speichereinheit ermittln.

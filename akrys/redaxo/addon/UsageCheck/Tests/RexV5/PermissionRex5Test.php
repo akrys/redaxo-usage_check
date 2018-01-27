@@ -48,7 +48,6 @@ class PermissionRex5Test
 		$this->assertEquals('modules', $function->invokeArgs($permission, array('perm' => \akrys\redaxo\addon\UsageCheck\RexV5\Permission::PERM_MODUL)));
 		$this->assertEquals('structure', $function->invokeArgs($permission, array('perm' => \akrys\redaxo\addon\UsageCheck\RexV5\Permission::PERM_STRUCTURE)));
 		$this->assertEquals('template', $function->invokeArgs($permission, array('perm' => \akrys\redaxo\addon\UsageCheck\RexV5\Permission::PERM_TEMPLATE)));
-		$this->assertEquals('xform', $function->invokeArgs($permission, array('perm' => \akrys\redaxo\addon\UsageCheck\RexV5\Permission::PERM_XFORM)));
 		$this->assertEquals('asdfg', $function->invokeArgs($permission, array('perm' => 'asdfg')));
 	}
 }

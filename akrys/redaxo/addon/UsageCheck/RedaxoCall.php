@@ -261,7 +261,7 @@ abstract class RedaxoCall
 	 * @param string $table
 	 * @param int $dataID
 	 */
-	abstract public function getXFormEditUrl($table, $dataID);
+	abstract public function getYFormEditUrl($table, $dataID);
 
 	/**
 	 * Abfrage, ob es Tabellenrechte gibt.

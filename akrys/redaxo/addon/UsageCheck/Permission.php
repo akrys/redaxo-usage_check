@@ -36,12 +36,6 @@ abstract class Permission
 	const PERM_MODUL = 'module';
 
 	/**
-	 * Name des Rechts für das XFormaddon
-	 * @var string
-	 */
-	const PERM_XFORM = 'xform';
-
-	/**
 	 * Name des Rechts für das Struktur
 	 * @var string
 	 */

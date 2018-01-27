@@ -120,12 +120,12 @@ TEXT;
 	}
 
 	/**
-	 * Funktionstest: getXFormEditUrl
+	 * Funktionstest: getYFormEditUrl
 	 */
-	public function testGetXFormEditUrl()
+	public function testGetYFormEditUrl()
 	{
 		$api = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
-		$this->assertEquals('index.php?page=yform/manager/data_edit&table_name=table&data_id=1&func=edit', $api->getXFormEditUrl('table', 1));
+		$this->assertEquals('index.php?page=yform/manager/data_edit&table_name=table&data_id=1&func=edit', $api->getYFormEditUrl('table', 1));
 	}
 
 	/**

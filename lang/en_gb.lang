@@ -10,7 +10,7 @@ akrys_usagecheck_no_rights = You don't have the permission to enter this page.
 akrys_usagecheck_overview_subpagetitle = Overview
 akrys_usagecheck_overview_intro = This addon searches for unused pictures, modules and templates.
 akrys_usagecheck_overview_images_title = Module: Picture
-akrys_usagecheck_overview_images_body = <p>This module searches for files used in article blocks, article meta data and XForm (Redaxo 4) / YForm(Redaxo 5) table.<br />These database fields in <tt>rex_article_slice</tt> are analyzed:</p><ol><li>file1, file2, .. , file10</li><li>filelist1, filelist2, .. , filelist10</li></ol></p><p>Media fields in other places can be configured. So these fields are only known on runtime.</p>
+akrys_usagecheck_overview_images_body = <p>This module searches for files used in article blocks, article meta data and YForm tables.<br />These database fields in <tt>rex_article_slice</tt> are analyzed:</p><ol><li>file1, file2, .. , file10</li><li>filelist1, filelist2, .. , filelist10</li></ol></p><p>Media fields in other places can be configured. So these fields are only known on runtime.</p>
 akrys_usagecheck_overview_module_title = Module: Modules
 akrys_usagecheck_overview_module_body = <p>This module searches for used modules in the database table <tt>rex_article_slice</tt>.<br />All article blocks are saved there with a hint to find module type and the article, where it was used.</p>
 akrys_usagecheck_overview_template_title = Module: Templates
@@ -34,7 +34,7 @@ akrys_usagecheck_images_linktext_edit = edit in media pool
 akrys_usagecheck_images_linktext_edit_in_slice = edit in original slice (ID: $sliceID$, article: "$articleName$")
 akrys_usagecheck_images_linktext_edit_in_metadata_art = edit in article metadata (ID: $articleID$, article: "$articleName$")
 akrys_usagecheck_images_linktext_edit_in_metadata_cat = edit in category metadata (ID: $articleID$, category: "$articleName$")<br /><small>Please click on the "plus sign" button there</small>
-akrys_usagecheck_images_linktext_edit_in_xformtable = edit in table "$tableName$" (ID: $entryID$)
+akrys_usagecheck_images_linktext_edit_in_yformtable = edit in table "$tableName$" (ID: $entryID$)
 akrys_usagecheck_images_linktext_edit_in_metadata_med = edit in file "$filename$"
 
 

@@ -18,12 +18,12 @@ class Pictures
 {
 
 	/**
-	 * XFormTables holen
+	 * YFormTables holen
 	 *
 	 * @return array
 	 * @param array &$return
 	 */
-	protected function getXFormSQL(&$return)
+	protected function getYFormSQL(&$return)
 	{
 		$tabels = array();
 		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
@@ -39,8 +39,8 @@ class Pictures
 		$yformTableTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('yform_table');
 		$yformFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('yform_field');
 
-		$xformtable = $rexSQL->getArray("show table status like '$yformTableTable'");
-		$xformfield = $rexSQL->getArray("show table status like '$yformFieldTable'");
+		$yformtable = $rexSQL->getArray("show table status like '$yformTableTable'");
+		$yformfield = $rexSQL->getArray("show table status like '$yformFieldTable'");
 
 		$additionalFields = '';
 		if ($this->hasMultiple($yformFieldTable)) {
@@ -54,10 +54,10 @@ left join $yformTableTable t on t.table_name=f.table_name
 where type_name in ('be_media','be_medialist','mediafile')
 SQL;
 
-		$xformtableExists = count($xformfield) > 0;
-		$xformfieldExists = count($xformtable) > 0;
+		$yformtableExists = count($yformfield) > 0;
+		$yformfieldExists = count($yformtable) > 0;
 
-		if ($xformfieldExists && $xformtableExists) {
+		if ($yformfieldExists && $yformtableExists) {
 			$tabels = $rexSQL->getArray($sql);
 		}
 		return $tabels;
