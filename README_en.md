@@ -7,10 +7,10 @@ on some Redaxo 5 instances.
 
 ## Installation
 
-###Standard installation
+### Standard installation
 Usually this addon can be installed through the addon installer located in the redaxo backend.
 
-###Manual installtion
+### Manual installtion
 If you want to test some beta functionality, it can be necessary to install this addon manually.
 
 Installation instructions:
@@ -30,7 +30,7 @@ After copying the files you'll need to install and activate this addon using the
 - PHP version: __5.6.11__ or later
 - tested on Redaxo versions __5.0.1__, __5.1__, __5.2__,  __5.3__,  __5.4__,  __5.5__
 
-##Notice on code-analyzing tools
+## Notice on code-analyzing tools
 As of version 1.0-Beta7, I'm using some code analyzing tools such as `PHPUnit`.
 It seems to be the easiest way to write a `composer.json` and install these tools into the project. I didn't notice the
 redaxo Autoloader. It analyzes all PHP-Files, including `vendor`-directories. So, it's possible for the page to run into

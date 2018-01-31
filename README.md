@@ -9,12 +9,12 @@ nachvollziehbaren) Zeichensatz-Problemen in diversen Redaxo 5 Instanzen.
 
 ## Installation
 
-###Standard-Installation
+### Standard-Installation
 Normalerweise kann man das Addon normal über das Redaxo-Backend installieren. Im Normalfall sollte man als Benutzer auch
 diesen Weg wählen.
 
 
-###Manuelle Installation
+### Manuelle Installation
 Eine Ausnahme stellt das Testen von Beta-Funktionalitäten dar. Dann muss man ganz "old school" die Dateien laden und an
 die richtige Stelle kopieren.
 
@@ -33,7 +33,7 @@ Dann muss man das Addon nur noch über das Redaxo-Backend installieren und aktiv
 - PHP Version: __5.6.11__ oder höher
 - getestet mit Redaxo __5.0.1__, __5.1__, __5.2__,  __5.3__,  __5.4__,  __5.5__
 
-##Hinweis Code-Analyse-Tools
+## Hinweis Code-Analyse-Tools
 Mit der Verison 1.0-Beta7 habe ich Code-Anlayse-Tools, wie z.B. `PHPUnit` eingebaut. Dafür schein es am Einfachsten zu
 sein, eine `composer.json` zu erstellen und die Hilfsprogramme ins Projekt zu installieren. Leider kann durch den
 AutoLoader im Redaxo-Core aber dazu kommen, dass sich die Seite in einen Timeout läuft. Es werden alle Dateien - auch
