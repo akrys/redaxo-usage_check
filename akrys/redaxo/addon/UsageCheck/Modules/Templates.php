@@ -30,18 +30,6 @@ abstract class Templates
 	private $showInactive = false;
 
 	/**
-	 * Redaxo-Spezifische Version wählen.
-	 * @return \akrys\redaxo\addon\UsageCheck\Modules\Templates
-	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public static function create()
-	{
-		$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Templates();
-		return $object;
-	}
-
-	/**
 	 * Anzeigemodus "alle zeigen" umstellen
 	 * @param boolean $bln
 	 */

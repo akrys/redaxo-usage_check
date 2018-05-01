@@ -24,18 +24,6 @@ abstract class Modules
 	private $showAll = false;
 
 	/**
-	 * Redaxo-Spezifische Version wählen.
-	 * @return \akrys\redaxo\addon\UsageCheck\Modules\Modules
-	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public static function create()
-	{
-		$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Modules();
-		return $object;
-	}
-
-	/**
 	 * Anzeigemodus "alle zeigen" umstellen
 	 * @param boolean $bln
 	 */

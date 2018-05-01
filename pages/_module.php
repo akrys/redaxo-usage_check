@@ -7,7 +7,7 @@
 
 use \akrys\redaxo\addon\UsageCheck\Config;
 
-$modules = \akrys\redaxo\addon\UsageCheck\Modules\Modules::create();
+$modules = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Modules();
 
 $showAll = false;
 switch (rex_get('showall', 'string', "")) {

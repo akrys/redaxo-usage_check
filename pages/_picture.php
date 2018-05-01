@@ -5,7 +5,7 @@
  */
 use \akrys\redaxo\addon\UsageCheck\Config;
 
-$pictures = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
+$pictures = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures();
 
 $title = new \rex_fragment();
 $title->setVar('name', Config::NAME_OUT);

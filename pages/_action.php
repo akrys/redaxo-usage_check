@@ -17,7 +17,7 @@ echo \rex_view::title($title->parse('fragments/title.php'));
 
 
 require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Actions.php';
-$actions = \akrys\redaxo\addon\UsageCheck\Modules\Actions::create();
+$actions = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Actions();
 
 switch (rex_get('showall', 'string', "")) {
 	case 'true':

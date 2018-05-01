@@ -24,18 +24,6 @@ abstract class Actions
 	private $showAll = false;
 
 	/**
-	 * Redaxo-Spezifische Version wählen.
-	 * @return \akrys\redaxo\addon\UsageCheck\Modules\Actions
-	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public static function create()
-	{
-		$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Actions();
-		return $object;
-	}
-
-	/**
 	 * Anzeigemodus umstellen
 	 * @param boolean $bln
 	 */
