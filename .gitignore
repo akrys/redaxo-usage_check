@@ -1,4 +1,13 @@
 docs
 node_modules
 /vendor/
+/phpunit.xml
+/phpdoc.xml
+/phpcs.xml
+/package.json
+/package-lock.json
+/gulpfile.js
+/composer.lock
+/composer.json
+/akrys/redaxo/addon/UsageCheck/Tests
 
