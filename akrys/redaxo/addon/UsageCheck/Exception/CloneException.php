@@ -11,7 +11,7 @@
 namespace akrys\redaxo\addon\UsageCheck\Exception;
 
 /**
- * Description of LangFileGenError
+ * Description of CloneException
  *
  * @author akrys
  */
