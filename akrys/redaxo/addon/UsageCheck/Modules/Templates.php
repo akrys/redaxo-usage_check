@@ -99,7 +99,7 @@ abstract class Templates
 				break;
 		}
 
-		$rexSQL = RedaxoCall::getAPI()->getSQL();
+		$rexSQL = \rex_sql::factory();
 
 		$where = '';
 		$having = '';

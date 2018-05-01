@@ -72,7 +72,7 @@ abstract class Modules
 			return false;
 		}
 
-		$rexSQL = RedaxoCall::getAPI()->getSQL();
+		$rexSQL = \rex_sql::factory();
 
 		$where = '';
 		if (!$showAll) {

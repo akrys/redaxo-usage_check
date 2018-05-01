@@ -71,7 +71,7 @@ abstract class Pictures
 			return false;
 		}
 
-		$rexSQL = RedaxoCall::getAPI()->getSQL();
+		$rexSQL = \rex_sql::factory();
 
 		$sqlPartsYForm = $this->getYFormTableSQLParts();
 		$sqlPartsMeta = $this->getMetaTableSQLParts();
@@ -133,8 +133,6 @@ abstract class Pictures
 			'tableFields' => array(),
 			'havingClauses' => array(),
 		);
-
-		RedaxoCall::getAPI()->getSQL();
 
 		$tables = $this->getYFormSQL($return);
 

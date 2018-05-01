@@ -70,7 +70,7 @@ abstract class Actions
 			return false;
 		}
 
-		$rexSQL = RedaxoCall::getAPI()->getSQL();
+		$rexSQL = \rex_sql::factory();
 
 		$where = '';
 		if (!$this->showAll) {

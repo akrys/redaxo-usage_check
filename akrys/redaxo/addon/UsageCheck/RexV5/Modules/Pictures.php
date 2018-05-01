@@ -26,7 +26,7 @@ class Pictures
 	protected function getYFormSQL(&$return)
 	{
 		$tabels = array();
-		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
+		$rexSQL = \rex_sql::factory();
 
 		if (!\rex_addon::get('yform')->isAvailable()) {
 			return $tabels;
@@ -100,7 +100,7 @@ SQL;
 	 */
 	private function hasMultiple($yformFieldTable, $dbs = null)
 	{
-		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
+		$rexSQL = \rex_sql::factory();
 
 		if (!isset($dbs)) { // Normalfall, wenn wir nicht gerade Unit-Tests laufen lassen
 			$dbs = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getDB();
@@ -400,7 +400,7 @@ SQL;
 	 */
 	protected function getMetaNames()
 	{
-		$rexSQL = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getSQL();
+		$rexSQL = \rex_sql::factory();
 
 //		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
 		$metainfoFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('metainfo_field');

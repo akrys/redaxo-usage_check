@@ -263,11 +263,4 @@ abstract class RedaxoCall
 	 * @return boolean
 	 */
 	abstract public function hasTablePerm($table);
-
-	/**
-	 * rex_sql instanz holen
-	 *
-	 * @return \rex_sql
-	 */
-	abstract public function getSQL();
 }
