@@ -80,9 +80,9 @@ abstract class Actions
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
-		$actionTable = RedaxoCall::getAPI()->getTable('action');
-		$moduleActionTable = RedaxoCall::getAPI()->getTable('module_action');
-		$moduleTable = RedaxoCall::getAPI()->getTable('module');
+		$actionTable = \rex::getTable('action');
+		$moduleActionTable = \rex::getTable('module_action');
+		$moduleTable = \rex::getTable('module');
 
 		$sql = <<<SQL
 SELECT a.*, group_concat(concat(

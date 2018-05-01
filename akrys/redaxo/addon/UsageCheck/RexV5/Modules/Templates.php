@@ -30,8 +30,8 @@ class Templates
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
 
-		$templateTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('template');
-		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
+		$templateTable = \rex::getTable('template');
+		$articleTable = \rex::getTable('article');
 
 		$sql = <<<SQL
 SELECT

@@ -36,8 +36,8 @@ class Pictures
 			return $tabels;
 		}
 
-		$yformTableTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('yform_table');
-		$yformFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('yform_field');
+		$yformTableTable = \rex::getTable('yform_table');
+		$yformFieldTable = \rex::getTable('yform_field');
 
 		$yformtable = $rexSQL->getArray("show table status like '$yformTableTable'");
 		$yformfield = $rexSQL->getArray("show table status like '$yformFieldTable'");
@@ -138,9 +138,9 @@ SQL;
 	 */
 	protected function getPictureSQL($additionalSelect, $additionalJoins)
 	{
-		$mediaTable = \ akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('media');
-		$articleSliceTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article_slice');
-		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
+		$mediaTable = \rex::getTable('media');
+		$articleSliceTable = \rex::getTable('article_slice');
+		$articleTable = \rex::getTable('article');
 
 		$sql = <<<SQL
 SELECT f.*,count(s.id) as count,
@@ -403,8 +403,8 @@ SQL;
 		$rexSQL = \rex_sql::factory();
 
 //		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
-		$metainfoFieldTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('metainfo_field');
-		$metainfoTypeTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('metainfo_type');
+		$metainfoFieldTable = \rex::getTable('metainfo_field');
+		$metainfoTypeTable = \rex::getTable('metainfo_type');
 
 		$sql = <<<SQL
 select f.name, t.label as type

@@ -38,16 +38,6 @@ class RedaxoCallAPI
 	}
 
 	/**
-	 * Tabellenprefix holen
-	 * @return string
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public function getTablePrefix()
-	{
-		return \rex::getTablePrefix();
-	}
-
-	/**
 	 * Titel ändern
 	 * @param string $title
 	 * @return string

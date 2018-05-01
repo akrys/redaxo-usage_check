@@ -27,9 +27,9 @@ class Modules
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
-		$moduleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('module');
-		$articleSliceTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article_slice');
-		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
+		$moduleTable = \rex::getTable('module');
+		$articleSliceTable = \rex::getTable('article_slice');
+		$articleTable = \rex::getTable('article');
 
 		$sql = <<<SQL
 SELECT m.name,

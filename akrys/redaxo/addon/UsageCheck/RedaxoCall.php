@@ -60,7 +60,6 @@ abstract class RedaxoCall
 		return self::$api;
 	}
 
-
 	/**
 	 * Sprachname Code holen.
 	 * @return string
@@ -73,22 +72,6 @@ abstract class RedaxoCall
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	abstract public function getDB();
-
-	/**
-	 * Tabelle mit Prefix versehen
-	 * @param string $name
-	 * @return string
-	 */
-	public function getTable($name)
-	{
-		return $this->getTablePrefix().$name;
-	}
-
-	/**
-	 * Tabellenprefix holen
-	 * @return string
-	 */
-	abstract public function getTablePrefix();
 
 	/**
 	 * Titel ändern
