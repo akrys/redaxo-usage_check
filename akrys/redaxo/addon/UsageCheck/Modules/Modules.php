@@ -9,7 +9,6 @@
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
 use \akrys\redaxo\addon\UsageCheck\Permission;
-use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
 /**
  * Description of Modules
@@ -32,17 +31,7 @@ abstract class Modules
 	 */
 	public static function create()
 	{
-		$object = null;
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_5:
-				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Modules();
-				break;
-		}
-
-		if (!isset($object)) {
-			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
-		}
-
+		$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Modules();
 		return $object;
 	}
 
@@ -67,7 +56,7 @@ abstract class Modules
 	{
 		$showAll = $this->showAll;
 
-		if (!Permission::getVersion()->check(Permission::PERM_STRUCTURE)) {
+		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
 			//Permission::PERM_MODUL
 			return false;
 		}
@@ -76,7 +65,7 @@ abstract class Modules
 
 		$where = '';
 		if (!$showAll) {
-			$where.='where s.id is null';
+			$where .= 'where s.id is null';
 		}
 		$sql = $this->getSQL($where);
 

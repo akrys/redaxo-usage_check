@@ -6,7 +6,6 @@
 /* @var $I18N \i18n */
 
 use \akrys\redaxo\addon\UsageCheck\Config;
-use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
 $modules = \akrys\redaxo\addon\UsageCheck\Modules\Modules::create();
 
@@ -26,12 +25,19 @@ $title = new \rex_fragment();
 $title->setVar('name', Config::NAME_OUT);
 $title->setVar('supage_title', \rex_i18n::rawMsg('akrys_usagecheck_module_subpagetitle'));
 $title->setVar('version', Config::VERSION);
-echo RedaxoCall::getAPI()->getRexTitle($title->parse('fragments/title.php'));
+echo \rex_view::title($title->parse('fragments/title.php'));
 
 $items = $modules->getModules($showAll);
 
 if ($items === false) {
-	echo RedaxoCall::getAPI()->getTaggedErrorMsg(\rex_i18n::rawMsg('akrys_usagecheck_no_rights'));
+	$msg = \rex_i18n::rawMsg('akrys_usagecheck_no_rights');
+	$fragment = new \rex_fragment([
+		'text' => $index,
+	]);
+	$fragment = new \rex_fragment([
+		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+	]);
+	echo $fragment->parse('fragments/msg/error.php');
 } else {
 	$showAllParam = '&showall=true';
 	$showAllLinktext = \rex_i18n::rawMsg('akrys_usagecheck_module_link_show_all');

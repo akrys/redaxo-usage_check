@@ -4,7 +4,6 @@
  * Grundlegendes Frontend
  */
 use \akrys\redaxo\addon\UsageCheck\Config;
-use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
 //Fehlerausgabe
 if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
@@ -15,7 +14,10 @@ if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
 		]);
 		$text .= $fragment->parse('fragments/msg/tagged_msg.php');
 
-		echo RedaxoCall::getAPI()->getErrorMsg($text, false);
+		$fragment = new \rex_fragment([
+			'text' => $msg,
+		]);
+		echo $fragment->parse('fragments/msg/error.php');
 	}
 }
 
@@ -31,5 +33,8 @@ if (file_exists($contentFile)) {
 	include $contentFile;
 } else {
 	$msg = \rex_i18n::rawMsg('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile;
-	echo RedaxoCall::getAPI()->getErrorMsg($msg, true);
+	$fragment = new \rex_fragment([
+		'text' => $msg,
+	]);
+	echo $fragment->parse('fragments/msg/error.php');
 }

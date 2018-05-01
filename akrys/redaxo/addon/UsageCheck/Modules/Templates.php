@@ -8,7 +8,6 @@
  */
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
-use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 use \akrys\redaxo\addon\UsageCheck\Permission;
 
 /**
@@ -38,17 +37,7 @@ abstract class Templates
 	 */
 	public static function create()
 	{
-		$object = null;
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_5:
-				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Templates();
-				break;
-		}
-
-		if (!isset($object)) {
-			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
-		}
-
+		$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Templates();
 		return $object;
 	}
 
@@ -83,20 +72,14 @@ abstract class Templates
 	{
 		$showInactive = $this->showInactive;
 
-		if (!Permission::getVersion()->check(Permission::PERM_STRUCTURE)) {
+		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
 			//Permission::PERM_TEMPLATE
 			return false;
 		}
 
-		//Parameter-Korrektur, wenn der User KEIN Admin ist
-		//Der darf die inaktiven Templats nämlich sowieso nicht sehen.
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_5:
-				$user = \rex::getUser();
-				if (!$user->isAdmin() && $showInactive === true) {
-					$showInactive = false;
-				}
-				break;
+		$user = \rex::getUser();
+		if (!$user->isAdmin() && $showInactive === true) {
+			$showInactive = false;
 		}
 
 		$rexSQL = \rex_sql::factory();
@@ -129,10 +112,10 @@ abstract class Templates
 	private function addParamCriteria(&$where, &$having)
 	{
 		if (!$this->showAll) {
-			$having.='articles is null and templates is null';
+			$having .= 'articles is null and templates is null';
 		}
 		if (!$this->showInactive) {
-			$where.='t.active = 1';
+			$where .= 't.active = 1';
 		}
 	}
 

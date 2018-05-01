@@ -1,8 +1,5 @@
-<?php
-$api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
-?>
 
-<table class="<?= $api->getTableClass() ?>">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_template_table_heading_name'); ?></th>
@@ -32,11 +29,22 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 
 					<?php
 					if ($item['articles'] === null && $item['templates'] === null) {
-						$index = 'akrys_usagecheck_images_msg_not_used';
-						echo $api->getTaggedErrorMsg(\rex_i18n::rawMsg($index));
+						$fragment = new \rex_fragment([
+							'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_msg_not_used'),
+						]);
+						$fragment = new \rex_fragment([
+							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+						]);
+						echo $fragment->parse('fragments/msg/error.php');
 					} else {
-						$index = 'akrys_usagecheck_template_msg_used';
-						echo $api->getTaggedInfoMsg(\rex_i18n::rawMsg($index));
+						$fragment = new \rex_fragment([
+							'text' => \rex_i18n::rawMsg('akrys_usagecheck_template_msg_used'),
+						]);
+
+						$fragment = new \rex_fragment([
+							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+						]);
+						echo $fragment->parse('fragments/msg/info.php');
 					}
 					?>
 
@@ -90,7 +98,8 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 
 								//Templates, die in Templates verwendert werden, betrifft
 								//nur die Coder, und das wären Admins
-								$hasPerm = $api->isAdmin();
+								$user = \rex::getUser();
+								$hasPerm = $user->isAdmin();
 								if ($hasPerm) {
 									if ($item['templates'] !== null) {
 										$templateData = explode("\n", $item['templates']);

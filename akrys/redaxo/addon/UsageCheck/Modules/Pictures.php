@@ -8,7 +8,6 @@
  */
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
-use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 use \akrys\redaxo\addon\UsageCheck\Permission;
 
 /**
@@ -32,17 +31,7 @@ abstract class Pictures
 	 */
 	public static function create()
 	{
-		$object = null;
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_5:
-				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures();
-				break;
-		}
-
-		if (!isset($object)) {
-			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
-		}
-
+		$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures();
 		return $object;
 	}
 
@@ -67,7 +56,7 @@ abstract class Pictures
 	{
 		$showAll = $this->showAll;
 
-		if (!Permission::getVersion()->check(Permission::PERM_MEDIA)) {
+		if (!Permission::getInstance()->check(Permission::PERM_MEDIA)) {
 			return false;
 		}
 

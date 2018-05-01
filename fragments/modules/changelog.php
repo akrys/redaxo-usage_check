@@ -1,8 +1,5 @@
-<?php
-$api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
-?>
 
-<table class="<?= $api->getTableClass(); ?>">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_changelog_header_version'); ?></th>

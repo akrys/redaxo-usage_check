@@ -1,8 +1,10 @@
 <?php
-$api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
+$user = \rex::getUser();
+$mediaPerm = \rex_structure_perm::get($user, 'media');
+$structurePerm = \rex_structure_perm::get($user, 'structure');
 ?>
 
-<table class="<?= $api->getTableClass(); ?>">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_images_table_heading_name'); ?></th>
@@ -87,11 +89,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 					//alle REGEXP-Abfragen abstürzen.
 					//Der Fehler liegt also nicht hier, und auch nicht im Redaxo-Core
 					if (!$used) {
-						switch (akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-							case akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-								$used = rex_mediapool_mediaIsInUse($medium->getFileName());
-								break;
-						}
+						$used = rex_mediapool_mediaIsInUse($medium->getFileName());
 
 						if ($used) {
 							$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_in_use');
@@ -102,13 +100,26 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 						$text = '';
 						foreach ($errors as $error) {
 							if (trim($error) !== '') {
-								$text .= $api->getTaggedMsg($error);
+								$fragment = new \rex_fragment([
+									'text' => $error,
+								]);
+
+								$text .= $fragment->parse('fragments/msg/tagged_msg.php');
 							}
 						}
-						echo $api->getErrorMsg($text);
+						$fragment = new \rex_fragment([
+							'text' => $text,
+						]);
+						echo $fragment->parse('fragments/msg/error.php');
 					} else {
-						$text = 'akrys_usagecheck_images_msg_used';
-						echo $api->getTaggedInfoMsg(\rex_i18n::rawMsg($text));
+						$fragment = new \rex_fragment([
+							'text' => \rex_i18n::rawMsg('akrys_usagecheck_images_msg_used'),
+						]);
+
+						$fragment = new \rex_fragment([
+							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+						]);
+						echo $fragment->parse('fragments/msg/info.php');
 					}
 					?>
 
@@ -138,7 +149,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 										$clang = $articleData[3];
 										$ctype = $articleData[4];
 
-										$hasPerm = $api->hasCategoryPerm($articleID);
+										$hasPerm = $structurePerm->hasCategoryPerm($articleID);
 										if ($hasPerm) {
 											$linkText = $linkTextRaw;
 											$linkText = str_replace('$sliceID$', $sliceID, $linkText);
@@ -168,8 +179,8 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 										$articleName = $articleData[1];
 										$clang = $articleData[2];
 
-										$hasPerm = $api->hasCategoryPerm($articleID);
-										$href = $api->getArticleMetaUrl($articleID, $clang);
+										$hasPerm = $structurePerm->hasCategoryPerm($articleID);
+										$href = 'index.php?page=content/metainfo&article_id='.$articleID.'&clang='.$clang.'&ctype=1';
 										if ($hasPerm) {
 											$linkText = $linkTextRaw;
 											$linkText = str_replace('$articleID$', $articleID, $linkText);
@@ -199,7 +210,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 										$clang = $articleData[2];
 										$parentID = $articleData[3];
 
-										$hasPerm = $api->hasCategoryPerm($articleID);
+										$hasPerm = $structurePerm->hasCategoryPerm($articleID);
 
 										if ($hasPerm) {
 											$linkText = $linkTextRaw;
@@ -231,8 +242,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 										$fileCatID = $mediaData[1];
 										$filename = $mediaData[2];
 
-										$hasPerm = $api->hasMediaCategoryPerm($fileCatID);
-										$hasPerm = true;
+										$hasPerm = $mediaPerm->hasCategoryPerm($fileCatID);
 
 										if ($hasPerm) {
 											$linkText = $linkTextRaw;
@@ -256,16 +266,19 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 										continue;
 									}
 
+									$hasPerm = \rex::getUser()->isAdmin() || (
+										\rex::getUser()->hasPerm('yform[]') &&
+										\rex::getUser()->hasPerm('yform[table:'.$table.']')
+										);
+
 									$ids = explode("\n", $item[$table]);
 									foreach ($ids as $id) {
 										$linkText = $linkTextRaw;
 										$linkText = str_replace('$entryID$', $id, $linkText);
 										$linkText = str_replace('$tableName$', $field[0]['table_out'], $linkText);
 
-										$hasPerm = $api->hasTablePerm($table);
-
 										if ($hasPerm) {
-											$href = $api->getYFormEditUrl($table, $id);
+											$href = 'index.php?page=yform/manager/data_edit&table_name='.$table.'&data_id='.$id.'&func=edit';
 											if ($href == '') {
 												continue;
 											}
@@ -287,16 +300,10 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 						<span>
 
 							<?php
-							$initCat = null;
-
-							switch (akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-								case akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-									/* @var $medium rex_media */
-									$medium = rex_media::get($item['filename']);
-									/* @var $initCat rex_media_category */
-									$initCat = $medium->getCategory();
-									break;
-							}
+							/* @var $medium rex_media */
+							$medium = rex_media::get($item['filename']);
+							/* @var $initCat rex_media_category */
+							$initCat = $medium->getCategory();
 
 							if (isset($initCat)) {
 								$title = \rex_i18n::rawMsg('akrys_usagecheck_images_category_header');

@@ -8,7 +8,6 @@
  */
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
-use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 use \akrys\redaxo\addon\UsageCheck\Permission;
 
 /**
@@ -32,17 +31,7 @@ abstract class Actions
 	 */
 	public static function create()
 	{
-		$object = null;
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_5:
-				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Actions();
-				break;
-		}
-
-		if (!isset($object)) {
-			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
-		}
-
+		$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Actions();
 		return $object;
 	}
 
@@ -66,7 +55,7 @@ abstract class Actions
 	 */
 	public function getActions()
 	{
-		if (!Permission::getVersion()->check(Permission::PERM_MODUL)) {
+		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
 			return false;
 		}
 
@@ -74,7 +63,7 @@ abstract class Actions
 
 		$where = '';
 		if (!$this->showAll) {
-			$where.='where ma.id is null';
+			$where .= 'where ma.id is null';
 		}
 
 		//Keine integer oder Datumswerte in einem concat!

@@ -103,7 +103,7 @@ SQL;
 		$rexSQL = \rex_sql::factory();
 
 		if (!isset($dbs)) { // Normalfall, wenn wir nicht gerade Unit-Tests laufen lassen
-			$dbs = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getDB();
+			$dbs = \rex::getProperty('db');
 		}
 
 		$where = array();
@@ -402,7 +402,7 @@ SQL;
 	{
 		$rexSQL = \rex_sql::factory();
 
-//		$articleTable = \akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getTable('article');
+//		$articleTable = \rex::getTable('article');
 		$metainfoFieldTable = \rex::getTable('metainfo_field');
 		$metainfoTypeTable = \rex::getTable('metainfo_type');
 

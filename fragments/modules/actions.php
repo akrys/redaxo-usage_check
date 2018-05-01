@@ -1,8 +1,5 @@
-<?php
-$api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
-?>
 
-<table class="<?= $api->getTableClass(); ?>">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_action_table_heading_name'); ?></th>
@@ -19,11 +16,22 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 				<td>
 					<?php
 					if ($item['modul'] === null) {
-						$msg = \rex_i18n::rawMsg('akrys_usagecheck_action_msg_not_used');
-						echo $api->getTaggedErrorMsg($msg);
+						$fragment = new \rex_fragment([
+							'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_msg_not_used'),
+						]);
+						$fragment = new \rex_fragment([
+							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+						]);
+						echo $fragment->parse('fragments/msg/error.php');
 					} else {
-						$msg = \rex_i18n::rawMsg('akrys_usagecheck_action_msg_used');
-						echo $api->getTaggedInfoMsg($msg);
+						$fragment = new \rex_fragment([
+							'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_msg_used'),
+						]);
+
+						$fragment = new \rex_fragment([
+							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+						]);
+						echo $fragment->parse('fragments/msg/info.php');
 					}
 					?>
 

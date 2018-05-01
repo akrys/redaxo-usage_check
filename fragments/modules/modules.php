@@ -1,8 +1,9 @@
 <?php
-$api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
+$user = \rex::getUser();
+$structurePerm = \rex_structure_perm::get($user, 'structure')
 ?>
 
-<table class="<?= $api->getTableClass() ?>">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_module_table_heading_name'); ?></th>
@@ -24,11 +25,24 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 
 					<?php
 					if ($item['slice_data'] === null) {
-						$index = 'akrys_usagecheck_module_msg_not_used';
-						echo $api->getTaggedErrorMsg(\rex_i18n::rawMsg($index));
+						$fragment = new \rex_fragment([
+							'text' => \rex_i18n::rawMsg('akrys_usagecheck_module_msg_not_used'),
+						]);
+
+						$fragment = new \rex_fragment([
+							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+						]);
+						echo $fragment->parse('fragments/msg/error.php');
 					} else {
-						$index = 'akrys_usagecheck_module_msg_used';
-						echo $api->getTaggedInfoMsg(\rex_i18n::rawMsg($index));
+
+						$fragment = new \rex_fragment([
+							'text' => \rex_i18n::rawMsg('akrys_usagecheck_module_msg_used'),
+						]);
+
+						$fragment = new \rex_fragment([
+							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+						]);
+						echo $fragment->parse('fragments/msg/info.php');
 					}
 					?>
 
@@ -37,7 +51,8 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 							<ol>
 
 								<?php
-								if ($api->isAdmin()) {
+								$user = \rex::getUser();
+								if ($user->isAdmin()) {
 									$url = 'index.php?page=modules/modules&function=edit&module_id='.$item['id'];
 									$index = 'akrys_usagecheck_module_linktext_edit_code';
 									$linkText = \rex_i18n::rawMsg($index);
@@ -65,7 +80,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 										$articleName = $usage[5];
 
 
-										$hasPerm = $api->hasCategoryPerm($articleID);
+										$hasPerm = $structurePerm->hasCategoryPerm($articleID);
 
 										if ($hasPerm) {
 											$href = 'index.php?page=content&article_id='.$articleID.

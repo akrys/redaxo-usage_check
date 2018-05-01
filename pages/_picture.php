@@ -4,7 +4,6 @@
  * Anzeige der nicht verwendeten Bilder.
  */
 use \akrys\redaxo\addon\UsageCheck\Config;
-use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
 $pictures = \akrys\redaxo\addon\UsageCheck\Modules\Pictures::create();
 
@@ -12,7 +11,7 @@ $title = new \rex_fragment();
 $title->setVar('name', Config::NAME_OUT);
 $title->setVar('supage_title', \rex_i18n::rawMsg('akrys_usagecheck_images_subpagetitle'));
 $title->setVar('version', Config::VERSION);
-echo RedaxoCall::getAPI()->getRexTitle($title->parse('fragments/title.php'));
+echo \rex_view::title($title->parse('fragments/title.php'));
 
 $showAll = false;
 switch (rex_get('showall', 'string', "")) {
@@ -28,7 +27,14 @@ switch (rex_get('showall', 'string', "")) {
 $items = $pictures->getPictures();
 
 if ($items === false) {
-	echo RedaxoCall::getAPI()->getTaggedErrorMsg(\rex_i18n::rawMsg('akrys_usagecheck_no_rights'));
+	$msg = \rex_i18n::rawMsg('akrys_usagecheck_no_rights');
+	$fragment = new \rex_fragment([
+		'text' => $index,
+	]);
+	$fragment = new \rex_fragment([
+		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+	]);
+	echo $fragment->parse('fragments/msg/error.php');
 } else {
 	$showAllLinktext = \rex_i18n::rawMsg('akrys_usagecheck_images_link_show_unused');
 	$showAllParam = '';
