@@ -2,7 +2,7 @@
 	"name": "redaxo-usage_check",
 	"description": "",
 	"dependencies": {
-		"gulp-cli": "^2.0.0"
+		"gulp-cli": "^2.0.1"
 	},
 	"devDependencies": {
 		"escape-string-regexp": "*",
