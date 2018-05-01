@@ -103,7 +103,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 											$name = $usage[1];
 
 											$href = $this->templates->getEditLink($id);
-											$linkText = $linkTextRaw;
+											$linkText = $name;
 											$linkText = str_replace('$templateName$', $name, $linkText);
 											$linkText = str_replace('$templateID$', $item['id'], $linkText);
 											?>
