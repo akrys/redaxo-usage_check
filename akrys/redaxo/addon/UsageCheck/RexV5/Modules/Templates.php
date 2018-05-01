@@ -93,7 +93,7 @@ SQL;
 		];
 
 		$texts = [
-			\akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_intro_text'),
+			\rex_i18n::rawMsg('akrys_usagecheck_template_intro_text'),
 		];
 
 		$params = [

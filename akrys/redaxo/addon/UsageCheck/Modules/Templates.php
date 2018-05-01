@@ -173,23 +173,23 @@ abstract class Templates
 	{
 		$return = array();
 
-		$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_unused');
+		$text = \rex_i18n::rawMsg('akrys_usagecheck_template_link_show_unused');
 		$return['showAllParam'] = '';
 		$return['showAllParamCurr'] = '&showall=true';
 		$return['showAllLinktext'] = $text;
 		if (!$showAll) {
-			$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_all');
+			$text = \rex_i18n::rawMsg('akrys_usagecheck_template_link_show_all');
 			$return['showAllParam'] = '&showall=true';
 			$return['showAllParamCurr'] = '';
 			$return['showAllLinktext'] = $text;
 		}
 
-		$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_active');
+		$text = \rex_i18n::rawMsg('akrys_usagecheck_template_link_show_active');
 		$return['showInactiveParam'] = '';
 		$return['showInactiveParamCurr'] = '&showinactive=true';
 		$return['showInactiveLinktext'] = $text;
 		if (!$showInactive) {
-			$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_active_inactive');
+			$text = \rex_i18n::rawMsg('akrys_usagecheck_template_link_show_active_inactive');
 			$return['showInactiveParam'] = '&showinactive=true';
 			$return['showInactiveParamCurr'] = '';
 			$return['showInactiveLinktext'] = $text;

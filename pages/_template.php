@@ -31,7 +31,7 @@ switch (rex_get('showinactive', 'string', "")) {
 
 $title = new \rex_fragment();
 $title->setVar('name', Config::NAME_OUT);
-$title->setVar('supage_title', RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_subpagetitle'));
+$title->setVar('supage_title', \rex_i18n::rawMsg('akrys_usagecheck_template_subpagetitle'));
 $title->setVar('version', Config::VERSION);
 echo RedaxoCall::getAPI()->getRexTitle($title->parse('fragments/title.php'));
 
@@ -45,7 +45,7 @@ if ($showInactive) {
 $items = $templates->getTemplates();
 
 if ($items === false) {
-	echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N('akrys_usagecheck_no_rights'));
+	echo RedaxoCall::getAPI()->getTaggedErrorMsg(\rex_i18n::rawMsg('akrys_usagecheck_no_rights'));
 } else {
 	echo $templates->outputMenu($subpage, $showAll, $showInactive);
 

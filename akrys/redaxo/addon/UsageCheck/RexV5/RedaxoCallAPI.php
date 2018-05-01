@@ -18,17 +18,6 @@ class RedaxoCallAPI
 {
 
 	/**
-	 * Übersetzung holen
-	 * @param string $text
-	 * @return string
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public function getI18N($text)
-	{
-		return \rex_i18n::rawMsg($text);
-	}
-
-	/**
 	 * Sprachname Code holen.
 	 * @return string
 	 * @SuppressWarnings(PHPMD.StaticAccess)

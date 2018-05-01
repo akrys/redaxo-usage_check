@@ -30,6 +30,6 @@ $contentFile = __DIR__.'/_'.$subpage.'.php';
 if (file_exists($contentFile)) {
 	include $contentFile;
 } else {
-	$msg = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile;
+	$msg = \rex_i18n::rawMsg('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile;
 	echo RedaxoCall::getAPI()->getErrorMsg($msg, true);
 }

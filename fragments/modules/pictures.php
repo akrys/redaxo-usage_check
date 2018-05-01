@@ -5,8 +5,8 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 <table class="<?= $api->getTableClass(); ?>">
 	<thead>
 		<tr>
-			<th><?= $api->getI18N('akrys_usagecheck_images_table_heading_name'); ?></th>
-			<th><?= $api->getI18N('akrys_usagecheck_images_table_heading_functions'); ?></th>
+			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_images_table_heading_name'); ?></th>
+			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_images_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -68,11 +68,11 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 
 					$errors = array();
 					if ($used === false) {
-						$errors[] = $api->getI18N('akrys_usagecheck_images_msg_not_used');
+						$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
 					}
 
 					if (!$this->pictures->exists($item)) {
-						$errors[] = $api->getI18N('akrys_usagecheck_images_msg_not_found');
+						$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_found');
 					}
 
 					//Ob ein Medium lt. Medienpool in Nutzung ist, brauchen wir nur zu prüfen,
@@ -94,7 +94,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 						}
 
 						if ($used) {
-							$errors[] = $api->getI18N('akrys_usagecheck_images_msg_in_use');
+							$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_in_use');
 						}
 					}
 
@@ -108,7 +108,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 						echo $api->getErrorMsg($text);
 					} else {
 						$text = 'akrys_usagecheck_images_msg_used';
-						echo $api->getTaggedInfoMsg(akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N($text));
+						echo $api->getTaggedInfoMsg(\rex_i18n::rawMsg($text));
 					}
 					?>
 
@@ -117,7 +117,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 							<ol>
 								<?php
 								$url = 'index.php?page=mediapool&subpage=detail&file_name='.$item['filename'];
-								$linkText = $api->getI18N('akrys_usagecheck_images_linktext_edit');
+								$linkText = \rex_i18n::rawMsg('akrys_usagecheck_images_linktext_edit');
 								?>
 
 								<li><a href="<?= $url ?>" target="_blank"><?= $linkText; ?></a><br /></li>
@@ -127,7 +127,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 									$usages = explode("\n", $item['slice_data']);
 
 									$index = 'akrys_usagecheck_images_linktext_edit_in_slice';
-									$linkTextRaw = $api->getI18N($index);
+									$linkTextRaw = \rex_i18n::rawMsg($index);
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
 
@@ -160,7 +160,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 								if ($item['metaArtIDs'] !== null) {
 									$usages = explode("\n", $item['metaArtIDs']);
 									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_art';
-									$linkTextRaw = $api->getI18N($index);
+									$linkTextRaw = \rex_i18n::rawMsg($index);
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
 
@@ -188,7 +188,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 									$usages = explode("\n", $item['metaCatIDs']);
 
 									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_cat';
-									$linkTextRaw = $api->getI18N($index);
+									$linkTextRaw = \rex_i18n::rawMsg($index);
 									foreach ($usages as $usage) {
 										$articleData = explode("\t", $usage);
 
@@ -220,7 +220,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 
 								if ($item['metaMedIDs'] !== null) {
 									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_med';
-									$linkTextRaw = $api->getI18N($index);
+									$linkTextRaw = \rex_i18n::rawMsg($index);
 
 									$usages = explode("\n", $item['metaMedIDs']);
 									foreach ($usages as $usage) {
@@ -250,7 +250,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 
 
 								$index = 'akrys_usagecheck_images_linktext_edit_in_yformtable';
-								$linkTextRaw = $api->getI18N($index);
+								$linkTextRaw = \rex_i18n::rawMsg($index);
 								foreach ($this->items['fields'] as $table => $field) {
 									if (!isset($item[$table])) {
 										continue;
@@ -299,7 +299,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 							}
 
 							if (isset($initCat)) {
-								$title = $api->getI18N('akrys_usagecheck_images_category_header');
+								$title = \rex_i18n::rawMsg('akrys_usagecheck_images_category_header');
 								?>
 
 								<small style="font-size:0.875em;">

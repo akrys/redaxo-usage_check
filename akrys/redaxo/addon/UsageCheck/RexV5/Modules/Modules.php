@@ -70,7 +70,7 @@ SQL;
 			'url' => $url,
 			'linktext' => $showAllLinktext,
 			'texts' => [
-				\akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N('akrys_usagecheck_module_intro_text'),
+				\rex_i18n::rawMsg('akrys_usagecheck_module_intro_text'),
 			],
 		]);
 		return $menu->parse('fragments/menu/linktext.php');

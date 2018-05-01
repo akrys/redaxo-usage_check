@@ -5,8 +5,8 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 <table class="<?= $api->getTableClass() ?>">
 	<thead>
 		<tr>
-			<th><?= $api->getI18N('akrys_usagecheck_module_table_heading_name'); ?></th>
-			<th><?= $api->getI18N('akrys_usagecheck_module_table_heading_functions'); ?></th>
+			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_module_table_heading_name'); ?></th>
+			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_module_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -25,10 +25,10 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 					<?php
 					if ($item['slice_data'] === null) {
 						$index = 'akrys_usagecheck_module_msg_not_used';
-						echo $api->getTaggedErrorMsg($api->getI18N($index));
+						echo $api->getTaggedErrorMsg(\rex_i18n::rawMsg($index));
 					} else {
 						$index = 'akrys_usagecheck_module_msg_used';
-						echo $api->getTaggedInfoMsg($api->getI18N($index));
+						echo $api->getTaggedInfoMsg(\rex_i18n::rawMsg($index));
 					}
 					?>
 
@@ -40,7 +40,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 								if ($api->isAdmin()) {
 									$url = 'index.php?page=modules/modules&function=edit&module_id='.$item['id'];
 									$index = 'akrys_usagecheck_module_linktext_edit_code';
-									$linkText = $api->getI18N($index);
+									$linkText = \rex_i18n::rawMsg($index);
 									?>
 
 									<li>
@@ -54,7 +54,7 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 									$usages = explode("\n", $item['slice_data']);
 
 									$index = 'akrys_usagecheck_module_linktext_edit_slice';
-									$linkTextRaw = $api->getI18N($index);
+									$linkTextRaw = \rex_i18n::rawMsg($index);
 									foreach ($usages as $usageRaw) {
 										$usage = explode("\t", $usageRaw);
 										$sliceID = $usage[0];

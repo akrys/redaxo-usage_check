@@ -11,7 +11,7 @@ use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
 $title = new \rex_fragment();
 $title->setVar('name', Config::NAME_OUT);
-$title->setVar('supage_title', RedaxoCall::getAPI()->getI18N('akrys_usagecheck_changelog_subpagetitle'));
+$title->setVar('supage_title', \rex_i18n::rawMsg('akrys_usagecheck_changelog_subpagetitle'));
 $title->setVar('version', Config::VERSION);
 echo RedaxoCall::getAPI()->getRexTitle($title->parse('fragments/title.php'));
 

@@ -13,7 +13,7 @@ use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
 $title = new \rex_fragment();
 $title->setVar('name', Config::NAME_OUT);
-$title->setVar('supage_title', RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_subpagetitle'));
+$title->setVar('supage_title', \rex_i18n::rawMsg('akrys_usagecheck_action_subpagetitle'));
 $title->setVar('version', Config::VERSION);
 echo RedaxoCall::getAPI()->getRexTitle($title->parse('fragments/title.php'));
 
@@ -36,13 +36,13 @@ $actions->showAll($showAll);
 $items = $actions->getActions();
 
 if ($items === false) {
-	echo RedaxoCall::getAPI()->getTaggedErrorMsg(RedaxoCall::getAPI()->getI18N('akrys_usagecheck_no_rights'));
+	echo RedaxoCall::getAPI()->getTaggedErrorMsg(\rex_i18n::rawMsg('akrys_usagecheck_no_rights'));
 } else {
 	$showAllParam = '&showall=true';
-	$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_link_show_all');
+	$showAllLinktext = \rex_i18n::rawMsg('akrys_usagecheck_action_link_show_all');
 	if ($showAll) {
 		$showAllParam = '';
-		$showAllLinktext = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_action_link_show_unused');
+		$showAllLinktext = \rex_i18n::rawMsg('akrys_usagecheck_action_link_show_unused');
 	}
 
 	echo $actions->outputMenu($subpage, $showAllParam, $showAllLinktext);

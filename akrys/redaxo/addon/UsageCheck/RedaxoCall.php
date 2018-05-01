@@ -60,12 +60,6 @@ abstract class RedaxoCall
 		return self::$api;
 	}
 
-	/**
-	 * Übersetzung holen
-	 * @param string $text
-	 * @return string
-	 */
-	abstract public function getI18N($text);
 
 	/**
 	 * Sprachname Code holen.
