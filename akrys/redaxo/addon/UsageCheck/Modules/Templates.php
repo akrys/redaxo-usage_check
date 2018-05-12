@@ -218,7 +218,7 @@ SQL;
 	 * @param boolean $showInactive
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public function outputMenu($subpage, $showAll, $showInactive)
+	public function getMenuFragmentParams($subpage, $showAll, $showInactive)
 	{
 		$param = $this->getMenuParameter($showAll, $showInactive);
 
@@ -250,8 +250,7 @@ SQL;
 			'texts' => $texts,
 			'user' => \rex::getUser(),
 		];
-		$menu = new \rex_fragment($params);
-		return $menu->parse('fragments/menu/linklist.php');
+		return $params;
 	}
 
 	/**

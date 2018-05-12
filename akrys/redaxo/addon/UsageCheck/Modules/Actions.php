@@ -87,25 +87,6 @@ SQL;
 //
 
 	/**
-	 * Menu
-	 * @param string $subpage
-	 * @param string $showAllParam
-	 * @param string $showAllLinktext
-	 */
-	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
-	{
-		$url = 'index.php?page='.Config::NAME.'/'.$subpage.$showAllParam;
-		$menu = new \rex_fragment([
-			'url' => $url,
-			'linktext' => $showAllLinktext,
-			'texts' => [
-				$this->i18nRaw('akrys_usagecheck_action_intro_text'),
-			],
-		]);
-		return $menu->parse('fragments/menu/linktext.php');
-	}
-
-	/**
 	 * Link Action Editieren
 	 * @param array $item
 	 * @param string $linkText

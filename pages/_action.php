@@ -51,7 +51,17 @@ if ($items === false) {
 		$showAllLinktext = \rex_i18n::rawMsg('akrys_usagecheck_action_link_show_unused');
 	}
 
-	echo $actions->outputMenu($subpage, $showAllParam, $showAllLinktext);
+// <editor-fold defaultstate="collapsed" desc="Menü">
+	$url = 'index.php?page='.Config::NAME.'/'.$subpage.$showAllParam;
+	$menu = new \rex_fragment([
+		'url' => $url,
+		'linktext' => $showAllLinktext,
+		'texts' => [
+		\rex_i18n::rawMsg('akrys_usagecheck_action_intro_text'),
+		],
+	]);
+	echo $menu->parse('fragments/menu/linktext.php');
+// </editor-fold>
 
 	$fragment = new rex_fragment([
 		'items' => $items,

@@ -106,26 +106,6 @@ SQL;
 	}
 
 	/**
-	 * Menü ausgeben
-	 * @return void
-	 * @param string $subpage
-	 * @param string $showAllParam
-	 * @param string $showAllLinktext
-	 */
-	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
-	{
-		$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.$showAllParam;
-		$menu = new \rex_fragment([
-			'url' => $url,
-			'linktext' => $showAllLinktext,
-			'texts' => [
-				$this->i18nRaw('akrys_usagecheck_module_intro_text'),
-			],
-		]);
-		return $menu->parse('fragments/menu/linktext.php');
-	}
-
-	/**
 	 * Abfrage der Rechte für das Modul
 	 *
 	 * Unit Testing

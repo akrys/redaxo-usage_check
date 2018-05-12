@@ -55,7 +55,10 @@ if ($items === false) {
 	]);
 	echo $fragment->parse('fragments/msg/error.php');
 } else {
-	echo $templates->outputMenu($subpage, $showAll, $showInactive);
+// <editor-fold defaultstate="collapsed" desc="Menü">
+	$menu = new \rex_fragment($templates->getMenuFragmentParams($subpage, $showAll, $showInactive));
+	echo $menu->parse('fragments/menu/linklist.php');
+// </editor-fold>
 
 	$fragment = new rex_fragment([
 		'items' => $items,

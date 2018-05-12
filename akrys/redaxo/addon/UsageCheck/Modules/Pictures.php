@@ -102,7 +102,7 @@ class Pictures
 			'havingClauses' => array(),
 		);
 
-		$tables = $this->getYFormSQL($return);
+		$tables = $this->getYFormSQL();
 
 		$xTables = array();
 		foreach ($tables as $table) {
@@ -173,93 +173,6 @@ class Pictures
 		return $joinCondition;
 	}
 
-	/**
-	 * kleinste Speichereinheit ermittln.
-	 *
-	 * Dabei zählen, wie oft man sie verkleinern konnte. Daraus ergibt sich die Einheit.
-	 *
-	 * @param int $size
-	 * @return array Indezes: index, size
-	 */
-	private function getSizeReadable($size)
-	{
-		$return = array(
-			'index' => 0,
-			'size' => $size,
-		);
-
-		$return['index'] = 0;
-
-		while ($return['size'] > 1024 && $return['index'] <= 6) {
-			$return['index'] ++;
-			$return['size'] /= 1024;
-		}
-		return $return;
-	}
-
-	/**
-	 * Dateigröße ermitteln.
-	 *
-	 * Die Größe in Byte auszugeben ist nicht gerade übersichtlich. Daher wird
-	 * hier versucht den Wert in der größt-möglichen Einheit zu ermittln.
-	 *
-	 * @param array $item wichtige Indezes: filesize
-	 * @return string
-	 */
-	public function getSizeOut($item)
-	{
-		$value = $this->getSizeReadable($item['filesize']);
-
-		$value['size'] = round($value['size'], 2);
-		switch ($value['index']) {
-			case 0:
-				$unit = 'B';
-				break;
-			case 1:
-				$unit = 'kB';
-				break;
-			case 2:
-				$unit = 'MB';
-				break;
-			case 3:
-				$unit = 'GB';
-				break;
-			case 4:
-				$unit = 'TB';
-				break;
-			case 5:
-				$unit = 'EB';
-				break;
-			case 6:
-				$unit = 'PB';
-				break;
-			default:
-				$unit = '????';
-				break;
-		}
-
-		return $value['size'].' '.$unit;
-	}
-
-	/**
-	 * Menü ausgeben
-	 * @return void
-	 * @param string $subpage
-	 * @param string $showAllParam
-	 * @param string $showAllLinktext
-	 */
-	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
-	{
-		$url = $this->getMeuLink($subpage, $showAllParam);
-		$menu = new \rex_fragment([
-			'url' => $url,
-			'linktext' => $showAllLinktext,
-			'texts' => [
-				$this->i18nRaw('akrys_usagecheck_images_intro_text'),
-			],
-		]);
-		return $menu->parse('fragments/menu/linktext.php');
-	}
 //
 ///////////////////// Tmplementation aus RexV5 /////////////////////
 //
@@ -270,7 +183,7 @@ class Pictures
 	 * @return array
 	 * @param array &$return
 	 */
-	protected function getYFormSQL(&$return)
+	protected function getYFormSQL()
 	{
 		$tabels = array();
 
@@ -457,38 +370,6 @@ SQL;
 		/* @var $medium \rex_media */
 		$medium = \rex_media::get($item['filename']);
 		return $medium;
-	}
-
-	/**
-	 * Bildvorschau ausgeben
-	 *
-	 * @return void
-	 * @param array $item Ein Element der Ergebnismenge
-	 */
-	public function outputImagePreview($item)
-	{
-		if (stristr($item['filetype'], 'image/')) {
-			$url = 'index.php?rex_media_type=rex_mediapool_preview&rex_media_file='.$item['filename'];
-
-			$fragment = new \rex_fragment([
-				'src' => $url,
-				'alt' => '',
-				'style' => 'max-width:150px;max-height: 150px;',
-			]);
-			return $fragment->parse('fragments/image.php');
-		}
-		return '';
-	}
-
-	/**
-	 * Menü URL generieren
-	 * @return string
-	 * @param string $subpage
-	 * @param string $showAllParam
-	 */
-	public function getMeuLink($subpage, $showAllParam)
-	{
-		return 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.$showAllParam;
 	}
 
 	/**

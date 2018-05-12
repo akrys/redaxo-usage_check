@@ -34,7 +34,6 @@ $structurePerm = \rex_structure_perm::get($user, 'structure')
 						]);
 						echo $fragment->parse('fragments/msg/error.php');
 					} else {
-
 						$fragment = new \rex_fragment([
 							'text' => \rex_i18n::rawMsg('akrys_usagecheck_module_msg_used'),
 						]);

@@ -23,17 +23,31 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 			}
 
 			$initCat = null;
+
+			$fileSize = new \akrys\redaxo\addon\UsageCheck\Lib\FileSize($item['filesize']);
 			?>
 
 			<tr>
 				<td>
 
-					<?= $this->pictures->outputImagePreview($item); ?><br /><br />
+					<?php
+					if (stristr($item['filetype'], 'image/')) {
+						$url = 'index.php?rex_media_type=rex_mediapool_preview&rex_media_file='.$item['filename'];
+
+						$fragment = new \rex_fragment([
+							'src' => $url,
+							'alt' => '',
+							'style' => 'max-width:150px;max-height: 150px;',
+						]);
+						echo $fragment->parse('fragments/image.php');
+					}
+					?>
+					<br /><br />
 
 					<strong><?= $item['title']; ?></strong><br />
 
 					<?php
-					echo $item['filename'].' ('.$this->pictures->getSizeOut($item).')';
+					echo $item['filename'].' ('.$fileSize->getSizeOut($item).')';
 					?>
 
 					<br />
@@ -180,7 +194,11 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 										$clang = $articleData[2];
 
 										$hasPerm = $structurePerm->hasCategoryPerm($articleID);
-										$href = 'index.php?page=content/metainfo&article_id='.$articleID.'&clang='.$clang.'&ctype=1';
+										$href = 'index.php?'.
+											'page=content/metainfo&'.
+											'article_id='.$articleID.'&'.
+											'clang='.$clang.'&'.
+											'ctype=1';
 										if ($hasPerm) {
 											$linkText = $linkTextRaw;
 											$linkText = str_replace('$articleID$', $articleID, $linkText);
@@ -278,7 +296,10 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 										$linkText = str_replace('$tableName$', $field[0]['table_out'], $linkText);
 
 										if ($hasPerm) {
-											$href = 'index.php?page=yform/manager/data_edit&table_name='.$table.'&data_id='.$id.'&func=edit';
+											$href = 'index.php?page=yform/manager/data_edit&'.
+												'table_name='.$table.'&'.
+												'data_id='.$id.'&'.
+												'func=edit';
 											if ($href == '') {
 												continue;
 											}

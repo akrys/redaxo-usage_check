@@ -44,7 +44,17 @@ if ($items === false) {
 		$showAllParam = '&showall=true';
 	}
 
-	echo $pictures->outputMenu($subpage, $showAllParam, $showAllLinktext);
+// <editor-fold defaultstate="collapsed" desc="Menü">
+	$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.$showAllParam;
+	$menu = new \rex_fragment([
+		'url' => $url,
+		'linktext' => $showAllLinktext,
+		'texts' => [
+			\rex_i18n::rawMsg('akrys_usagecheck_images_intro_text'),
+		],
+	]);
+	echo $menu->parse('fragments/menu/linktext.php');
+// </editor-fold>
 
 	$fragment = new rex_fragment([
 		'items' => $items,

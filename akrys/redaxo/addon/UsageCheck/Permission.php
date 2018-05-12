@@ -103,7 +103,7 @@ class Permission
 	 */
 	final private function __construct()
 	{
-
+		//;
 	}
 
 	/**
