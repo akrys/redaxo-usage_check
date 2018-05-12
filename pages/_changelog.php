@@ -18,7 +18,12 @@ if (!function_exists('\\glob')) {
 	die();
 }
 
-if (stristr(\rex::getUser()->getLanguage(), 'de_')) {
+$language = \rex::getUser()->getLanguage();
+if ($language == '') {
+	$language = \rex::getProperty('lang');
+}
+
+if (stristr($language, 'de_')) {
 	$dir = glob(__DIR__.'/release_notes/de/*_*.php');
 } else {
 	$dir = glob(__DIR__.'/release_notes/en/*_*.php');

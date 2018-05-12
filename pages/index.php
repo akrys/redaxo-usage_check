@@ -7,9 +7,12 @@ use \akrys\redaxo\addon\UsageCheck\Config;
 
 $locale = null;
 $language = \rex::getUser()->getLanguage();
+if ($language == '') {
+	$language = \rex::getProperty('lang');
+}
 if (!stristr($language, 'de_') && !stristr($language, 'en_')) {
-	rex_i18n::setLocale('en_gb');
 	$locale = rex_i18n::getLocale();
+	rex_i18n::setLocale('en_gb');
 }
 
 //Fehlerausgabe

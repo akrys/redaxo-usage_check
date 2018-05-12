@@ -9,13 +9,14 @@
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
 use \akrys\redaxo\addon\UsageCheck\Permission;
+use \akrys\redaxo\addon\UsageCheck\Config;
 
 /**
  * Description of Modules
  *
  * @author akrys
  */
-abstract class Actions
+class Actions
 	extends BaseModule
 {
 	const TYPE = 'actions';
@@ -81,6 +82,9 @@ SQL;
 
 		return $rexSQL->getArray($sql);
 	}
+//
+///////////////////// Tmplementation aus RexV5 /////////////////////
+//
 
 	/**
 	 * Menu
@@ -88,12 +92,31 @@ SQL;
 	 * @param string $showAllParam
 	 * @param string $showAllLinktext
 	 */
-	abstract public function outputMenu($subpage, $showAllParam, $showAllLinktext);
+	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
+	{
+		$url = 'index.php?page='.Config::NAME.'/'.$subpage.$showAllParam;
+		$menu = new \rex_fragment([
+			'url' => $url,
+			'linktext' => $showAllLinktext,
+			'texts' => [
+				$this->i18nRaw('akrys_usagecheck_action_intro_text'),
+			],
+		]);
+		return $menu->parse('fragments/menu/linktext.php');
+	}
 
 	/**
 	 * Link Action Editieren
 	 * @param array $item
 	 * @param string $linkText
 	 */
-	abstract public function outputActionEdit($item, $linkText);
+	public function outputActionEdit($item, $linkText)
+	{
+		$url = 'index.php?page=modules/actions&action_id='.$item['id'].'&function=edit';
+		$fragmet = new \rex_fragment([
+			'href' => $url,
+			'text' => $linkText,
+		]);
+		return $fragmet->parse('fragments/link.php');
+	}
 }

@@ -7,7 +7,7 @@
 
 use \akrys\redaxo\addon\UsageCheck\Config;
 
-$modules = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Modules();
+$modules = new \akrys\redaxo\addon\UsageCheck\Modules\Modules();
 $modules->setRexSql(\rex_sql::factory());
 
 $showAll = false;

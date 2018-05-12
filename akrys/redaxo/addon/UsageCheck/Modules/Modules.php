@@ -15,7 +15,7 @@ use \akrys\redaxo\addon\UsageCheck\Permission;
  *
  * @author akrys
  */
-abstract class Modules
+class Modules
 	extends BaseModule
 {
 	const TYPE = 'modules';
@@ -62,13 +62,48 @@ abstract class Modules
 
 		return $rexSQL->getArray($sql);
 	}
+//
+///////////////////// Tmplementation aus RexV5 /////////////////////
+//
 
 	/**
 	 * SQL generieren
 	 * @param string $where
 	 * @return string
 	 */
-	abstract protected function getSQL($where);
+	protected function getSQL($where)
+	{
+		//Keine integer oder Datumswerte in einem concat!
+		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
+		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
+		$moduleTable = $this->getTable('module');
+		$articleSliceTable = $this->getTable('article_slice');
+		$articleTable = $this->getTable('article');
+
+		$sql = <<<SQL
+SELECT m.name,
+	m.id,
+	m.createdate,
+	m.updatedate,
+	group_concat(
+		concat(
+			cast(s.id as char),"\t",
+			cast(s.clang_id as char),"\t",
+			cast(s.ctype_id as char),"\t",
+			cast(a.id as char),"\t",
+			cast(a.parent_id as char),"\t",
+			a.name) Separator "\n"
+		) slice_data
+FROM `$moduleTable` m
+left join $articleSliceTable s on s.module_id=m.id
+left join $articleTable a on s.article_id=a.id and s.clang_id=a.clang_id
+
+$where
+group by m.id
+
+SQL;
+		return $sql;
+	}
 
 	/**
 	 * Menü ausgeben
@@ -77,7 +112,18 @@ abstract class Modules
 	 * @param string $showAllParam
 	 * @param string $showAllLinktext
 	 */
-	abstract public function outputMenu($subpage, $showAllParam, $showAllLinktext);
+	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
+	{
+		$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.$showAllParam;
+		$menu = new \rex_fragment([
+			'url' => $url,
+			'linktext' => $showAllLinktext,
+			'texts' => [
+				$this->i18nRaw('akrys_usagecheck_module_intro_text'),
+			],
+		]);
+		return $menu->parse('fragments/menu/linktext.php');
+	}
 
 	/**
 	 * Abfrage der Rechte für das Modul
@@ -88,6 +134,14 @@ abstract class Modules
 	 *
 	 * @param array $item
 	 * @return boolean
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	abstract public function hasRights($item);
+	public function hasRights($item)
+	{
+		$user = \rex::getUser();
+		if (!$user->isAdmin() && !$user->getComplexPerm('modules')->hasPerm($item['id'])) {
+			return false;
+		}
+		return true;
+	}
 }

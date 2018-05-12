@@ -5,7 +5,7 @@
  */
 use \akrys\redaxo\addon\UsageCheck\Config;
 
-$pictures = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures();
+$pictures = new \akrys\redaxo\addon\UsageCheck\Modules\Pictures();
 $pictures->setRexSql(\rex_sql::factory());
 
 $title = new \rex_fragment();

@@ -34,7 +34,7 @@ $title->setVar('supage_title', \rex_i18n::rawMsg('akrys_usagecheck_template_subp
 $title->setVar('version', Config::VERSION);
 echo \rex_view::title($title->parse('fragments/title.php'));
 
-$templates = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Templates();
+$templates = new \akrys\redaxo\addon\UsageCheck\Modules\Templates();
 $templates->setRexSql(\rex_sql::factory());
 
 if ($showAll) {
