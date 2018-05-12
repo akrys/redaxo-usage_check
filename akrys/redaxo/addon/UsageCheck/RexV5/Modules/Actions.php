@@ -32,7 +32,7 @@ class Actions
 			'url' => $url,
 			'linktext' => $showAllLinktext,
 			'texts' => [
-				\rex_i18n::rawMsg('akrys_usagecheck_action_intro_text'),
+				$this->i18nRaw('akrys_usagecheck_action_intro_text'),
 			],
 		]);
 		return $menu->parse('fragments/menu/linktext.php');

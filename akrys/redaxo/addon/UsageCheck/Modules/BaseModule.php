@@ -49,11 +49,17 @@ class BaseModule
 	protected function getTable($table)
 	{
 		$rex = new \rex;
-		$a = $rex->getTable($table);
-		$b = \rex::getTable($table);
-		if ($a !== $b) {
-			throw("'".$a."' !== '".$b."'");
-		}
 		return $rex->getTable($table);
+	}
+
+	/**
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	protected function i18nRaw($string)
+	{
+		$rex = new \rex_i18n;
+		return $rex->rawMsg($string);
 	}
 }

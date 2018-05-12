@@ -150,23 +150,23 @@ abstract class Templates
 	{
 		$return = array();
 
-		$text = \rex_i18n::rawMsg('akrys_usagecheck_template_link_show_unused');
+		$text = $this->i18nRaw('akrys_usagecheck_template_link_show_unused');
 		$return['showAllParam'] = '';
 		$return['showAllParamCurr'] = '&showall=true';
 		$return['showAllLinktext'] = $text;
 		if (!$showAll) {
-			$text = \rex_i18n::rawMsg('akrys_usagecheck_template_link_show_all');
+			$text = $this->i18nRaw('akrys_usagecheck_template_link_show_all');
 			$return['showAllParam'] = '&showall=true';
 			$return['showAllParamCurr'] = '';
 			$return['showAllLinktext'] = $text;
 		}
 
-		$text = \rex_i18n::rawMsg('akrys_usagecheck_template_link_show_active');
+		$text = $this->i18nRaw('akrys_usagecheck_template_link_show_active');
 		$return['showInactiveParam'] = '';
 		$return['showInactiveParamCurr'] = '&showinactive=true';
 		$return['showInactiveLinktext'] = $text;
 		if (!$showInactive) {
-			$text = \rex_i18n::rawMsg('akrys_usagecheck_template_link_show_active_inactive');
+			$text = $this->i18nRaw('akrys_usagecheck_template_link_show_active_inactive');
 			$return['showInactiveParam'] = '&showinactive=true';
 			$return['showInactiveParamCurr'] = '';
 			$return['showInactiveLinktext'] = $text;

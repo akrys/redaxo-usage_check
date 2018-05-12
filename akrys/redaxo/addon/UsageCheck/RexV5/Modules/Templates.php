@@ -93,7 +93,7 @@ SQL;
 		];
 
 		$texts = [
-			\rex_i18n::rawMsg('akrys_usagecheck_template_intro_text'),
+			$this->i18nRaw('akrys_usagecheck_template_intro_text'),
 		];
 
 		$params = [
