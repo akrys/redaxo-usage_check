@@ -50,10 +50,10 @@ abstract class Actions
 			return false;
 		}
 
-		if(!$this->sql) {
+		if(!$this->rexSql) {
 			throw \Exception('no sql given');
 		}
-		$rexSQL = $this->sql;
+		$rexSQL = $this->rexSql;
 
 		$where = '';
 		if (!$this->showAll) {
@@ -63,9 +63,9 @@ abstract class Actions
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
-		$actionTable = \rex::getTable('action');
-		$moduleActionTable = \rex::getTable('module_action');
-		$moduleTable = \rex::getTable('module');
+		$actionTable = $this->getTable('action');
+		$moduleActionTable = $this->getTable('module_action');
+		$moduleTable = $this->getTable('module');
 
 		$sql = <<<SQL
 SELECT a.*, group_concat(concat(

@@ -19,15 +19,15 @@ class BaseModule
 	 *
 	 * @var \rex_sql
 	 */
-	protected $sql;
+	protected $rexSql;
 
 	/**
 	 *
 	 * @return type
 	 */
-	public function getSql()
+	public function getRexSql()
 	{
-		return $this->sql;
+		return $this->rexSql;
 	}
 
 	/**
@@ -35,9 +35,25 @@ class BaseModule
 	 * @param \rex_sql $sql
 	 * @return $this
 	 */
-	public function setSql(\rex_sql $sql)
+	public function setRexSql(\rex_sql $sql)
 	{
-		$this->sql = $sql;
+		$this->rexSql = $sql;
 		return $this;
+	}
+
+	/**
+	 *
+	 * @param string $table
+	 * @return string
+	 */
+	protected function getTable($table)
+	{
+		$rex = new \rex;
+		$a = $rex->getTable($table);
+		$b = \rex::getTable($table);
+		if ($a !== $b) {
+			throw("'".$a."' !== '".$b."'");
+		}
+		return $rex->getTable($table);
 	}
 }

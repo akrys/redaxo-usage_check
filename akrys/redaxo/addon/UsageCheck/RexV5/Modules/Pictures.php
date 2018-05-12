@@ -26,10 +26,10 @@ class Pictures
 	protected function getYFormSQL(&$return)
 	{
 		$tabels = array();
-		if(!$this->sql) {
+		if(!$this->rexSql) {
 			throw \Exception('no sql given');
 		}
-		$rexSQL = $this->sql;
+		$rexSQL = $this->rexSql;
 
 		if (!\rex_addon::get('yform')->isAvailable()) {
 			return $tabels;
@@ -39,8 +39,8 @@ class Pictures
 			return $tabels;
 		}
 
-		$yformTableTable = \rex::getTable('yform_table');
-		$yformFieldTable = \rex::getTable('yform_field');
+		$yformTableTable = $this->getTable('yform_table');
+		$yformFieldTable = $this->getTable('yform_field');
 
 		$yformtable = $rexSQL->getArray("show table status like '$yformTableTable'");
 		$yformfield = $rexSQL->getArray("show table status like '$yformFieldTable'");
@@ -103,10 +103,10 @@ SQL;
 	 */
 	private function hasMultiple($yformFieldTable, $dbs = null)
 	{
-		if(!$this->sql) {
+		if(!$this->rexSql) {
 			throw \Exception('no sql given');
 		}
-		$rexSQL = $this->sql;
+		$rexSQL = $this->rexSql;
 
 		if (!isset($dbs)) { // Normalfall, wenn wir nicht gerade Unit-Tests laufen lassen
 			$dbs = \rex::getProperty('db');
@@ -144,9 +144,9 @@ SQL;
 	 */
 	protected function getPictureSQL($additionalSelect, $additionalJoins)
 	{
-		$mediaTable = \rex::getTable('media');
-		$articleSliceTable = \rex::getTable('article_slice');
-		$articleTable = \rex::getTable('article');
+		$mediaTable = $this->getTable('media');
+		$articleSliceTable = $this->getTable('article_slice');
+		$articleTable = $this->getTable('article');
 
 		$sql = <<<SQL
 SELECT f.*,count(s.id) as count,
@@ -406,13 +406,13 @@ SQL;
 	 */
 	protected function getMetaNames()
 	{
-		if(!$this->sql) {
+		if(!$this->rexSql) {
 			throw \Exception('no sql given');
 		}
-		$rexSQL = $this->sql;
-//		$articleTable = \rex::getTable('article');
-		$metainfoFieldTable = \rex::getTable('metainfo_field');
-		$metainfoTypeTable = \rex::getTable('metainfo_type');
+		$rexSQL = $this->rexSql;
+//		$articleTable = $this->getTable('article');
+		$metainfoFieldTable = $this->getTable('metainfo_field');
+		$metainfoTypeTable = $this->getTable('metainfo_type');
 
 		$sql = <<<SQL
 select f.name, t.label as type
