@@ -3,4 +3,8 @@
 	<li>Textänderungen: Verweise auf XForm entfernt.</li>
 	<li>Aufräumaktion. Nicht benötigten Code entfernt</li>
 	<li>Bugfix: inatktive, genutzte Templates haben keinen Bearbeiten-Link</li>
+	<li>
+		Bugfix: Sofern die Sprache weder Deutsch noch Englisch ist, sollten die englischen Texte genommen werden.<br />
+		(Für die Menüpunkte ist das leider nicht möglich)
+	</li>
 </ul>

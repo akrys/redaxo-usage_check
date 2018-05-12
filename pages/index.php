@@ -5,6 +5,13 @@
  */
 use \akrys\redaxo\addon\UsageCheck\Config;
 
+$locale = null;
+$language = \rex::getUser()->getLanguage();
+if (!stristr($language, 'de_') && !stristr($language, 'en_')) {
+	rex_i18n::setLocale('en_gb');
+	$locale = rex_i18n::getLocale();
+}
+
 //Fehlerausgabe
 if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
 	$text = '';
@@ -37,4 +44,9 @@ if (file_exists($contentFile)) {
 		'text' => $msg,
 	]);
 	echo $fragment->parse('fragments/msg/error.php');
+}
+
+//restore
+if (isset($locale)) {
+	\rex_i18n::setLocale($locale);
 }
