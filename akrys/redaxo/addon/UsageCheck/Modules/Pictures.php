@@ -165,14 +165,13 @@ class Pictures
 				$joinCondition = $tableName.'.'.$field['name'].' = f.filename';
 				if ($field['multiple']) {
 					//YForm 2 kann mehrere Dateien aufnehmen
-					//siehe Kommentare in \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures::getYFormSQL
+					//siehe Kommentare in self::hasMultiple()
 					$joinCondition = 'FIND_IN_SET(f.filename, '.$tableName.'.'.$field['name'].')';
 				}
 				break;
 		}
 		return $joinCondition;
 	}
-
 //
 ///////////////////// Tmplementation aus RexV5 /////////////////////
 //
@@ -275,20 +274,18 @@ SQL;
 				$params[] = $db['name'];
 			}
 		}
-		if ($where) {
-			$whereString = implode(' or ', $where);
-			$sql = <<<SQL
+
+		if (!$where) {
+			return false;
+		}
+
+		$whereString = implode(' or ', $where);
+		$sql = <<<SQL
 select * from information_schema.COLUMNS
 where $whereString
 SQL;
-			$hasMultipleResult = $rexSQL->getArray($sql, $params);
-			$hasMultiple = count($hasMultipleResult);
-			if ($hasMultiple > 0) {
-				return true;
-			}
-		}
-
-		return false;
+		$hasMultipleResult = $rexSQL->getArray($sql, $params);
+		return count($hasMultipleResult) > 0;
 	}
 
 	/**
@@ -389,14 +386,17 @@ SQL;
 		if (preg_match('/'.preg_quote(\rex_metainfo_article_handler::PREFIX, '/').'/', $name)) {
 			$return['field'] = 'joinArtMeta';
 			$return['table'] = 'rex_article_art_meta';
+			return $return;
 		} elseif (preg_match('/'.preg_quote(\rex_metainfo_category_handler::PREFIX, '/').'/', $name)) {
 			$return['field'] = 'joinCatMeta';
 			$return['table'] = 'rex_article_cat_meta';
+			return $return;
 		} elseif (preg_match('/'.preg_quote(\rex_metainfo_media_handler::PREFIX, '/').'/', $name)) {
 			$return['field'] = 'joinMedMeta';
 			$return['table'] = 'rex_article_med_meta';
+			return $return;
 		}
-		return $return;
+		throw new \Exception('Table not valid');
 	}
 
 	/**
@@ -421,8 +421,8 @@ SQL;
 		$names = $this->getMetaNames();
 
 		foreach ($names as $name) {
-			$table = $this->getTableNames($name['name']);
-			if (isset($table['field']) && isset($table['table'])) {
+			try {
+				$table = $this->getTableNames($name['name']);
 				$fieldname = $table['field'];
 				$tablename = $table['table'];
 
@@ -440,6 +440,8 @@ SQL;
 						$$fieldname .= 'FIND_IN_SET(f.filename, '.$tablename.'.'.$name['name'].')';
 						break;
 				}
+			} catch (\Exception $e) {
+
 			}
 		}
 
