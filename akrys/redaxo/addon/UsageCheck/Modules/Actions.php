@@ -16,7 +16,10 @@ use \akrys\redaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 abstract class Actions
+	extends BaseModule
 {
+	const TYPE = 'actions';
+
 	/**
 	 * Anzeigemodus
 	 * @var boolean
@@ -47,7 +50,10 @@ abstract class Actions
 			return false;
 		}
 
-		$rexSQL = \rex_sql::factory();
+		if(!$this->sql) {
+			throw \Exception('no sql given');
+		}
+		$rexSQL = $this->sql;
 
 		$where = '';
 		if (!$this->showAll) {

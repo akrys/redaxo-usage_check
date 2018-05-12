@@ -6,6 +6,7 @@
 use \akrys\redaxo\addon\UsageCheck\Config;
 
 $pictures = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures();
+$pictures->setSql(\rex_sql::factory());
 
 $title = new \rex_fragment();
 $title->setVar('name', Config::NAME_OUT);

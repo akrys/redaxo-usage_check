@@ -16,7 +16,10 @@ use \akrys\redaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 abstract class Templates
+	extends BaseModule
 {
+	const TYPE = 'templates';
+
 	/**
 	 * Anzeigemodus für "Alle Anzeigen"
 	 * @var boolean
@@ -70,7 +73,10 @@ abstract class Templates
 			$showInactive = false;
 		}
 
-		$rexSQL = \rex_sql::factory();
+		if(!$this->sql) {
+			throw \Exception('no sql given');
+		}
+		$rexSQL = $this->sql;
 
 		$where = '';
 		$having = '';

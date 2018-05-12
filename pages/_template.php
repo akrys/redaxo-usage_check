@@ -35,6 +35,7 @@ $title->setVar('version', Config::VERSION);
 echo \rex_view::title($title->parse('fragments/title.php'));
 
 $templates = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Templates();
+$templates->setSql(\rex_sql::factory());
 if ($showAll) {
 	$templates->showAll($showAll);
 }

@@ -16,7 +16,10 @@ use \akrys\redaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 abstract class Pictures
+	extends BaseModule
 {
+	const TYPE = 'media';
+
 	/**
 	 * Anzeigemodus für "Alle Anzeigen"
 	 * @var boolean
@@ -48,7 +51,10 @@ abstract class Pictures
 			return false;
 		}
 
-		$rexSQL = \rex_sql::factory();
+		if(!$this->sql) {
+			throw \Exception('no sql given');
+		}
+		$rexSQL = $this->sql;
 
 		$sqlPartsYForm = $this->getYFormTableSQLParts();
 		$sqlPartsMeta = $this->getMetaTableSQLParts();
