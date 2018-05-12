@@ -16,22 +16,39 @@ namespace akrys\redaxo\addon\UsageCheck\Modules;
 class BaseModule
 {
 	/**
-	 *
+	 * rexSQL instanz
 	 * @var \rex_sql
 	 */
-	protected $rexSql;
+	private $rexSql;
 
 	/**
+	 * rex Instanz
+	 * @var \rex
+	 */
+	private $rex;
+
+	/**
+	 * rex_i18n Instanz
+	 * @var \rex_i18n
+	 */
+	private $rexI18n;
+
+	/**
+	 * sql-Instanz verwalten
 	 *
-	 * @return type
+	 * @return \rex_sql
 	 */
 	public function getRexSql()
 	{
+		if (!$this->rexSql) {
+			throw new \Exception('no sql given');
+		}
+
 		return $this->rexSql;
 	}
 
 	/**
-	 *
+	 * sql-Instanz verwalten
 	 * @param \rex_sql $sql
 	 * @return $this
 	 */
@@ -42,24 +59,31 @@ class BaseModule
 	}
 
 	/**
-	 *
+	 * getTable wird überll genutzt, darf aber lt. phpmd nicht statisch aufgerufen werden.
+	 * lt. phpmd sollte man nicht statisch drauf zugreifen
 	 * @param string $table
 	 * @return string
 	 */
 	protected function getTable($table)
 	{
-		$rex = new \rex;
-		return $rex->getTable($table);
+		if (!$this->rex) {
+			$this->rex = new \rex;
+		}
+		return $this->rex->getTable($table);
 	}
 
 	/**
-	 *
+	 * Übersetzungen
+	 * lt. phpmd sollte man nicht statisch drauf zugreifen
 	 * @param string $string
 	 * @return string
 	 */
 	protected function i18nRaw($string)
 	{
-		$rex = new \rex_i18n;
-		return $rex->rawMsg($string);
+		if (!$this->rexI18n) {
+			$this->rexI18n = new \rex_i18n;
+		}
+
+		return $this->rexI18n->rawMsg($string);
 	}
 }

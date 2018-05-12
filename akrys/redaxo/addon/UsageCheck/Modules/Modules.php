@@ -52,10 +52,7 @@ abstract class Modules
 			return false;
 		}
 
-		if(!$this->rexSql) {
-			throw \Exception('no sql given');
-		}
-		$rexSQL = $this->rexSql;
+		$rexSQL = $this->getRexSql();
 
 		$where = '';
 		if (!$showAll) {

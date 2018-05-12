@@ -26,10 +26,8 @@ class Pictures
 	protected function getYFormSQL(&$return)
 	{
 		$tabels = array();
-		if(!$this->rexSql) {
-			throw \Exception('no sql given');
-		}
-		$rexSQL = $this->rexSql;
+
+		$rexSQL = $this->getRexSql();
 
 		if (!\rex_addon::get('yform')->isAvailable()) {
 			return $tabels;
@@ -103,10 +101,7 @@ SQL;
 	 */
 	private function hasMultiple($yformFieldTable, $dbs = null)
 	{
-		if(!$this->rexSql) {
-			throw \Exception('no sql given');
-		}
-		$rexSQL = $this->rexSql;
+		$rexSQL = $this->getRexSql();
 
 		if (!isset($dbs)) { // Normalfall, wenn wir nicht gerade Unit-Tests laufen lassen
 			$dbs = \rex::getProperty('db');
@@ -406,10 +401,7 @@ SQL;
 	 */
 	protected function getMetaNames()
 	{
-		if(!$this->rexSql) {
-			throw \Exception('no sql given');
-		}
-		$rexSQL = $this->rexSql;
+		$rexSQL = $this->getRexSql();
 //		$articleTable = $this->getTable('article');
 		$metainfoFieldTable = $this->getTable('metainfo_field');
 		$metainfoTypeTable = $this->getTable('metainfo_type');

@@ -51,10 +51,7 @@ abstract class Pictures
 			return false;
 		}
 
-		if(!$this->rexSql) {
-			throw \Exception('no sql given');
-		}
-		$rexSQL = $this->rexSql;
+		$rexSQL = $this->getRexSql();
 
 		$sqlPartsYForm = $this->getYFormTableSQLParts();
 		$sqlPartsMeta = $this->getMetaTableSQLParts();
