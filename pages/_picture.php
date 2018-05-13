@@ -25,7 +25,7 @@ switch (rex_get('showall', 'string', "")) {
 		//
 		break;
 }
-$items = $pictures->getPictures();
+$items = $pictures->get();
 
 if ($items === false) {
 	$msg = \rex_i18n::rawMsg('akrys_usagecheck_no_rights');

@@ -38,11 +38,17 @@
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
-								<?php
-								$output = \rex_i18n::rawMsg('akrys_usagecheck_action_linktext_edit_code');
-								?>
+								<li>
+									<?php
+									$url = 'index.php?page=modules/actions&action_id='.$item['id'].'&function=edit';
+									$fragmet = new \rex_fragment([
+										'href' => $url,
+										'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_linktext_edit_code'),
+									]);
+									echo $fragmet->parse('fragments/link.php');
+									?>
 
-								<li><?= $this->actions->outputActionEdit($item, $output); ?></li>
+								</li>
 
 								<?php
 								if ($item['modul'] !== null) {

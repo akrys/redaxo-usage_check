@@ -3,17 +3,17 @@
 /**
  * Datei für ...
  *
- * @version       1.0 / 2018-05-12
+ * @version       1.0 / 2018-05-13
  * @author        akrys
  */
-namespace akrys\redaxo\addon\UsageCheck\Modules;
+namespace akrys\redaxo\addon\UsageCheck\Lib;
 
 /**
- * Description of BaseModule
+ * Description of RexBase
  *
  * @author akrys
  */
-class BaseModule
+class RexBase
 {
 	/**
 	 * rexSQL instanz
@@ -28,10 +28,12 @@ class BaseModule
 	private $rex;
 
 	/**
-	 * rex_i18n Instanz
-	 * @var \rex_i18n
+	 * Konstruktor
 	 */
-	private $rexI18n;
+	public function __construct()
+	{
+		//;
+	}
 
 	/**
 	 * sql-Instanz verwalten
@@ -70,20 +72,5 @@ class BaseModule
 			$this->rex = new \rex;
 		}
 		return $this->rex->getTable($table);
-	}
-
-	/**
-	 * Übersetzungen
-	 * lt. phpmd sollte man nicht statisch drauf zugreifen
-	 * @param string $string
-	 * @return string
-	 */
-	protected function i18nRaw($string)
-	{
-		if (!$this->rexI18n) {
-			$this->rexI18n = new \rex_i18n;
-		}
-
-		return $this->rexI18n->rawMsg($string);
 	}
 }

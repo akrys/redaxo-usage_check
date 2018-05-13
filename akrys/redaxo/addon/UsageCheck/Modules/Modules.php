@@ -16,24 +16,9 @@ use \akrys\redaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 class Modules
-	extends BaseModule
+	extends \akrys\redaxo\addon\UsageCheck\Lib\BaseModule
 {
 	const TYPE = 'modules';
-
-	/**
-	 * Anzeigemodus für "Alle Anzeigen"
-	 * @var boolean
-	 */
-	private $showAll = false;
-
-	/**
-	 * Anzeigemodus "alle zeigen" umstellen
-	 * @param boolean $bln
-	 */
-	public function showAll($bln)
-	{
-		$this->showAll = (boolean) $bln;
-	}
 
 	/**
 	 * Nicht genutze Module holen
@@ -43,22 +28,15 @@ class Modules
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
-	public function getModules()
+	public function get()
 	{
-		$showAll = $this->showAll;
-
 		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
 			//Permission::PERM_MODUL
 			return false;
 		}
 
 		$rexSQL = $this->getRexSql();
-
-		$where = '';
-		if (!$showAll) {
-			$where .= 'where s.id is null';
-		}
-		$sql = $this->getSQL($where);
+		$sql = $this->getSQL();
 
 		return $rexSQL->getArray($sql);
 	}
@@ -68,11 +46,15 @@ class Modules
 
 	/**
 	 * SQL generieren
-	 * @param string $where
 	 * @return string
 	 */
-	protected function getSQL($where)
+	protected function getSQL()
 	{
+		$where = '';
+		if (!$this->showAll) {
+			$where .= 'where s.id is null';
+		}
+
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
@@ -103,25 +85,5 @@ group by m.id
 
 SQL;
 		return $sql;
-	}
-
-	/**
-	 * Abfrage der Rechte für das Modul
-	 *
-	 * Unit Testing
-	 * Die Rechteverwaltung ist zu nah am RedaxoCore, um das auf die Schnelle simulieren zu können.
-	 * @codeCoverageIgnore
-	 *
-	 * @param array $item
-	 * @return boolean
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public function hasRights($item)
-	{
-		$user = \rex::getUser();
-		if (!$user->isAdmin() && !$user->getComplexPerm('modules')->hasPerm($item['id'])) {
-			return false;
-		}
-		return true;
 	}
 }

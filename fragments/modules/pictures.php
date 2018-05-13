@@ -17,7 +17,7 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 		foreach ($this->items['result'] as $item) {
 			$continue = false;
 			try {
-				$medium = $this->pictures->getMedium($item);
+				$medium = akrys\redaxo\addon\UsageCheck\Medium::get($item);
 			} catch (\Exception $e) {
 				continue;
 			}
@@ -87,7 +87,7 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 						$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
 					}
 
-					if (!$this->pictures->exists($item)) {
+					if (!akrys\redaxo\addon\UsageCheck\Medium::exists($item)) {
 						$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_found');
 					}
 

@@ -1,3 +1,6 @@
+<?php
+$user = \rex::getUser();
+?>
 
 <table class="table table-striped">
 	<thead>
@@ -50,17 +53,22 @@
 
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
-							<?php
-							$text = \rex_i18n::rawMsg('akrys_usagecheck_template_detail_heading');
-							?>
-
-							<strong><?= $text ?></strong>
+							<strong><?= \rex_i18n::rawMsg('akrys_usagecheck_template_detail_heading') ?></strong>
 							<ol>
-								<?php
-								$text = \rex_i18n::rawMsg('akrys_usagecheck_template_linktext_edit_code');
-								?>
 
-								<li><?= $this->templates->outputTemplateEdit($item, $text); ?></li>
+								<li>
+									<?php
+									if ($user->isAdmin()) {
+										$url = 'index.php?page=templates&function=edit&template_id='.$item['id'];
+
+										$fragmet = new \rex_fragment([
+											'href' => $url,
+											'text' => \rex_i18n::rawMsg('akrys_usagecheck_template_linktext_edit_code'),
+										]);
+										echo $fragmet->parse('fragments/link.php');
+									}
+									?>
+								</li>
 
 								<?php
 								if ($item['articles'] !== null) {
@@ -79,11 +87,12 @@
 											$articleReID = $articleID;
 										}
 
-										$hasPerm = $this->templates->hasArticlePerm($articleID);
+										$perm = \rex_structure_perm::get($user, 'structure');
+										$hasPerm = $perm->hasCategoryPerm($articleID);
 
 										if ($hasPerm) {
-											$href = 'index.php ? page = structure&article_id = '.$articleID.
-												'&function = edit_art&category_id = '.$articleReID.'&clang = '.$clang;
+											$href = 'index.php?page=structure&article_id='.$articleID.
+												'&function=edit_art&category_id='.$articleReID.'&clang='.$clang;
 											$linkText = $linkTextRaw;
 											$linkText = str_replace('$articleID$', $articleID, $linkText);
 											$linkText = str_replace('$articleName$', $articleName, $linkText);
@@ -98,7 +107,6 @@
 
 								//Templates, die in Templates verwendert werden, betrifft
 								//nur die Coder, und das wären Admins
-								$user = \rex::getUser();
 								$hasPerm = $user->isAdmin();
 								if ($hasPerm) {
 									if ($item['templates'] !== null) {
@@ -111,7 +119,7 @@
 											$id = $usage[0];
 											$name = $usage[1];
 
-											$href = $this->templates->getEditLink($id);
+											$href = 'index.php?page=templates&function=edit&template_id='.$id;
 											$linkText = $name;
 											$linkText = str_replace('$templateName$', $name, $linkText);
 											$linkText = str_replace('$templateID$', $item['id'], $linkText);

@@ -9,7 +9,6 @@
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
 use \akrys\redaxo\addon\UsageCheck\Permission;
-use \akrys\redaxo\addon\UsageCheck\Config;
 
 /**
  * Description of Modules
@@ -17,24 +16,9 @@ use \akrys\redaxo\addon\UsageCheck\Config;
  * @author akrys
  */
 class Actions
-	extends BaseModule
+	extends \akrys\redaxo\addon\UsageCheck\Lib\BaseModule
 {
 	const TYPE = 'actions';
-
-	/**
-	 * Anzeigemodus
-	 * @var boolean
-	 */
-	private $showAll = false;
-
-	/**
-	 * Anzeigemodus umstellen
-	 * @param boolean $bln
-	 */
-	public function showAll($bln)
-	{
-		$this->showAll = (boolean) $bln;
-	}
 
 	/**
 	 * Nicht genutze Module holen
@@ -45,14 +29,23 @@ class Actions
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
-	public function getActions()
+	public function get()
 	{
 		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
 			return false;
 		}
 
 		$rexSQL = $this->getRexSql();
+		$sql = $this->getSQL();
+		return $rexSQL->getArray($sql);
+	}
 
+	/**
+	 * SQL generieren
+	 * @return string
+	 */
+	protected function getSQL()
+	{
 		$where = '';
 		if (!$this->showAll) {
 			$where .= 'where ma.id is null';
@@ -79,25 +72,6 @@ $where
 group by a.id
 
 SQL;
-
-		return $rexSQL->getArray($sql);
-	}
-//
-///////////////////// Tmplementation aus RexV5 /////////////////////
-//
-
-	/**
-	 * Link Action Editieren
-	 * @param array $item
-	 * @param string $linkText
-	 */
-	public function outputActionEdit($item, $linkText)
-	{
-		$url = 'index.php?page=modules/actions&action_id='.$item['id'].'&function=edit';
-		$fragmet = new \rex_fragment([
-			'href' => $url,
-			'text' => $linkText,
-		]);
-		return $fragmet->parse('fragments/link.php');
+		return $sql;
 	}
 }

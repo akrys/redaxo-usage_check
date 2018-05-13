@@ -28,7 +28,7 @@ $title->setVar('supage_title', \rex_i18n::rawMsg('akrys_usagecheck_module_subpag
 $title->setVar('version', Config::VERSION);
 echo \rex_view::title($title->parse('fragments/title.php'));
 
-$items = $modules->getModules($showAll);
+$items = $modules->get($showAll);
 
 if ($items === false) {
 	$msg = \rex_i18n::rawMsg('akrys_usagecheck_no_rights');

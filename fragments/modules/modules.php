@@ -14,7 +14,7 @@ $structurePerm = \rex_structure_perm::get($user, 'structure')
 
 		<?php
 		foreach ($this->items as $item) {
-			if (!$this->modules->hasRights($item)) {
+			if (!$user->isAdmin() && !$user->getComplexPerm('modules')->hasPerm($item['id'])) {
 				continue;
 			}
 			?>

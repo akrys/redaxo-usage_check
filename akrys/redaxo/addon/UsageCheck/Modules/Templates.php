@@ -16,30 +16,15 @@ use \akrys\redaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 class Templates
-	extends BaseModule
+	extends \akrys\redaxo\addon\UsageCheck\Lib\BaseModule
 {
 	const TYPE = 'templates';
-
-	/**
-	 * Anzeigemodus für "Alle Anzeigen"
-	 * @var boolean
-	 */
-	private $showAll = false;
 
 	/**
 	 * Anzeigemodus für "Ianktive zeigen"
 	 * @var boolean
 	 */
 	private $showInactive = false;
-
-	/**
-	 * Anzeigemodus "alle zeigen" umstellen
-	 * @param boolean $bln
-	 */
-	public function showAll($bln)
-	{
-		$this->showAll = (boolean) $bln;
-	}
 
 	/**
 	 * Anzeigemodus "inaktive zeigen" umstellen
@@ -59,7 +44,7 @@ class Templates
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public function getTemplates()
+	public function get()
 	{
 		$showInactive = $this->showInactive;
 
@@ -75,19 +60,14 @@ class Templates
 
 		$rexSQL = $this->getRexSql();
 
-		$where = '';
-		$having = '';
-
-		$this->addParamCriteria($where, $having);
-		$this->addParamStatementKeywords($where, $having);
-		$sql = $this->getSQL($where, $having);
+		$sql = $this->getSQL();
 		$return = $rexSQL->getArray($sql);
 		// @codeCoverageIgnoreStart
 		//SQL-Fehler an der Stelle recht schwer zu testen, aber dennoch sinnvoll enthalten zu sein.
 		if (!$return) {
 			\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($rexSQL->getError());
 		}
-		// @codeCoverageIgnoreStart
+		// @codeCoverageIgnoreEnd
 
 		return $return;
 	}
@@ -130,50 +110,16 @@ class Templates
 	}
 
 	/**
-	 * Menüparameter ermittln
-	 * @param boolean $showAll
-	 * @param boolean $showInactive
-	 * @return array
-	 */
-	protected function getMenuParameter($showAll, $showInactive)
-	{
-		$return = array();
-
-		$text = $this->i18nRaw('akrys_usagecheck_template_link_show_unused');
-		$return['showAllParam'] = '';
-		$return['showAllParamCurr'] = '&showall=true';
-		$return['showAllLinktext'] = $text;
-		if (!$showAll) {
-			$text = $this->i18nRaw('akrys_usagecheck_template_link_show_all');
-			$return['showAllParam'] = '&showall=true';
-			$return['showAllParamCurr'] = '';
-			$return['showAllLinktext'] = $text;
-		}
-
-		$text = $this->i18nRaw('akrys_usagecheck_template_link_show_active');
-		$return['showInactiveParam'] = '';
-		$return['showInactiveParamCurr'] = '&showinactive=true';
-		$return['showInactiveLinktext'] = $text;
-		if (!$showInactive) {
-			$text = $this->i18nRaw('akrys_usagecheck_template_link_show_active_inactive');
-			$return['showInactiveParam'] = '&showinactive=true';
-			$return['showInactiveParamCurr'] = '';
-			$return['showInactiveLinktext'] = $text;
-		}
-		return $return;
-	}
-//
-///////////////////// Tmplementation aus RexV5 /////////////////////
-//
-
-	/**
 	 * SQL für Redaxo 5
-	 * @param string $where
-	 * @param string $having
 	 * @return string
 	 */
-	protected function getSQL($where, $having)
+	protected function getSQL()
 	{
+		$where = '';
+		$having = '';
+
+		$this->addParamCriteria($where, $having);
+		$this->addParamStatementKeywords($where, $having);
 
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
@@ -209,93 +155,5 @@ $having
 
 SQL;
 		return $sql;
-	}
-
-	/**
-	 * Menu-Ausgabe
-	 * @param string $subpage
-	 * @param boolean $showAll
-	 * @param boolean $showInactive
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public function getMenuFragmentParams($subpage, $showAll, $showInactive)
-	{
-		$param = $this->getMenuParameter($showAll, $showInactive);
-
-		$link = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
-			$param['showAllParam'].$param['showInactiveParamCurr'];
-
-		$adminLink = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
-			$param['showAllParamCurr'].$param['showInactiveParam'];
-
-		$links = [
-			[
-				'url' => $link,
-				'text' => $param['showAllLinktext'],
-				'admin' => false,
-			],
-			[
-				'url' => $adminLink,
-				'text' => $param['showInactiveLinktext'],
-				'admin' => true,
-			],
-		];
-
-		$texts = [
-			$this->i18nRaw('akrys_usagecheck_template_intro_text'),
-		];
-
-		$params = [
-			'links' => $links,
-			'texts' => $texts,
-			'user' => \rex::getUser(),
-		];
-		return $params;
-	}
-
-	/**
-	 * Edit-Link generieren
-	 * @param array $item
-	 * @param string $linkText
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public function outputTemplateEdit($item, $linkText)
-	{
-		$user = \rex::getUser();
-		if ($user->isAdmin()) {
-			$url = 'index.php?page=templates&function=edit&template_id='.$item['id'];
-
-			$fragmet = new \rex_fragment([
-				'href' => $url,
-				'text' => $linkText,
-			]);
-			return $fragmet->parse('fragments/link.php');
-		}
-		return '';
-	}
-
-	/**
-	 * ArticlePerm ermitteln
-	 * @param int $articleID
-	 * @return boolean
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public function hasArticlePerm($articleID)
-	{
-		$user = \rex::getUser();
-		$perm = \rex_structure_perm::get($user, 'structure');
-		$hasPerm = $perm->hasCategoryPerm($articleID);
-
-		return $hasPerm;
-	}
-
-	/**
-	 * Template-EditLink zusammenbauen
-	 * @param int $tplID
-	 * @return string
-	 */
-	public function getEditLink($tplID)
-	{
-		return 'index.php?page=templates&function=edit&template_id='.$tplID;
 	}
 }
