@@ -3,6 +3,7 @@ akrys_usagecheck_picture = Pictures
 akrys_usagecheck_module = Modules
 akrys_usagecheck_action = Actions
 akrys_usagecheck_templates = Templates
+akrys_usagecheck_details = Item Details
 akrys_usagecheck_changelog = Change log
 
 akrys_usagecheck_no_rights = You don't have the permission to enter this page.
@@ -85,3 +86,5 @@ akrys_usagecheck_changelog_header_date = Date
 akrys_usagecheck_changelog_header_changes = Changes
 
 akrys_usagecheck_error_content_file_not_found = This file should be shown, but it wasn't found
+
+akrys_usagecheck_details_no_data = No data available.

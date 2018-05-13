@@ -73,6 +73,23 @@ class Templates
 	}
 
 	/**
+	 * Details zu einem Eintrag holen
+	 * @param int $item_id
+	 * @return array
+	 */
+	public function getDetails(/* int */$item_id)
+	{
+		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
+			//Permission::PERM_TEMPLATE
+			return false;
+		}
+
+		$rexSQL = $this->getRexSql();
+		$sql = $this->getSQL($item_id);
+		return $rexSQL->getArray($sql);
+	}
+
+	/**
 	 * Parameter-Kriterien anwenden.
 	 *
 	 * Die Funktion dient der Komplexitätsminderung, die von phpmd angemahnt wurde.
@@ -111,9 +128,10 @@ class Templates
 
 	/**
 	 * SQL für Redaxo 5
+	 * @param int $detail_id
 	 * @return string
 	 */
-	protected function getSQL()
+	protected function getSQL(/* int */$detail_id = null)
 	{
 		$where = '';
 		$having = '';

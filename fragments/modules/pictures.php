@@ -111,29 +111,11 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 					}
 
 					if (count($errors) > 0) {
-						$text = '';
-						foreach ($errors as $error) {
-							if (trim($error) !== '') {
-								$fragment = new \rex_fragment([
-									'text' => $error,
-								]);
-
-								$text .= $fragment->parse('fragments/msg/tagged_msg.php');
-							}
-						}
-						$fragment = new \rex_fragment([
-							'text' => $text,
-						]);
-						echo $fragment->parse('fragments/msg/error.php');
+						$fragment = new rex_fragment(['msg' => $errors]);
+						echo $fragment->parse('msg/error_box.php');
 					} else {
-						$fragment = new \rex_fragment([
-							'text' => \rex_i18n::rawMsg('akrys_usagecheck_images_msg_used'),
-						]);
-
-						$fragment = new \rex_fragment([
-							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
-						]);
-						echo $fragment->parse('fragments/msg/info.php');
+						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_images_msg_used')]]);
+						echo $fragment->parse('msg/info_box.php');
 					}
 					?>
 
@@ -149,6 +131,15 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 
 								<?php
 								if ($item['slice_data'] !== null) {
+									$type = akrys\redaxo\addon\UsageCheck\Modules\Pictures::TYPE;
+									$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
+									?>
+
+									<a href="<?= $url; ?>">
+										zur Detail-Seite des Eintrags
+									</a>
+
+									<?php
 									$usages = explode("\n", $item['slice_data']);
 
 									$index = 'akrys_usagecheck_images_linktext_edit_in_slice';

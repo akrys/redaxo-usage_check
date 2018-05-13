@@ -40,15 +40,33 @@ class Modules
 
 		return $rexSQL->getArray($sql);
 	}
+
+	/**
+	 * Details zu einem Eintrag holen
+	 * @param int $item_id
+	 * @return array
+	 */
+	public function getDetails($item_id)
+	{
+		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
+			//Permission::PERM_MODUL
+			return false;
+		}
+
+		$rexSQL = $this->getRexSql();
+		$sql = $this->getSQL($item_id);
+		return $rexSQL->getArray($sql);
+	}
 //
 ///////////////////// Tmplementation aus RexV5 /////////////////////
 //
 
 	/**
 	 * SQL generieren
+	 * @param int $detail_id
 	 * @return string
 	 */
-	protected function getSQL()
+	protected function getSQL(/* int */$detail_id = null)
 	{
 		$where = '';
 		if (!$this->showAll) {

@@ -23,7 +23,6 @@ class Actions
 	/**
 	 * Nicht genutze Module holen
 	 *
-	 * @param boolean $show_all
 	 * @return array
 	 *
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
@@ -41,10 +40,27 @@ class Actions
 	}
 
 	/**
+	 * Details zu einem Eintrag holen
+	 * @param int $item_id
+	 * @return array
+	 */
+	public function getDetails($item_id)
+	{
+		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
+			return false;
+		}
+
+		$rexSQL = $this->getRexSql();
+		$sql = $this->getSQL($item_id);
+		return $rexSQL->getArray($sql);
+	}
+
+	/**
 	 * SQL generieren
+	 * @param int $detail_id
 	 * @return string
 	 */
-	protected function getSQL()
+	protected function getSQL(/* int */$detail_id = null)
 	{
 		$where = '';
 		if (!$this->showAll) {

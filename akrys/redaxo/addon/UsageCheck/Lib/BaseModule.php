@@ -23,6 +23,12 @@ abstract class BaseModule
 	protected $showAll = false;
 
 	/**
+	 *
+	 * @var type
+	 */
+	protected $detailId = null;
+
+	/**
 	 * Anzeigemodus umstellen
 	 * @param boolean $bln
 	 */
@@ -39,7 +45,15 @@ abstract class BaseModule
 
 	/**
 	 * SQL genereieren
+	 * @param int $datail_id
 	 * @return array
 	 */
-	abstract protected function getSQL();
+	abstract protected function getSQL(/* int */$datail_id = null);
+
+	/**
+	 * Details holen
+	 * @param int $item_id
+	 * @return array
+	 */
+	abstract public function getDetails(/* int */$item_id);
 }

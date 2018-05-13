@@ -56,17 +56,37 @@ class Pictures
 		$sql = $this->getSQL();
 		return array('result' => $rexSQL->getArray($sql), 'fields' => $this->tableFields);
 	}
+
+	/**
+	 * Details zu einem Eintrag holen
+	 * @param int $item_id
+	 * @return array
+	 */
+	public function getDetails($item_id)
+	{
+		if (!Permission::getInstance()->check(Permission::PERM_MEDIA)) {
+			return false;
+		}
+
+		$rexSQL = $this->getRexSql();
+		if (!isset($this->yform)) {
+			$this->yform = new \akrys\redaxo\addon\UsageCheck\Lib\PictureYFrom($this);
+			$this->yform->setRexSql($rexSQL);
+		}
+
+		$sql = $this->getSQL($item_id);
+		return $rexSQL->getArray($sql);
+	}
 //
 ///////////////////// Tmplementation aus RexV5 /////////////////////
 //
 
-
-
 	/**
 	 * Spezifisches SQL für redaxo 5
+	 * @param int $detail_id
 	 * @return string
 	 */
-	protected function getSQL()
+	protected function getSQL(/* int */$detail_id = null)
 	{
 		$sqlPartsYForm = $this->yform->getYFormTableSQLParts();
 		$sqlPartsMeta = $this->getMetaTableSQLParts();
@@ -92,17 +112,9 @@ class Pictures
 		$articleSliceTable = $this->getTable('article_slice');
 		$articleTable = $this->getTable('article');
 
-		$sql = <<<SQL
-SELECT f.*,count(s.id) as count,
-group_concat(distinct concat(
-	cast(s.id as char),"\\t",
-	cast(s.article_id as char),"\\t",
-	a.name,"\\t",
-	cast(s.clang_id as char),"\\t",
-	cast(s.ctype_id as char)
-) Separator "\\n") as slice_data
-
-$additionalSelect
+		$sql = 'SELECT f.*,';
+		$sql .= $this->addGroupFields($detail_id, $additionalSelect);
+		$sql .= <<<SQL
 
 FROM $mediaTable f
 left join `$articleSliceTable` s on (
@@ -134,17 +146,55 @@ $additionalJoins
 
 SQL;
 
-		if (!$this->showAll) {
-			$sql .= 'where s.id is null ';
-			$havingClauses[] = 'metaCatIDs is null and metaArtIDs is null and metaMedIDs is null';
-		}
+		if (!isset($detail_id)) {
+			if (!$this->showAll) {
+				$sql .= 'where s.id is null ';
+				$havingClauses[] = 'metaCatIDs is null and metaArtIDs is null and metaMedIDs is null';
+			}
 
-		$sql .= 'group by f.filename ';
-
-		if (!$this->showAll && isset($havingClauses) && count($havingClauses) > 0) {
-			$sql .= 'having '.implode(' and ', $havingClauses).'';
+			$sql .= 'group by f.filename ';
+			if (!$this->showAll && isset($havingClauses) && count($havingClauses) > 0) {
+				$sql .= 'having '.implode(' and ', $havingClauses).'';
+			}
+		} else {
+			$sql.='where f.id = '.$this->getRexSql()->escape($detail_id);
 		}
 		return $sql;
+	}
+
+	/**
+	 * Felder - Grupppierung
+	 * @param int $detail_id
+	 * @param string $additionalSelect
+	 * @return string
+	 */
+	private function addGroupFields($detail_id, $additionalSelect)
+	{
+		if (isset($detail_id)) {
+			return <<<SQL
+
+	s.id as s_id,
+	s.article_id as s_article_id,
+	a.name as a_name,
+	s.clang_id as s_clang_id,
+	s.ctype_id as s_ctype_id
+
+SQL;
+		}
+
+		return <<<SQL
+count(s.id) as count,
+group_concat(distinct concat(
+	cast(s.id as char),"\\t",
+	cast(s.article_id as char),"\\t",
+	a.name,"\\t",
+	cast(s.clang_id as char),"\\t",
+	cast(s.ctype_id as char)
+) Separator "\\n") as slice_data
+
+$additionalSelect
+
+SQL;
 	}
 
 	/**

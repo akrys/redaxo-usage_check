@@ -16,11 +16,22 @@
 				<td>
 					<?php
 					if ($item['modul'] === null) {
-						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_action_msg_not_used')]]);
-						echo $fragment->parse('msg/error_box.php');
+						$fragment = new \rex_fragment([
+							'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_msg_not_used'),
+						]);
+						$fragment = new \rex_fragment([
+							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+						]);
+						echo $fragment->parse('fragments/msg/error.php');
 					} else {
-						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_action_msg_used')]]);
-						echo $fragment->parse('msg/info_box.php');
+						$fragment = new \rex_fragment([
+							'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_msg_used'),
+						]);
+
+						$fragment = new \rex_fragment([
+							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+						]);
+						echo $fragment->parse('fragments/msg/info.php');
 					}
 					?>
 

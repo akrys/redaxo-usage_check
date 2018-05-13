@@ -148,4 +148,28 @@ class Error
 		throw new Exception\CloneException();
 	}
 // </editor-fold>
+
+	/**
+	 *
+	 * @param type $messages
+	 */
+	public static function getMessageOutputFragment($messages)
+	{
+
+		$text = '';
+		foreach ($messages as $error) {
+			if (trim($error) !== '') {
+				$fragment = new \rex_fragment([
+					'text' => $error,
+				]);
+
+				$text .= $fragment->parse('fragments/msg/tagged_msg.php');
+			}
+		}
+		$fragment = new \rex_fragment([
+			'text' => $text,
+		]);
+
+		return $fragment;
+	}
 }
