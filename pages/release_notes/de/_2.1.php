@@ -7,4 +7,5 @@
 		Bugfix: Sofern die Sprache weder Deutsch noch Englisch ist, sollten die englischen Texte genommen werden.<br />
 		(Für die Menüpunkte ist das leider nicht möglich)
 	</li>
+	<li>Detailseite für Bilder. Dort wird <tt>group_concat</tt> mit den dazu gehörigen Nebenwirkungen nicht mehr genutzt.</li>
 </ul>

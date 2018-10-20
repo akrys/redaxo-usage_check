@@ -75,7 +75,37 @@ class Pictures
 		}
 
 		$sql = $this->getSQL($item_id);
-		return $rexSQL->getArray($sql);
+		$res = $rexSQL->getArray($sql);
+		$result = [];
+		foreach ($res as $articleData) {
+			if (isset($articleData['usagecheck_s_id']) && (int) $articleData['usagecheck_s_id'] > 0) {
+				$result['slices'][$articleData['usagecheck_s_id']] = $articleData;
+			}
+
+			if (isset($articleData['usagecheck_metaArtIDs']) && (int) $articleData['usagecheck_metaArtIDs'] > 0) {
+				$result['art_meta'][$articleData['usagecheck_art_id'].'_'.$articleData['usagecheck_art_clang']] = $articleData;
+			}
+
+			if (isset($articleData['usagecheck_metaCatIDs']) && (int) $articleData['usagecheck_metaCatIDs'] > 0) {
+				$result['cat_meta'][$articleData['usagecheck_cat_id'].'_'.$articleData['usagecheck_cat_clang']] = $articleData;
+			}
+
+			if (isset($articleData['usagecheck_metaMedIDs']) && (int) $articleData['usagecheck_metaMedIDs'] > 0) {
+				$result['media_meta'][$articleData['usagecheck_med_id']] = $articleData;
+			}
+
+			foreach ($this->tableFields as $table => $field) {
+				if (!isset($articleData['usagecheck_'.$table.'_id'])) {
+					continue;
+				}
+				$result['yform'][$table][$field[0]['table_out']][$articleData['usagecheck_'.$table.'_id']] = $articleData;
+			}
+		}
+		return [
+			'first' => $res[0],
+			'result' => $result,
+			'fields' => $this->tableFields,
+		];
 	}
 //
 ///////////////////// Tmplementation aus RexV5 /////////////////////
@@ -88,8 +118,8 @@ class Pictures
 	 */
 	protected function getSQL(/* int */$detail_id = null)
 	{
-		$sqlPartsYForm = $this->yform->getYFormTableSQLParts();
-		$sqlPartsMeta = $this->getMetaTableSQLParts();
+		$sqlPartsYForm = $this->yform->getYFormTableSQLParts($detail_id);
+		$sqlPartsMeta = $this->getMetaTableSQLParts($detail_id);
 
 		$havingClauses = array();
 		$additionalSelect = '';
@@ -112,7 +142,7 @@ class Pictures
 		$articleSliceTable = $this->getTable('article_slice');
 		$articleTable = $this->getTable('article');
 
-		$sql = 'SELECT f.*,';
+		$sql = 'SELECT f.*';
 		$sql .= $this->addGroupFields($detail_id, $additionalSelect);
 		$sql .= <<<SQL
 
@@ -149,7 +179,7 @@ SQL;
 		if (!isset($detail_id)) {
 			if (!$this->showAll) {
 				$sql .= 'where s.id is null ';
-				$havingClauses[] = 'metaCatIDs is null and metaArtIDs is null and metaMedIDs is null';
+				$havingClauses[] = ' ifnull(usagecheck_metaCatIDs, 0) = 0 and ifnull(usagecheck_metaArtIDs, 0) = 0 and ifnull(usagecheck_metaMedIDs, 0) = 0';
 			}
 
 			$sql .= 'group by f.filename ';
@@ -157,7 +187,7 @@ SQL;
 				$sql .= 'having '.implode(' and ', $havingClauses).'';
 			}
 		} else {
-			$sql.='where f.id = '.$this->getRexSql()->escape($detail_id);
+			$sql .= 'where f.id = '.$this->getRexSql()->escape($detail_id);
 		}
 		return $sql;
 	}
@@ -172,19 +202,21 @@ SQL;
 	{
 		if (isset($detail_id)) {
 			return <<<SQL
+	,
+	s.id as usagecheck_s_id,
+	s.article_id as usagecheck_s_article_id,
+	a.name as usagecheck_a_name,
+	s.clang_id as usagecheck_s_clang_id,
+	s.ctype_id as usagecheck_s_ctype_id
 
-	s.id as s_id,
-	s.article_id as s_article_id,
-	a.name as a_name,
-	s.clang_id as s_clang_id,
-	s.ctype_id as s_ctype_id
-
+	$additionalSelect
 SQL;
 		}
 
+
 		return <<<SQL
-count(s.id) as count,
-group_concat(distinct concat(
+, count(s.id) as count
+		, group_concat(distinct concat(
 	cast(s.id as char),"\\t",
 	cast(s.article_id as char),"\\t",
 	a.name,"\\t",
@@ -230,10 +262,11 @@ SQL;
 	/**
 	 * SQL Parts für die Metadaten innerhalb von Redaxo5 generieren
 	 *
+	 * @param int $detail_id
 	 * @return array
 	 * @SuppressWarnings(PHPMD.ElseExpression)
 	 */
-	private function getMetaTableSQLParts()
+	private function getMetaTableSQLParts(/* int */ $detail_id = null)
 	{
 		$return = array(
 			'additionalSelect' => '',
@@ -273,9 +306,9 @@ SQL;
 			}
 		}
 
-		$this->addArtSelectAndJoinStatements($return, $joinArtMeta);
-		$this->addCatSelectAndJoinStatements($return, $joinCatMeta);
-		$this->addMedSelectAndJoinStatements($return, $joinMedMeta);
+		$this->addArtSelectAndJoinStatements($return, $joinArtMeta, $detail_id);
+		$this->addCatSelectAndJoinStatements($return, $joinCatMeta, $detail_id);
+		$this->addMedSelectAndJoinStatements($return, $joinMedMeta, $detail_id);
 
 		return $return;
 	}
@@ -287,14 +320,27 @@ SQL;
 	 *
 	 * @param array &$return
 	 * @param string $joinArtMeta
+	 * @param int $detail_id
 	 */
-	private function addArtSelectAndJoinStatements(&$return, $joinArtMeta)
+	private function addArtSelectAndJoinStatements(&$return, $joinArtMeta, $detail_id = null)
 	{
-		$selectMetaNull = ',null as metaArtIDs '.PHP_EOL;
-		$selectMetaNotNull = ',group_concat(distinct concat('.
-			'rex_article_art_meta.id,"\t",'.
-			'rex_article_art_meta.name,"\t",'.
-			'rex_article_art_meta.clang_id) Separator "\n") as metaArtIDs '.PHP_EOL;
+		$selectMetaNull = ',0 as usagecheck_metaArtIDs '.PHP_EOL;
+		if (!$detail_id) {
+			$selectMetaNotNull = ',group_concat(distinct concat('.
+				'rex_article_art_meta.id,"\t",'.
+				'rex_article_art_meta.name,"\t",'.
+				'rex_article_art_meta.clang_id,"\t") Separator "\n") as usagecheck_metaArtIDs '.PHP_EOL;
+
+			//Vorbereitung: Link-Wüste auf der Übersichtsseite vermeiden
+//			$selectMetaNotNull = ',1 as usagecheck_metaArtIDs '.PHP_EOL;
+		} else {
+			$selectMetaNotNull = <<<SQL
+				, rex_article_art_meta.id is not null as usagecheck_metaArtIDs
+				,rex_article_art_meta.id usagecheck_art_id,
+				rex_article_art_meta.name usagecheck_art_name,
+				rex_article_art_meta.clang_id usagecheck_art_clang
+SQL;
+		}
 		$return['additionalSelect'] .= $joinArtMeta == '' ? $selectMetaNull : $selectMetaNotNull;
 
 		if ($joinArtMeta != '') {
@@ -310,15 +356,29 @@ SQL;
 	 *
 	 * @param array &$return
 	 * @param string $joinCatMeta
+	 * @param int $detail_id
 	 */
-	private function addCatSelectAndJoinStatements(&$return, $joinCatMeta)
+	private function addCatSelectAndJoinStatements(&$return, $joinCatMeta, /* int */ $detail_id = null)
 	{
-		$selectMetaNull = ',null as metaCatIDs '.PHP_EOL;
-		$selectMetaNotNull = ',group_concat(distinct concat('.
-			'rex_article_cat_meta.id,"\t",'.
-			'rex_article_cat_meta.catname,"\t",'.
-			'rex_article_cat_meta.clang_id,"\t",'.
-			'rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
+		$selectMetaNull = ',0 as usagecheck_metaCatIDs '.PHP_EOL;
+		if (!$detail_id) {
+			$selectMetaNotNull = ',group_concat(distinct concat('.
+				'rex_article_cat_meta.id,"\t",'.
+				'rex_article_cat_meta.catname,"\t",'.
+				'rex_article_cat_meta.clang_id,"\t",'.
+				'rex_article_cat_meta.parent_id) Separator "\n") as usagecheck_metaCatIDs '.PHP_EOL;
+
+			//Vorbereitung: Link-Wüste auf der Übersichtsseite vermeiden
+//			$selectMetaNotNull = ', 1 as usagecheck_metaCatIDs '.PHP_EOL;
+		} else {
+			$selectMetaNotNull = <<<SQL
+				, rex_article_cat_meta.id is not null as usagecheck_metaCatIDs
+				,rex_article_cat_meta.id usagecheck_cat_id,
+				rex_article_cat_meta.catname usagecheck_cat_name,
+				rex_article_cat_meta.clang_id usagecheck_cat_clang,
+				rex_article_cat_meta.parent_id usagecheck_cat_parent_id
+SQL;
+		}
 
 		$return['additionalSelect'] .= $joinCatMeta == '' ? $selectMetaNull : $selectMetaNotNull;
 
@@ -335,16 +395,28 @@ SQL;
 	 *
 	 * @param array &$return
 	 * @param string $joinMedMeta
+	 * @param int $detail_id
 	 */
-	private function addMedSelectAndJoinStatements(&$return, $joinMedMeta)
+	private function addMedSelectAndJoinStatements(&$return, $joinMedMeta, /* int */ $detail_id = null)
 	{
-		$selectMetaNull = ',null as metaMedIDs '.PHP_EOL;
-		$selectMetaNotNull = ',group_concat(distinct concat('.
-			'rex_article_med_meta.id,"\t",'.
-			'rex_article_med_meta.category_id,"\t",'.
-			'rex_article_med_meta.filename'.
-			') Separator "\n") as metaMedIDs '.PHP_EOL;
+		$selectMetaNull = ',0 as usagecheck_metaMedIDs '.PHP_EOL;
+		if (!$detail_id) {
+			$selectMetaNotNull = ',group_concat(distinct concat('.
+				'rex_article_med_meta.id,"\t",'.
+				'rex_article_med_meta.category_id,"\t",'.
+				'rex_article_med_meta.filename'.
+				') Separator "\n") as usagecheck_metaMedIDs '.PHP_EOL;
 
+			//Vorbereitung: Link-Wüste auf der Übersichtsseite vermeiden
+//			$selectMetaNotNull = ',1 as usagecheck_metaMedIDs '.PHP_EOL;
+		} else {
+			$selectMetaNotNull = <<<SQL
+				,rex_article_med_meta.id is not null as usagecheck_metaMedIDs
+				,rex_article_med_meta.id usagecheck_med_id,
+				rex_article_med_meta.category_id usagecheck_med_cat_id,
+				rex_article_med_meta.filename usagecheck_med_filename
+SQL;
+		}
 		$return['additionalSelect'] .= $joinMedMeta == '' ? $selectMetaNull : $selectMetaNotNull;
 
 		if ($joinMedMeta != '') {

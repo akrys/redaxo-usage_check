@@ -7,4 +7,5 @@
 		Bugfix: If the langauge is something different than German or Englisch, the english texts should appear.<br />
 		(This is not possible for the menu)
 	</li>
+	<li>Building a detail page for images avoiding <tt>group_concat</tt> which could be buggy.</li>
 </ul>

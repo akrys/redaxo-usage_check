@@ -57,7 +57,7 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 
 					<?php
 					$used = false;
-					if ($item['slice_data'] !== null) {
+					if ($item['count'] > 0) {
 						$used = true;
 					}
 
@@ -70,15 +70,15 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 						}
 					}
 
-					if ($item['metaArtIDs'] !== null) {
+					if ($item['usagecheck_metaArtIDs'] > 0) {
 						$used = true;
 					}
 
-					if ($item['metaCatIDs'] !== null) {
+					if ($item['usagecheck_metaCatIDs'] > 0) {
 						$used = true;
 					}
 
-					if ($item['metaMedIDs'] !== null) {
+					if ($item['usagecheck_metaMedIDs'] > 0) {
 						$used = true;
 					}
 
@@ -130,16 +130,16 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 								<li><a href="<?= $url ?>" target="_blank"><?= $linkText; ?></a><br /></li>
 
 								<?php
+								$type = akrys\redaxo\addon\UsageCheck\Modules\Pictures::TYPE;
+								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
+								?>
+
+								<a href="<?= $url; ?>">
+									zur Detail-Seite des Eintrags
+								</a>
+
+								<?php
 								if ($item['slice_data'] !== null) {
-									$type = akrys\redaxo\addon\UsageCheck\Modules\Pictures::TYPE;
-									$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
-									?>
-
-									<a href="<?= $url; ?>">
-										zur Detail-Seite des Eintrags
-									</a>
-
-									<?php
 									$usages = explode("\n", $item['slice_data']);
 
 									$index = 'akrys_usagecheck_images_linktext_edit_in_slice';
@@ -172,9 +172,11 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 										unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
 									}
 								}
+								?>
 
-								if ($item['metaArtIDs'] !== null) {
-									$usages = explode("\n", $item['metaArtIDs']);
+								<?php
+								if (isset($item['usagecheck_metaArtIDs']) && (int) $item['usagecheck_metaArtIDs'] > 0) {
+									$usages = explode("\n", $item['usagecheck_metaArtIDs']);
 									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_art';
 									$linkTextRaw = \rex_i18n::rawMsg($index);
 									foreach ($usages as $usage) {
@@ -204,9 +206,8 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 									}
 								}
 
-								if ($item['metaCatIDs'] !== null) {
-									$usages = explode("\n", $item['metaCatIDs']);
-
+								if (isset($item['usagecheck_metaCatIDs']) && (int) $item['usagecheck_metaCatIDs'] > 0) {
+									$usages = explode("\n", $item['usagecheck_metaCatIDs']);
 									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_cat';
 									$linkTextRaw = \rex_i18n::rawMsg($index);
 									foreach ($usages as $usage) {
@@ -238,11 +239,11 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 									}
 								}
 
-								if ($item['metaMedIDs'] !== null) {
+								if (isset($item['usagecheck_metaMedIDs']) && (int) $item['usagecheck_metaMedIDs'] > 0) {
 									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_med';
 									$linkTextRaw = \rex_i18n::rawMsg($index);
 
-									$usages = explode("\n", $item['metaMedIDs']);
+									$usages = explode("\n", $item['usagecheck_metaMedIDs']);
 									foreach ($usages as $usage) {
 										$mediaData = explode("\t", $usage);
 
@@ -266,7 +267,6 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 										unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
 									}
 								}
-
 
 								$index = 'akrys_usagecheck_images_linktext_edit_in_yformtable';
 								$linkTextRaw = \rex_i18n::rawMsg($index);
@@ -312,9 +312,9 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 						<span>
 
 							<?php
-							/* @var $medium rex_media */
-							$medium = rex_media::get($item['filename']);
 							/* @var $initCat rex_media_category */
+							/* @var $medium rex_media */
+
 							$initCat = $medium->getCategory();
 
 							if (isset($initCat)) {
@@ -337,7 +337,6 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 										/
 										<?php
 									}
-
 									$url = 'index.php?page=mediapool&rex_file_category='.$initCat->getId();
 									$linkText = $initCat->getName();
 									?>
