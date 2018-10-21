@@ -42,7 +42,7 @@
 								<?php
 								if ($item['modul'] !== null) {
 									$usages = explode("\n", $item['modul']);
-									$idex = 'akrys_usagecheck_action_linktext_edit_in_modul';
+									$index = 'akrys_usagecheck_action_linktext_edit_in_modul';
 									$linkTextRaw = \rex_i18n::rawMsg($index);
 									foreach ($usages as $usageRaw) {
 										$usage = (explode("\t", $usageRaw));

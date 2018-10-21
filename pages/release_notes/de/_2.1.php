@@ -8,4 +8,5 @@
 		(Für die Menüpunkte ist das leider nicht möglich)
 	</li>
 	<li>Detailseite für Bilder. Dort wird <tt>group_concat</tt> mit den dazu gehörigen Nebenwirkungen nicht mehr genutzt.</li>
+	<li>Bugfix falscher Index bei einer Übersetzung auf der Aktionen-Seite</li>
 </ul>

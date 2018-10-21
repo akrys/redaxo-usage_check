@@ -8,4 +8,5 @@
 		(This is not possible for the menu)
 	</li>
 	<li>Building a detail page for images avoiding <tt>group_concat</tt> which could be buggy.</li>
+	<li>Bugfix translation index on action page</li>
 </ul>
