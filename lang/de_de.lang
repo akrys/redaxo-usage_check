@@ -8,6 +8,8 @@ akrys_usagecheck_changelog = Change log
 
 akrys_usagecheck_no_rights = Sie haben keine ausreichenden Rechte, diese Seite aufzurufen.
 
+akrys_usagecheck_linktext_detail_page = zur Detail-Seite des Eintrags
+
 akrys_usagecheck_overview_subpagetitle = Übersicht
 akrys_usagecheck_overview_intro = Dieses Addon sucht nach Bildern, Module und Templates, die nicht verwendet werden.
 akrys_usagecheck_overview_images_title = Modul: Bilder

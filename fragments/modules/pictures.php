@@ -56,72 +56,19 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 				<td style="width:75%;">
 
 					<?php
-					$used = false;
-					if ($item['count'] > 0) {
-						$used = true;
-					}
-
-					$table = '';
-					foreach ($this->items['fields'] as $tablename => $field) {
-						if ($item[$tablename] !== null) {
-							$used = true;
-							$table = $tablename;
-							break;
-						}
-					}
-
-					if ($item['usagecheck_metaArtIDs'] > 0) {
-						$used = true;
-					}
-
-					if ($item['usagecheck_metaCatIDs'] > 0) {
-						$used = true;
-					}
-
-					if ($item['usagecheck_metaMedIDs'] > 0) {
-						$used = true;
-					}
-
-					$errors = array();
-					if ($used === false) {
-						$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
-					}
-
-					if (!akrys\redaxo\addon\UsageCheck\Medium::exists($item)) {
-						$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_found');
-					}
-
-					//Ob ein Medium lt. Medienpool in Nutzung ist, brauchen wir nur zu prüfen,
-					//wenn wir glauben, dass die Datei ungenutzt ist.
-					//Vielleicht wird sie ja dennoch verwendet ;-)
-					//
-					//Hier wird die Funktion verwendet, die auch beim Löschen von Medien aus dem Medienpool aufgerufen
-					//wird.
-					//
-					//ACHTUNG:
-					//XAMPP 5.6.14-4 mit MariaDB unter MacOS hat ein falsch kompiliertes PCRE-Mdoul an Bord, so dass
-					//alle REGEXP-Abfragen abstürzen.
-					//Der Fehler liegt also nicht hier, und auch nicht im Redaxo-Core
-					if (!$used) {
-						$used = rex_mediapool_mediaIsInUse($medium->getFileName());
-
-						if ($used) {
-							$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_in_use');
-						}
-					}
-
-					if (count($errors) > 0) {
-						$fragment = new rex_fragment(['msg' => $errors]);
-						echo $fragment->parse('msg/error_box.php');
-					} else {
-						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_images_msg_used')]]);
-						echo $fragment->parse('msg/info_box.php');
-					}
+						echo \akrys\redaxo\addon\UsageCheck\Modules\Pictures::showUsedInfo($item, $this->items['fields']);
 					?>
 
 					<div class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
+								<?php
+								$type = akrys\redaxo\addon\UsageCheck\Modules\Pictures::TYPE;
+								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
+								?>
+
+								<li><a href="<?= $url; ?>"><?= \rex_i18n::rawMsg('akrys_usagecheck_linktext_detail_page') ?></a></li>
+
 								<?php
 								$url = 'index.php?page=mediapool&subpage=detail&file_name='.$item['filename'];
 								$linkText = \rex_i18n::rawMsg('akrys_usagecheck_images_linktext_edit');
@@ -130,180 +77,171 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 								<li><a href="<?= $url ?>" target="_blank"><?= $linkText; ?></a><br /></li>
 
 								<?php
-								$type = akrys\redaxo\addon\UsageCheck\Modules\Pictures::TYPE;
-								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
-								?>
-
-								<a href="<?= $url; ?>">
-									zur Detail-Seite des Eintrags
-								</a>
-
-								<?php
 								/*
-								if ($item['slice_data'] !== null) {
-									$usages = explode("\n", $item['slice_data']);
+								  if ($item['slice_data'] !== null) {
+								  $usages = explode("\n", $item['slice_data']);
 
-									$index = 'akrys_usagecheck_images_linktext_edit_in_slice';
-									$linkTextRaw = \rex_i18n::rawMsg($index);
-									foreach ($usages as $usage) {
-										$articleData = explode("\t", $usage);
+								  $index = 'akrys_usagecheck_images_linktext_edit_in_slice';
+								  $linkTextRaw = \rex_i18n::rawMsg($index);
+								  foreach ($usages as $usage) {
+								  $articleData = explode("\t", $usage);
 
-										//s.id,"\\t",s.article_id,"\\t",s.clang,"\\t",s.ctype
-										$sliceID = $articleData[0];
-										$articleID = $articleData[1];
-										$articleName = $articleData[2];
-										$clang = $articleData[3];
-										$ctype = $articleData[4];
+								  //s.id,"\\t",s.article_id,"\\t",s.clang,"\\t",s.ctype
+								  $sliceID = $articleData[0];
+								  $articleID = $articleData[1];
+								  $articleName = $articleData[2];
+								  $clang = $articleData[3];
+								  $ctype = $articleData[4];
 
-										$hasPerm = $structurePerm->hasCategoryPerm($articleID);
-										if ($hasPerm) {
-											$linkText = $linkTextRaw;
-											$linkText = str_replace('$sliceID$', $sliceID, $linkText);
-											$linkText = str_replace('$articleName$', $articleName, $linkText);
+								  $hasPerm = $structurePerm->hasCategoryPerm($articleID);
+								  if ($hasPerm) {
+								  $linkText = $linkTextRaw;
+								  $linkText = str_replace('$sliceID$', $sliceID, $linkText);
+								  $linkText = str_replace('$articleName$', $articleName, $linkText);
 
-											$href = 'index.php?page=content&article_id='.$articleID.
-												'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.
-												'&ctype='.$ctype.'&function=edit#slice'.$sliceID;
-											?>
+								  $href = 'index.php?page=content&article_id='.$articleID.
+								  '&mode=edit&slice_id='.$sliceID.'&clang='.$clang.
+								  '&ctype='.$ctype.'&function=edit#slice'.$sliceID;
+								  ?>
 
-											<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
+								  <li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
 
-											<?php
-										}
-										unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
-									}
-								}
-								?>
+								  <?php
+								  }
+								  unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
+								  }
+								  }
+								  ?>
 
-								<?php
-								if (isset($item['usagecheck_metaArtIDs']) && (int) $item['usagecheck_metaArtIDs'] > 0) {
-									$usages = explode("\n", $item['usagecheck_metaArtIDs']);
-									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_art';
-									$linkTextRaw = \rex_i18n::rawMsg($index);
-									foreach ($usages as $usage) {
-										$articleData = explode("\t", $usage);
+								  <?php
+								  if (isset($item['usagecheck_metaArtIDs']) && (int) $item['usagecheck_metaArtIDs'] > 0) {
+								  $usages = explode("\n", $item['usagecheck_metaArtIDs']);
+								  $index = 'akrys_usagecheck_images_linktext_edit_in_metadata_art';
+								  $linkTextRaw = \rex_i18n::rawMsg($index);
+								  foreach ($usages as $usage) {
+								  $articleData = explode("\t", $usage);
 
-										$articleID = $articleData[0];
-										$articleName = $articleData[1];
-										$clang = $articleData[2];
+								  $articleID = $articleData[0];
+								  $articleName = $articleData[1];
+								  $clang = $articleData[2];
 
-										$hasPerm = $structurePerm->hasCategoryPerm($articleID);
-										$href = 'index.php?'.
-											'page=content/metainfo&'.
-											'article_id='.$articleID.'&'.
-											'clang='.$clang.'&'.
-											'ctype=1';
-										if ($hasPerm) {
-											$linkText = $linkTextRaw;
-											$linkText = str_replace('$articleID$', $articleID, $linkText);
-											$linkText = str_replace('$articleName$', $articleName, $linkText);
-											?>
+								  $hasPerm = $structurePerm->hasCategoryPerm($articleID);
+								  $href = 'index.php?'.
+								  'page=content/metainfo&'.
+								  'article_id='.$articleID.'&'.
+								  'clang='.$clang.'&'.
+								  'ctype=1';
+								  if ($hasPerm) {
+								  $linkText = $linkTextRaw;
+								  $linkText = str_replace('$articleID$', $articleID, $linkText);
+								  $linkText = str_replace('$articleName$', $articleName, $linkText);
+								  ?>
 
-											<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
+								  <li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
 
-											<?php
-										}
-										unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
-									}
-								}
+								  <?php
+								  }
+								  unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
+								  }
+								  }
 
-								if (isset($item['usagecheck_metaCatIDs']) && (int) $item['usagecheck_metaCatIDs'] > 0) {
-									$usages = explode("\n", $item['usagecheck_metaCatIDs']);
-									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_cat';
-									$linkTextRaw = \rex_i18n::rawMsg($index);
-									foreach ($usages as $usage) {
-										$articleData = explode("\t", $usage);
+								  if (isset($item['usagecheck_metaCatIDs']) && (int) $item['usagecheck_metaCatIDs'] > 0) {
+								  $usages = explode("\n", $item['usagecheck_metaCatIDs']);
+								  $index = 'akrys_usagecheck_images_linktext_edit_in_metadata_cat';
+								  $linkTextRaw = \rex_i18n::rawMsg($index);
+								  foreach ($usages as $usage) {
+								  $articleData = explode("\t", $usage);
 
-										//http://51.redaxo.akrys-dev.local/redaxo/index.php?page=structure&category_id=5&article_id=0&clang=1&edit_id=11&function=edit_cat&catstart=0
-										//s.id,"\\t",s.article_id,"\\t",s.clang,"\\t",s.ctype
-										$articleID = $articleData[0];
-										$articleName = $articleData[1];
-										$clang = $articleData[2];
-										$parentID = $articleData[3];
+								  //http://51.redaxo.akrys-dev.local/redaxo/index.php?page=structure&category_id=5&article_id=0&clang=1&edit_id=11&function=edit_cat&catstart=0
+								  //s.id,"\\t",s.article_id,"\\t",s.clang,"\\t",s.ctype
+								  $articleID = $articleData[0];
+								  $articleName = $articleData[1];
+								  $clang = $articleData[2];
+								  $parentID = $articleData[3];
 
-										$hasPerm = $structurePerm->hasCategoryPerm($articleID);
+								  $hasPerm = $structurePerm->hasCategoryPerm($articleID);
 
-										if ($hasPerm) {
-											$linkText = $linkTextRaw;
-											$linkText = str_replace('$articleID$', $articleID, $linkText);
-											$linkText = str_replace('$articleName$', $articleName, $linkText);
-											$href = 'index.php?page=structure&category_id='.$parentID.
-												'&article_id=0&clang='.$clang.'&edit_id='.$articleID.
-												'&function=edit_cat&catstart=0';
-											?>
+								  if ($hasPerm) {
+								  $linkText = $linkTextRaw;
+								  $linkText = str_replace('$articleID$', $articleID, $linkText);
+								  $linkText = str_replace('$articleName$', $articleName, $linkText);
+								  $href = 'index.php?page=structure&category_id='.$parentID.
+								  '&article_id=0&clang='.$clang.'&edit_id='.$articleID.
+								  '&function=edit_cat&catstart=0';
+								  ?>
 
-											<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
+								  <li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
 
-											<?php
-										}
-										unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
-									}
-								}
+								  <?php
+								  }
+								  unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
+								  }
+								  }
 
-								if (isset($item['usagecheck_metaMedIDs']) && (int) $item['usagecheck_metaMedIDs'] > 0) {
-									$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_med';
-									$linkTextRaw = \rex_i18n::rawMsg($index);
+								  if (isset($item['usagecheck_metaMedIDs']) && (int) $item['usagecheck_metaMedIDs'] > 0) {
+								  $index = 'akrys_usagecheck_images_linktext_edit_in_metadata_med';
+								  $linkTextRaw = \rex_i18n::rawMsg($index);
 
-									$usages = explode("\n", $item['usagecheck_metaMedIDs']);
-									foreach ($usages as $usage) {
-										$mediaData = explode("\t", $usage);
+								  $usages = explode("\n", $item['usagecheck_metaMedIDs']);
+								  foreach ($usages as $usage) {
+								  $mediaData = explode("\t", $usage);
 
-										//file_id,"\t",category_id,"\t",filename
-										$fileID = $mediaData[0];
-										$fileCatID = $mediaData[1];
-										$filename = $mediaData[2];
+								  //file_id,"\t",category_id,"\t",filename
+								  $fileID = $mediaData[0];
+								  $fileCatID = $mediaData[1];
+								  $filename = $mediaData[2];
 
-										$hasPerm = $mediaPerm->hasCategoryPerm($fileCatID);
+								  $hasPerm = $mediaPerm->hasCategoryPerm($fileCatID);
 
-										if ($hasPerm) {
-											$linkText = $linkTextRaw;
-											$linkText = str_replace('$filename$', $filename, $linkText);
-											$href = "index.php?page=mediapool&subpage=detail&file_name=".$filename;
-											?>
+								  if ($hasPerm) {
+								  $linkText = $linkTextRaw;
+								  $linkText = str_replace('$filename$', $filename, $linkText);
+								  $href = "index.php?page=mediapool&subpage=detail&file_name=".$filename;
+								  ?>
 
-											<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
+								  <li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
 
-											<?php
-										}
-										unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
-									}
-								}
+								  <?php
+								  }
+								  unset($href, $linkText, $ctype, $clang, $articleID, $articleName, $sliceID);
+								  }
+								  }
 
-								$index = 'akrys_usagecheck_images_linktext_edit_in_yformtable';
-								$linkTextRaw = \rex_i18n::rawMsg($index);
-								foreach ($this->items['fields'] as $table => $field) {
-									if (!isset($item[$table])) {
-										continue;
-									}
+								  $index = 'akrys_usagecheck_images_linktext_edit_in_yformtable';
+								  $linkTextRaw = \rex_i18n::rawMsg($index);
+								  foreach ($this->items['fields'] as $table => $field) {
+								  if (!isset($item[$table])) {
+								  continue;
+								  }
 
-									$hasPerm = \rex::getUser()->isAdmin() || (
-										\rex::getUser()->hasPerm('yform[]') &&
-										\rex::getUser()->hasPerm('yform[table:'.$table.']')
-										);
+								  $hasPerm = \rex::getUser()->isAdmin() || (
+								  \rex::getUser()->hasPerm('yform[]') &&
+								  \rex::getUser()->hasPerm('yform[table:'.$table.']')
+								  );
 
-									$ids = explode("\n", $item[$table]);
-									foreach ($ids as $id) {
-										$linkText = $linkTextRaw;
-										$linkText = str_replace('$entryID$', $id, $linkText);
-										$linkText = str_replace('$tableName$', $field[0]['table_out'], $linkText);
+								  $ids = explode("\n", $item[$table]);
+								  foreach ($ids as $id) {
+								  $linkText = $linkTextRaw;
+								  $linkText = str_replace('$entryID$', $id, $linkText);
+								  $linkText = str_replace('$tableName$', $field[0]['table_out'], $linkText);
 
-										if ($hasPerm) {
-											$href = 'index.php?page=yform/manager/data_edit&'.
-												'table_name='.$table.'&'.
-												'data_id='.$id.'&'.
-												'func=edit';
-											if ($href == '') {
-												continue;
-											}
-											?>
+								  if ($hasPerm) {
+								  $href = 'index.php?page=yform/manager/data_edit&'.
+								  'table_name='.$table.'&'.
+								  'data_id='.$id.'&'.
+								  'func=edit';
+								  if ($href == '') {
+								  continue;
+								  }
+								  ?>
 
-											<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
+								  <li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
 
-											<?php
-										}
-									}
-								}
-								*/
+								  <?php
+								  }
+								  }
+								  }
+								 */
 								?>
 
 							</ol>

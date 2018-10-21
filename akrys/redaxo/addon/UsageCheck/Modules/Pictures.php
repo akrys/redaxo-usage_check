@@ -444,4 +444,77 @@ SQL;
 
 		return $names;
 	}
+
+	/**
+	 * Anzeige Benutzt/Nicht benutzt erstellen
+	 * @param array $item
+	 * @param array $fields
+	 * @return string
+	 */
+	public static function showUsedInfo($item, $fields)
+	{
+		$return = '';
+		$used = false;
+		if ($item['count'] > 0) {
+			$used = true;
+		}
+
+		$table = '';
+		foreach ($fields as $tablename => $field) {
+			if ($item[$tablename] !== null) {
+				$used = true;
+				$table = $tablename;
+				break;
+			}
+		}
+
+		if ($item['usagecheck_metaArtIDs'] > 0) {
+			$used = true;
+		}
+
+		if ($item['usagecheck_metaCatIDs'] > 0) {
+			$used = true;
+		}
+
+		if ($item['usagecheck_metaMedIDs'] > 0) {
+			$used = true;
+		}
+
+		$errors = array();
+		if ($used === false) {
+			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
+		}
+
+		if (!\akrys\redaxo\addon\UsageCheck\Medium::exists($item)) {
+			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_found');
+		}
+
+		//Ob ein Medium lt. Medienpool in Nutzung ist, brauchen wir nur zu prüfen,
+		//wenn wir glauben, dass die Datei ungenutzt ist.
+		//Vielleicht wird sie ja dennoch verwendet ;-)
+		//
+		//Hier wird die Funktion verwendet, die auch beim Löschen von Medien aus dem Medienpool aufgerufen
+		//wird.
+		//
+		//ACHTUNG:
+		//XAMPP 5.6.14-4 mit MariaDB unter MacOS hat ein falsch kompiliertes PCRE-Mdoul an Bord, so dass
+		//alle REGEXP-Abfragen abstürzen.
+		//Der Fehler liegt also nicht hier, und auch nicht im Redaxo-Core
+		if (!$used) {
+			$used = \rex_mediapool_mediaIsInUse($item['filename']);
+
+			if ($used) {
+				$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_in_use');
+			}
+		}
+
+		if (count($errors) > 0) {
+			$fragment = new \rex_fragment(['msg' => $errors]);
+			$return = $fragment->parse('msg/error_box.php');
+		} else {
+			$fragment = new \rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_images_msg_used')]]);
+			$return = $fragment->parse('msg/info_box.php');
+		}
+		return $return;
+	}
 }

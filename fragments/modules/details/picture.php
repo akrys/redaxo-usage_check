@@ -11,6 +11,10 @@ $media = rex_media::get($this->data['first']['filename']);
 ?>
 
 <div class="basis">
+	<?php
+	echo \akrys\redaxo\addon\UsageCheck\Modules\Pictures::showUsedInfo($this->data['first'], $this->data['fields']);
+	?>
+
 	<div style="float:left;margin-left:5px;">
 		<ol>
 			<?php

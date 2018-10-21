@@ -8,6 +8,8 @@ akrys_usagecheck_changelog = Change log
 
 akrys_usagecheck_no_rights = You don't have the permission to enter this page.
 
+akrys_usagecheck_linktext_detail_page = to the detail page for this entry
+
 akrys_usagecheck_overview_subpagetitle = Overview
 akrys_usagecheck_overview_intro = This addon searches for unused pictures, modules and templates.
 akrys_usagecheck_overview_images_title = Module: Picture
