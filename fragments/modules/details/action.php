@@ -1,83 +1,45 @@
 
-<table class="table table-striped">
-	<thead>
-		<tr>
-			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_action_table_heading_name'); ?></th>
-			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_action_table_heading_functions'); ?></th>
-		</tr>
-	</thead>
-	<tbody>
+<div class="basis">
+	<strong><?= \rex_i18n::rawMsg('akrys_usagecheck_action'); ?> "<?= $this->data['first']['name'] ?>"</strong><br />
+	<?php
+	if ($this->data['first']['usagecheck_ma_module'] === null) {
+		$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_module_msg_not_used')]]);
+		echo $fragment->parse('msg/error_box.php');
+	} else {
+		$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_module_msg_used')]]);
+		echo $fragment->parse('msg/info_box.php');
+	}
+	?>
+	<ol>
+
+		<li>
+			<?php
+			$url = 'index.php?page=modules/actions&action_id='.$this->data['first']['id'].'&function=edit';
+			$fragmet = new \rex_fragment([
+				'href' => $url,
+				'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_linktext_edit_code'),
+			]);
+			echo $fragmet->parse('fragments/link.php');
+			?>
+
+		</li>
 
 		<?php
-		foreach ($this->items as $item) {
+		$index = 'akrys_usagecheck_action_linktext_edit_in_modul';
+		$linkTextRaw = \rex_i18n::rawMsg($index);
+
+		foreach ($this->data['result']['action'] as $item) {
+			$modulID = $item['usagecheck_ma_module'];
+			$modulName = $item['usage_check_m_name'];
+			$href = 'index.php?page=modules/modules&start=0&function=edit&module_id='.$modulID;
+			$linkText = str_replace('$modulName$', $modulName, $linkTextRaw);
 			?>
-			<tr>
-				<td><?= $item['name']; ?></td>
-				<td>
-					<?php
-					if ($item['modul'] === null) {
-						$fragment = new \rex_fragment([
-							'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_msg_not_used'),
-						]);
-						$fragment = new \rex_fragment([
-							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
-						]);
-						echo $fragment->parse('fragments/msg/error.php');
-					} else {
-						$fragment = new \rex_fragment([
-							'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_msg_used'),
-						]);
 
-						$fragment = new \rex_fragment([
-							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
-						]);
-						echo $fragment->parse('fragments/msg/info.php');
-					}
-					?>
-
-					<div  class="rex-message" style="border:0;outline:0;">
-						<span>
-							<ol>
-								<li>
-									<?php
-									$url = 'index.php?page=modules/actions&action_id='.$item['id'].'&function=edit';
-									$fragmet = new \rex_fragment([
-										'href' => $url,
-										'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_linktext_edit_code'),
-									]);
-									echo $fragmet->parse('fragments/link.php');
-									?>
-
-								</li>
-
-								<?php
-								if ($item['modul'] !== null) {
-									$usages = explode("\n", $item['modul']);
-									$idex = 'akrys_usagecheck_action_linktext_edit_in_modul';
-									$linkTextRaw = \rex_i18n::rawMsg($index);
-									foreach ($usages as $usageRaw) {
-										$usage = (explode("\t", $usageRaw));
-										$modulID = $usage[0];
-										$modulName = $usage[1];
-										$href = 'index.php?page=module&subpage=&function=edit&modul_id='.$modulID;
-										$linkText = str_replace('$modulName$', $modulName, $linkTextRaw);
-										?>
-
-										<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
-
-										<?php
-									}
-								}
-								?>
-							</ol>
-						</span>
-					</div>
-				</td>
-			</tr>
+			<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
 
 			<?php
 		}
 		?>
 
-	</tbody>
-</table>
+	</ol>
+</div>

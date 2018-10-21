@@ -10,7 +10,7 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 ?>
 
 <div class="basis">
-	<strong>Modul "<?= $this->data['first']['name'] ?>"</strong><br />
+	<strong><?= \rex_i18n::rawMsg('akrys_usagecheck_module'); ?> "<?= $this->data['first']['name'] ?>"</strong><br />
 
 	<?php
 	if ($this->data['first']['usagecheck_s_id'] === null) {
