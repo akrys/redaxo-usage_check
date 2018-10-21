@@ -86,7 +86,21 @@ class Templates
 
 		$rexSQL = $this->getRexSql();
 		$sql = $this->getSQL($item_id);
-		return $rexSQL->getArray($sql);
+		$res = $rexSQL->getArray($sql);
+
+		foreach ($res as $articleData) {
+			if (isset($articleData['usagecheck_article_a_id']) && (int) $articleData['usagecheck_article_a_id'] > 0) {
+				$result['articles'][$articleData['usagecheck_article_a_id'].'_'.$articleData['usagecheck_article_a_clang_id']] = $articleData;
+			}
+			if (isset($articleData['usagecheck_template_t2_id']) && (int) $articleData['usagecheck_template_t2_id'] > 0) {
+				$result['templates'][$articleData['usagecheck_template_t2_id']] = $articleData;
+			}
+		}
+		return [
+			'first' => $res[0],
+			'result' => $result,
+			'fields' => $this->tableFields,
+		];
 	}
 
 	/**
@@ -133,11 +147,12 @@ class Templates
 	 */
 	protected function getSQL(/* int */$detail_id = null)
 	{
+		$rexSQL = \rex_sql::factory();
+
 		$where = '';
 		$having = '';
 
-		$this->addParamCriteria($where, $having);
-		$this->addParamStatementKeywords($where, $having);
+		$groupBy = null;
 
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
@@ -146,11 +161,23 @@ class Templates
 		$templateTable = $this->getTable('template');
 		$articleTable = $this->getTable('article');
 
-		$sql = <<<SQL
-SELECT
-	t.*,
-	a.id as article_id,
-	group_concat(distinct concat(
+		$additionalFields = '';
+		if ($detail_id) {
+			$additionalFields = <<<SQL
+	,
+		a.id usagecheck_article_a_id,
+		a.parent_id usagecheck_article_a_parent_id,
+		a.startarticle usagecheck_article_a_startarticle,
+		a.name usagecheck_article_a_name,
+		a.clang_id usagecheck_article_a_clang_id,
+
+		t2.id as usagecheck_template_t2_id,
+		t2.name as usagecheck_template_t2_name
+SQL;
+			$where .= 'where t.id='.$rexSQL->escape($detail_id);
+		} else {
+			$additionalFields = <<<SQL
+	,group_concat(distinct concat(
 		cast(a.id as char),"\t",
 		cast(a.parent_id as char),"\t",
 		cast(a.startarticle as char),"\t",
@@ -161,13 +188,25 @@ SELECT
 		cast(t2.id as char),"\t",
 		t2.name) Separator "\n"
 	) as templates
+SQL;
+			$groupBy = 'group by a.template_id,t.id';
+
+			$this->addParamCriteria($where, $having);
+			$this->addParamStatementKeywords($where, $having);
+		}
+
+		$sql = <<<SQL
+SELECT
+	t.*,
+	a.id as article_id
+	$additionalFields
 FROM `$templateTable` t
 left join $articleTable a on t.id=a.template_id
 left join `$templateTable` t2 on t.id <> t2.id and t2.content like concat('%TEMPLATE[', t.id, ']%')
 
 $where
 
-group by a.template_id,t.id
+$groupBy
 
 $having
 
