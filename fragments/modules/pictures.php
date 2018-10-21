@@ -53,7 +53,7 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 					<br />
 					<small style="font-size:0.875em;font-weight:bold;"><?= $item['filetype']; ?></small>
 				</td>
-				<td>
+				<td style="width:75%;">
 
 					<?php
 					$used = false;
@@ -119,7 +119,7 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 					}
 					?>
 
-					<div  class="rex-message" style="border:0;outline:0;">
+					<div class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
 								<?php
@@ -139,6 +139,7 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 								</a>
 
 								<?php
+								/*
 								if ($item['slice_data'] !== null) {
 									$usages = explode("\n", $item['slice_data']);
 
@@ -302,6 +303,7 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 										}
 									}
 								}
+								*/
 								?>
 
 							</ol>

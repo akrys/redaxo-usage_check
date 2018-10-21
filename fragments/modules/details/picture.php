@@ -252,7 +252,7 @@ $media = rex_media::get($this->data['first']['filename']);
 		?>
 
 
-		<table style="border: 0px solid #000000;">
+		<table style="border: 0px solid #000000;max-width:700px;">
 			<?php
 			foreach ($this->data['first'] as $key => $value) {
 				if (preg_match('/^usagecheck_/', $key)) {
@@ -262,7 +262,7 @@ $media = rex_media::get($this->data['first']['filename']);
 
 				<tr>
 					<th style="border: 1px solid #000000;padding: 0 5px;"><?= $key ?></th>
-					<td style="border: 1px solid #000000;padding: 0 5px;"><?= $value ?></td>
+					<td style="border: 1px solid #000000;padding: 0 5px; width:75%;"><?= $value ?></td>
 				</tr>
 
 				<?php
