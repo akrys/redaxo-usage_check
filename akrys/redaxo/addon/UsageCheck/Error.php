@@ -41,6 +41,16 @@ class Error
 	{
 		$this->errors[] = $text;
 	}
+
+	/**
+	 * Einträge zählen.
+	 *
+	 * @return int
+	 */
+	public function count(){
+		return count($this->errors);
+	}
+
 // <editor-fold defaultstate="collapsed" desc="Iterator Implementation">
 
 	/**

@@ -7,4 +7,9 @@
 		Bugfix: If the langauge is something different than German or Englisch, the english texts should appear.<br />
 		(This is not possible for the menu)
 	</li>
+	<li>
+		PHP-Error: Warning: count(): Parameter must be an array or an object that implements Countable<br />
+		Perhaps, counting the errors on addon boot didn't work properly before the change.
+	</li>
+
 </ul>

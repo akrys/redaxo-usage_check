@@ -7,4 +7,9 @@
 		Bugfix: Sofern die Sprache weder Deutsch noch Englisch ist, sollten die englischen Texte genommen werden.<br />
 		(Für die Menüpunkte ist das leider nicht möglich)
 	</li>
+	<li>
+		PHP-Fehler: Warning: count(): Parameter must be an array or an object that implements Countable<br />
+		Möglicherweise hat das Zählen der Fehler beim Addon-Boot vorher schon nicht richtig funktioniert.
+	</li>
+
 </ul>
