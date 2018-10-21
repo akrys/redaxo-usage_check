@@ -55,7 +55,18 @@ class Modules
 
 		$rexSQL = $this->getRexSql();
 		$sql = $this->getSQL($item_id);
-		return $rexSQL->getArray($sql);
+		$res = $rexSQL->getArray($sql);
+		$result = [];
+		foreach ($res as $articleData) {
+			if (isset($articleData['usagecheck_s_id']) && (int) $articleData['usagecheck_s_id'] > 0) {
+				$result['modules'][$articleData['usagecheck_s_id']] = $articleData;
+			}
+		}
+		return [
+			'first' => $res[0],
+			'result' => $result,
+			'fields' => $this->tableFields,
+		];
 	}
 //
 ///////////////////// Tmplementation aus RexV5 /////////////////////
@@ -68,9 +79,46 @@ class Modules
 	 */
 	protected function getSQL(/* int */$detail_id = null)
 	{
-		$where = '';
-		if (!$this->showAll) {
-			$where .= 'where s.id is null';
+		$additionalFields = '';
+		$whereArray = [];
+		$groupBy = 'group by m.id';
+
+		$rexSQL = \rex_sql::factory();
+		if ($detail_id) {
+			$whereArray[] = 'm.id='.$rexSQL->escape($detail_id);
+			$groupBy = '';
+			$additionalFields = <<<SQL
+			,s.id usagecheck_s_id,
+			s.clang_id usagecheck_s_clang_id,
+			s.ctype_id usagecheck_s_ctype_id,
+			a.id usagecheck_a_id ,
+			a.parent_id usagecheck_a_parent_id,
+			a.name usagecheck_a_name
+
+SQL;
+		} else {
+			if (!$this->showAll) {
+				$whereArray[] .= 's.id is null';
+			}
+
+			$additionalFields = ', s.id as slice_data';
+			/*
+			  $additionalFields = <<<SQL
+			  ,group_concat(
+			  concat(
+			  cast(s.id as char),"\t",
+			  cast(s.clang_id as char),"\t",
+			  cast(s.ctype_id as char),"\t",
+			  cast(a.id as char),"\t",
+			  cast(a.parent_id as char),"\t",
+			  a.name) Separator "\n"
+			  ) slice_data
+			  SQL;
+			 */
+		}
+
+		if (count($whereArray) > 0) {
+			$where = 'where '.implode(' and ', $whereArray);
 		}
 
 		//Keine integer oder Datumswerte in einem concat!
@@ -84,22 +132,15 @@ class Modules
 SELECT m.name,
 	m.id,
 	m.createdate,
-	m.updatedate,
-	group_concat(
-		concat(
-			cast(s.id as char),"\t",
-			cast(s.clang_id as char),"\t",
-			cast(s.ctype_id as char),"\t",
-			cast(a.id as char),"\t",
-			cast(a.parent_id as char),"\t",
-			a.name) Separator "\n"
-		) slice_data
+	m.updatedate
+
+	$additionalFields
 FROM `$moduleTable` m
 left join $articleSliceTable s on s.module_id=m.id
 left join $articleTable a on s.article_id=a.id and s.clang_id=a.clang_id
 
 $where
-group by m.id
+$groupBy
 
 SQL;
 		return $sql;
