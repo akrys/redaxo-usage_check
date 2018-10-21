@@ -7,7 +7,7 @@ use \akrys\redaxo\addon\UsageCheck\Config;
 use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
 //Fehlerausgabe
-if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
+if (\akrys\redaxo\addon\UsageCheck\Error::getInstance()->count() > 0) {
 	$text = '';
 	foreach (\akrys\redaxo\addon\UsageCheck\Error::getInstance() as $error) {
 		$fragment = new \rex_fragment([
