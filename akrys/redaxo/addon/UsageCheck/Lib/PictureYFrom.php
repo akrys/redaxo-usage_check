@@ -20,9 +20,10 @@ class PictureYFrom
 	/**
 	 * SQL Partsfür YForm generieren.
 	 *
+	 * @param int $detail_id
 	 * @return array
 	 */
-	public function getYFormTableSQLParts()
+	public function getYFormTableSQLParts(/* int */ $detail_id = null)
 	{
 		$return = array(
 			'additionalSelect' => '',
@@ -47,7 +48,12 @@ class PictureYFrom
 		}
 
 		foreach ($xTables as $tableName => $fields) {
-			$return['additionalSelect'] .= ', group_concat(distinct '.$tableName.'.id';
+			if (!$detail_id) {
+				$return['additionalSelect'] .= ', group_concat(distinct '.$tableName.'.id';
+				$return['additionalSelect'] .= ' Separator "\n") as '.$tableName.PHP_EOL;
+			} else {
+				$return['additionalSelect'] .= ', '.$tableName.'.id as usagecheck_'.$tableName.'_id'.PHP_EOL;
+			}
 			$return['additionalJoins'] .= 'LEFT join '.$tableName.' on (';
 
 			foreach ($fields as $key => $field) {
@@ -60,11 +66,8 @@ class PictureYFrom
 
 			$return['tableFields'][$tableName] = $fields;
 			$return['additionalJoins'] .= ')'.PHP_EOL;
-			$return['additionalSelect'] .= ' Separator "\n") as '.$tableName.PHP_EOL;
 			$return['havingClauses'][] = $tableName.' IS NULL';
 		}
-
-
 		return $return;
 	}
 

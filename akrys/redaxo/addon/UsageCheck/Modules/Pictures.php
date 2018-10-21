@@ -56,20 +56,70 @@ class Pictures
 		$sql = $this->getSQL();
 		return array('result' => $rexSQL->getArray($sql), 'fields' => $this->tableFields);
 	}
+
+	/**
+	 * Details zu einem Eintrag holen
+	 * @param int $item_id
+	 * @return array
+	 */
+	public function getDetails($item_id)
+	{
+		if (!Permission::getInstance()->check(Permission::PERM_MEDIA)) {
+			return false;
+		}
+
+		$rexSQL = $this->getRexSql();
+		if (!isset($this->yform)) {
+			$this->yform = new \akrys\redaxo\addon\UsageCheck\Lib\PictureYFrom($this);
+			$this->yform->setRexSql($rexSQL);
+		}
+
+		$sql = $this->getSQL($item_id);
+		$res = $rexSQL->getArray($sql);
+		$result = [];
+		foreach ($res as $articleData) {
+			if (isset($articleData['usagecheck_s_id']) && (int) $articleData['usagecheck_s_id'] > 0) {
+				$result['slices'][$articleData['usagecheck_s_id']] = $articleData;
+			}
+
+			if (isset($articleData['usagecheck_metaArtIDs']) && (int) $articleData['usagecheck_metaArtIDs'] > 0) {
+				$result['art_meta'][$articleData['usagecheck_art_id'].'_'.$articleData['usagecheck_art_clang']] = $articleData;
+			}
+
+			if (isset($articleData['usagecheck_metaCatIDs']) && (int) $articleData['usagecheck_metaCatIDs'] > 0) {
+				$result['cat_meta'][$articleData['usagecheck_cat_id'].'_'.$articleData['usagecheck_cat_clang']] = $articleData;
+			}
+
+			if (isset($articleData['usagecheck_metaMedIDs']) && (int) $articleData['usagecheck_metaMedIDs'] > 0) {
+				$result['media_meta'][$articleData['usagecheck_med_id']] = $articleData;
+			}
+
+			foreach ($this->tableFields as $table => $field) {
+				if (!isset($articleData['usagecheck_'.$table.'_id'])) {
+					continue;
+				}
+				$result['yform'][$table][$field[0]['table_out']][$articleData['usagecheck_'.$table.'_id']] = $articleData;
+			}
+		}
+		return [
+			'first' => $res[0],
+			'result' => $result,
+			'fields' => $this->tableFields,
+		];
+	}
 //
 ///////////////////// Tmplementation aus RexV5 /////////////////////
 //
 
-
-
 	/**
 	 * Spezifisches SQL für redaxo 5
+	 * @param int $detail_id
 	 * @return string
 	 */
-	protected function getSQL()
+	protected function getSQL(/* int */$detail_id = null)
 	{
-		$sqlPartsYForm = $this->yform->getYFormTableSQLParts();
-		$sqlPartsMeta = $this->getMetaTableSQLParts();
+		$sqlPartsYForm = $this->yform->getYFormTableSQLParts($detail_id);
+		$sqlPartsMeta = $this->getMetaTableSQLParts($detail_id);
 
 		$havingClauses = array();
 		$additionalSelect = '';
@@ -92,17 +142,9 @@ class Pictures
 		$articleSliceTable = $this->getTable('article_slice');
 		$articleTable = $this->getTable('article');
 
-		$sql = <<<SQL
-SELECT f.*,count(s.id) as count,
-group_concat(distinct concat(
-	cast(s.id as char),"\\t",
-	cast(s.article_id as char),"\\t",
-	a.name,"\\t",
-	cast(s.clang_id as char),"\\t",
-	cast(s.ctype_id as char)
-) Separator "\\n") as slice_data
-
-$additionalSelect
+		$sql = 'SELECT f.*';
+		$sql .= $this->addGroupFields($detail_id, $additionalSelect);
+		$sql .= <<<SQL
 
 FROM $mediaTable f
 left join `$articleSliceTable` s on (
@@ -134,17 +176,57 @@ $additionalJoins
 
 SQL;
 
-		if (!$this->showAll) {
-			$sql .= 'where s.id is null ';
-			$havingClauses[] = 'metaCatIDs is null and metaArtIDs is null and metaMedIDs is null';
-		}
+		if (!isset($detail_id)) {
+			if (!$this->showAll) {
+				$sql .= 'where s.id is null ';
+				$havingClauses[] = ' ifnull(usagecheck_metaCatIDs, 0) = 0 and ifnull(usagecheck_metaArtIDs, 0) = 0 and ifnull(usagecheck_metaMedIDs, 0) = 0';
+			}
 
-		$sql .= 'group by f.filename ';
-
-		if (!$this->showAll && isset($havingClauses) && count($havingClauses) > 0) {
-			$sql .= 'having '.implode(' and ', $havingClauses).'';
+			$sql .= 'group by f.filename ';
+			if (!$this->showAll && isset($havingClauses) && count($havingClauses) > 0) {
+				$sql .= 'having '.implode(' and ', $havingClauses).'';
+			}
+		} else {
+			$sql .= 'where f.id = '.$this->getRexSql()->escape($detail_id);
 		}
 		return $sql;
+	}
+
+	/**
+	 * Felder - Grupppierung
+	 * @param int $detail_id
+	 * @param string $additionalSelect
+	 * @return string
+	 */
+	private function addGroupFields($detail_id, $additionalSelect)
+	{
+		if (isset($detail_id)) {
+			return <<<SQL
+	,
+	s.id as usagecheck_s_id,
+	s.article_id as usagecheck_s_article_id,
+	a.name as usagecheck_a_name,
+	s.clang_id as usagecheck_s_clang_id,
+	s.ctype_id as usagecheck_s_ctype_id
+
+	$additionalSelect
+SQL;
+		}
+
+
+		return <<<SQL
+, count(s.id) as count
+		, group_concat(distinct concat(
+	cast(s.id as char),"\\t",
+	cast(s.article_id as char),"\\t",
+	a.name,"\\t",
+	cast(s.clang_id as char),"\\t",
+	cast(s.ctype_id as char)
+) Separator "\\n") as slice_data
+
+$additionalSelect
+
+SQL;
 	}
 
 	/**
@@ -180,10 +262,11 @@ SQL;
 	/**
 	 * SQL Parts für die Metadaten innerhalb von Redaxo5 generieren
 	 *
+	 * @param int $detail_id
 	 * @return array
 	 * @SuppressWarnings(PHPMD.ElseExpression)
 	 */
-	private function getMetaTableSQLParts()
+	private function getMetaTableSQLParts(/* int */ $detail_id = null)
 	{
 		$return = array(
 			'additionalSelect' => '',
@@ -223,9 +306,9 @@ SQL;
 			}
 		}
 
-		$this->addArtSelectAndJoinStatements($return, $joinArtMeta);
-		$this->addCatSelectAndJoinStatements($return, $joinCatMeta);
-		$this->addMedSelectAndJoinStatements($return, $joinMedMeta);
+		$this->addArtSelectAndJoinStatements($return, $joinArtMeta, $detail_id);
+		$this->addCatSelectAndJoinStatements($return, $joinCatMeta, $detail_id);
+		$this->addMedSelectAndJoinStatements($return, $joinMedMeta, $detail_id);
 
 		return $return;
 	}
@@ -237,14 +320,26 @@ SQL;
 	 *
 	 * @param array &$return
 	 * @param string $joinArtMeta
+	 * @param int $detail_id
 	 */
-	private function addArtSelectAndJoinStatements(&$return, $joinArtMeta)
+	private function addArtSelectAndJoinStatements(&$return, $joinArtMeta, $detail_id = null)
 	{
-		$selectMetaNull = ',null as metaArtIDs '.PHP_EOL;
-		$selectMetaNotNull = ',group_concat(distinct concat('.
-			'rex_article_art_meta.id,"\t",'.
-			'rex_article_art_meta.name,"\t",'.
-			'rex_article_art_meta.clang_id) Separator "\n") as metaArtIDs '.PHP_EOL;
+		$selectMetaNull = ',0 as usagecheck_metaArtIDs '.PHP_EOL;
+		if (!$detail_id) {
+//			$selectMetaNotNull = ',group_concat(distinct concat('.
+//				'rex_article_art_meta.id,"\t",'.
+//				'rex_article_art_meta.name,"\t",'.
+//				'rex_article_art_meta.clang_id,"\t") Separator "\n") as usagecheck_metaArtIDs '.PHP_EOL;
+
+			$selectMetaNotNull = ',ifnull(rex_article_art_meta.id,0) as usagecheck_metaArtIDs '.PHP_EOL;
+		} else {
+			$selectMetaNotNull = <<<SQL
+				, rex_article_art_meta.id is not null as usagecheck_metaArtIDs
+				,rex_article_art_meta.id usagecheck_art_id,
+				rex_article_art_meta.name usagecheck_art_name,
+				rex_article_art_meta.clang_id usagecheck_art_clang
+SQL;
+		}
 		$return['additionalSelect'] .= $joinArtMeta == '' ? $selectMetaNull : $selectMetaNotNull;
 
 		if ($joinArtMeta != '') {
@@ -260,15 +355,28 @@ SQL;
 	 *
 	 * @param array &$return
 	 * @param string $joinCatMeta
+	 * @param int $detail_id
 	 */
-	private function addCatSelectAndJoinStatements(&$return, $joinCatMeta)
+	private function addCatSelectAndJoinStatements(&$return, $joinCatMeta, /* int */ $detail_id = null)
 	{
-		$selectMetaNull = ',null as metaCatIDs '.PHP_EOL;
-		$selectMetaNotNull = ',group_concat(distinct concat('.
-			'rex_article_cat_meta.id,"\t",'.
-			'rex_article_cat_meta.catname,"\t",'.
-			'rex_article_cat_meta.clang_id,"\t",'.
-			'rex_article_cat_meta.parent_id) Separator "\n") as metaCatIDs '.PHP_EOL;
+		$selectMetaNull = ',0 as usagecheck_metaCatIDs '.PHP_EOL;
+		if (!$detail_id) {
+//			$selectMetaNotNull = ',group_concat(distinct concat('.
+//				'rex_article_cat_meta.id,"\t",'.
+//				'rex_article_cat_meta.catname,"\t",'.
+//				'rex_article_cat_meta.clang_id,"\t",'.
+//				'rex_article_cat_meta.parent_id) Separator "\n") as usagecheck_metaCatIDs '.PHP_EOL;
+
+			$selectMetaNotNull = ',ifnull(rex_article_cat_meta.id,0) as usagecheck_metaCatIDs '.PHP_EOL;
+		} else {
+			$selectMetaNotNull = <<<SQL
+				, rex_article_cat_meta.id is not null as usagecheck_metaCatIDs
+				,rex_article_cat_meta.id usagecheck_cat_id,
+				rex_article_cat_meta.catname usagecheck_cat_name,
+				rex_article_cat_meta.clang_id usagecheck_cat_clang,
+				rex_article_cat_meta.parent_id usagecheck_cat_parent_id
+SQL;
+		}
 
 		$return['additionalSelect'] .= $joinCatMeta == '' ? $selectMetaNull : $selectMetaNotNull;
 
@@ -285,16 +393,27 @@ SQL;
 	 *
 	 * @param array &$return
 	 * @param string $joinMedMeta
+	 * @param int $detail_id
 	 */
-	private function addMedSelectAndJoinStatements(&$return, $joinMedMeta)
+	private function addMedSelectAndJoinStatements(&$return, $joinMedMeta, /* int */ $detail_id = null)
 	{
-		$selectMetaNull = ',null as metaMedIDs '.PHP_EOL;
-		$selectMetaNotNull = ',group_concat(distinct concat('.
-			'rex_article_med_meta.id,"\t",'.
-			'rex_article_med_meta.category_id,"\t",'.
-			'rex_article_med_meta.filename'.
-			') Separator "\n") as metaMedIDs '.PHP_EOL;
+		$selectMetaNull = ',0 as usagecheck_metaMedIDs '.PHP_EOL;
+		if (!$detail_id) {
+//			$selectMetaNotNull = ',group_concat(distinct concat('.
+//				'rex_article_med_meta.id,"\t",'.
+//				'rex_article_med_meta.category_id,"\t",'.
+//				'rex_article_med_meta.filename'.
+//				') Separator "\n") as usagecheck_metaMedIDs '.PHP_EOL;
 
+			$selectMetaNotNull = ',ifnull(rex_article_med_meta.id,0) as usagecheck_metaMedIDs '.PHP_EOL;
+		} else {
+			$selectMetaNotNull = <<<SQL
+				,rex_article_med_meta.id is not null as usagecheck_metaMedIDs
+				,rex_article_med_meta.id usagecheck_med_id,
+				rex_article_med_meta.category_id usagecheck_med_cat_id,
+				rex_article_med_meta.filename usagecheck_med_filename
+SQL;
+		}
 		$return['additionalSelect'] .= $joinMedMeta == '' ? $selectMetaNull : $selectMetaNotNull;
 
 		if ($joinMedMeta != '') {
@@ -324,5 +443,82 @@ SQL;
 		$names = $rexSQL->getArray($sql);
 
 		return $names;
+	}
+
+	/**
+	 * Anzeige Benutzt/Nicht benutzt erstellen
+	 * @param array $item
+	 * @param array $fields
+	 * @return string
+	 */
+	public static function showUsedInfo($item, $fields)
+	{
+		$return = '';
+		$used = false;
+		if ($item['count'] > 0) {
+			$used = true;
+		}
+
+		$table = '';
+		foreach ($fields as $tablename => $field) {
+			if ($item[$tablename] !== null) {
+				$used = true;
+				$table = $tablename;
+				break;
+			}
+		}
+
+		if ($item['usagecheck_s_id'] > 0) {
+			$used = true;
+		}
+
+		if ($item['usagecheck_metaArtIDs'] > 0) {
+			$used = true;
+		}
+
+		if ($item['usagecheck_metaCatIDs'] > 0) {
+			$used = true;
+		}
+
+		if ($item['usagecheck_metaMedIDs'] > 0) {
+			$used = true;
+		}
+
+		$errors = array();
+		if ($used === false) {
+			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
+		}
+
+		if (!\akrys\redaxo\addon\UsageCheck\Medium::exists($item)) {
+			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_found');
+		}
+
+		//Ob ein Medium lt. Medienpool in Nutzung ist, brauchen wir nur zu prüfen,
+		//wenn wir glauben, dass die Datei ungenutzt ist.
+		//Vielleicht wird sie ja dennoch verwendet ;-)
+		//
+		//Hier wird die Funktion verwendet, die auch beim Löschen von Medien aus dem Medienpool aufgerufen
+		//wird.
+		//
+		//ACHTUNG:
+		//XAMPP 5.6.14-4 mit MariaDB unter MacOS hat ein falsch kompiliertes PCRE-Mdoul an Bord, so dass
+		//alle REGEXP-Abfragen abstürzen.
+		//Der Fehler liegt also nicht hier, und auch nicht im Redaxo-Core
+		if (!$used) {
+			$used = \rex_mediapool_mediaIsInUse($item['filename']);
+
+			if ($used) {
+				$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_in_use');
+			}
+		}
+
+		if (count($errors) > 0) {
+			$fragment = new \rex_fragment(['msg' => $errors]);
+			$return = $fragment->parse('msg/error_box.php');
+		} else {
+			$fragment = new \rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_images_msg_used')]]);
+			$return = $fragment->parse('msg/info_box.php');
+		}
+		return $return;
 	}
 }

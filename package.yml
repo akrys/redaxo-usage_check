@@ -17,6 +17,7 @@ page:
         module: { title: 'translate:akrys_usagecheck_module' }
         action: { title: 'translate:akrys_usagecheck_action', perm: admin }
         template: { title: 'translate:akrys_usagecheck_templates' }
+        details: { title: 'translate:akrys_usagecheck_details', hidden: true }
         changelog: { title: 'translate:akrys_usagecheck_changelog' }
 
 requires:

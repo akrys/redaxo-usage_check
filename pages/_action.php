@@ -57,7 +57,7 @@ if ($items === false) {
 		'url' => $url,
 		'linktext' => $showAllLinktext,
 		'texts' => [
-		\rex_i18n::rawMsg('akrys_usagecheck_action_intro_text'),
+			\rex_i18n::rawMsg('akrys_usagecheck_action_intro_text'),
 		],
 	]);
 	echo $menu->parse('fragments/menu/linktext.php');

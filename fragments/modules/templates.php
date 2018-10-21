@@ -32,22 +32,11 @@ $user = \rex::getUser();
 
 					<?php
 					if ($item['articles'] === null && $item['templates'] === null) {
-						$fragment = new \rex_fragment([
-							'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_msg_not_used'),
-						]);
-						$fragment = new \rex_fragment([
-							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
-						]);
-						echo $fragment->parse('fragments/msg/error.php');
+						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_template_msg_not_used')]]);
+						echo $fragment->parse('msg/error_box.php');
 					} else {
-						$fragment = new \rex_fragment([
-							'text' => \rex_i18n::rawMsg('akrys_usagecheck_template_msg_used'),
-						]);
-
-						$fragment = new \rex_fragment([
-							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
-						]);
-						echo $fragment->parse('fragments/msg/info.php');
+						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_template_msg_used')]]);
+						echo $fragment->parse('msg/info_box.php');
 					}
 					?>
 
@@ -55,6 +44,12 @@ $user = \rex::getUser();
 						<span>
 							<strong><?= \rex_i18n::rawMsg('akrys_usagecheck_template_detail_heading') ?></strong>
 							<ol>
+								<?php
+								$type = akrys\redaxo\addon\UsageCheck\Modules\Templates::TYPE;
+								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
+								?>
+
+								<li><a href="<?= $url; ?>"><?= \rex_i18n::rawMsg('akrys_usagecheck_linktext_detail_page') ?></a></li>
 
 								<li>
 									<?php

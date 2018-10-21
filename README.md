@@ -7,6 +7,9 @@ Dieses Addon sucht nach Bildern, Module und Templates, die nicht (mehr) verwende
 Mit der Version 2.0 wird die Unterstützung für Redaxo 4 entfernt. Vorrangig passiert das wegen (für mich nicht
 nachvollziehbaren) Zeichensatz-Problemen in diversen Redaxo 5 Instanzen.
 
+Mit der Version 2.1 wandern die Bearbeiten-Links in eine Detail-Seite. Dadurch kann man im SQL die Anweisung
+`group_concat` verhindern, dessen Ergebnis u.U. abgeschnitten wird.
+
 ## Installation
 
 ### Standard-Installation

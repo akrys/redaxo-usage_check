@@ -23,7 +23,6 @@ class Actions
 	/**
 	 * Nicht genutze Module holen
 	 *
-	 * @param boolean $show_all
 	 * @return array
 	 *
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
@@ -41,14 +40,73 @@ class Actions
 	}
 
 	/**
+	 * Details zu einem Eintrag holen
+	 * @param int $item_id
+	 * @return array
+	 */
+	public function getDetails($item_id)
+	{
+		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
+			return false;
+		}
+		$result = [];
+
+		$rexSQL = $this->getRexSql();
+		$sql = $this->getSQL($item_id);
+		$res = $rexSQL->getArray($sql);
+
+		foreach ($res as $articleData) {
+			if (isset($articleData['usagecheck_ma_module']) && (int) $articleData['usagecheck_ma_module'] > 0) {
+				$result['action'][$articleData['usagecheck_ma_module']] = $articleData;
+			}
+		}
+		return [
+			'first' => $res[0],
+			'result' => $result,
+			'fields' => $this->tableFields,
+		];
+	}
+
+	/**
 	 * SQL generieren
+	 * @param int $detail_id
 	 * @return string
 	 */
-	protected function getSQL()
+	protected function getSQL(/* int */$detail_id = null)
 	{
+		$rexSQL = \rex_sql::factory();
+		$additionalFields = '';
 		$where = '';
-		if (!$this->showAll) {
-			$where .= 'where ma.id is null';
+		$whereArray = [];
+		$groupBy = 'group by a.id';
+
+		if ($detail_id) {
+			$groupBy = '';
+			$additionalFields = <<<SQL
+,ma.module_id as usagecheck_ma_module,
+m.name as usage_check_m_name
+SQL;
+			$whereArray[] = 'a.id='.$rexSQL->escape($detail_id);
+		} else {
+			$where = '';
+			if (!$this->showAll) {
+				$whereArray[] = 'ma.id is null';
+			}
+
+			$additionalFields = ', ma.module_id as modul';
+			/*
+			  $additionalFields = <<<SQL
+			  , group_concat(concat(
+			  cast(ma.module_id as char),"\t",
+			  m.name
+			  ) separator "\n") as modul
+
+			  SQL;
+			 */
+		}
+
+		if (count($whereArray) > 0) {
+			$where = 'where '.implode(' and ', $whereArray);
 		}
 
 		//Keine integer oder Datumswerte in einem concat!
@@ -59,17 +117,15 @@ class Actions
 		$moduleTable = $this->getTable('module');
 
 		$sql = <<<SQL
-SELECT a.*, group_concat(concat(
-	cast(ma.module_id as char),"\t",
-	m.name
-) separator "\n") as modul
+SELECT a.*
+$additionalFields
 FROM $actionTable a
 left join $moduleActionTable ma on ma.action_id=a.id
 left join $moduleTable m on ma.module_id=m.id or m.id is null
 
 $where
 
-group by a.id
+$groupBy
 
 SQL;
 		return $sql;

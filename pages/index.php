@@ -14,22 +14,9 @@ if (!stristr($language, 'de_') && !stristr($language, 'en_')) {
 	$locale = rex_i18n::getLocale();
 	rex_i18n::setLocale('en_gb');
 }
-
 //Fehlerausgabe
-if (count(\akrys\redaxo\addon\UsageCheck\Error::getInstance()) > 0) {
-	$text = '';
-	foreach (\akrys\redaxo\addon\UsageCheck\Error::getInstance() as $error) {
-		$fragment = new \rex_fragment([
-			'text' => $error,
-		]);
-		$text .= $fragment->parse('fragments/msg/tagged_msg.php');
-
-		$fragment = new \rex_fragment([
-			'text' => $msg,
-		]);
-		echo $fragment->parse('fragments/msg/error.php');
-	}
-}
+$fragment = new rex_fragment(['msg' => akrys\redaxo\addon\UsageCheck\Error::getInstance()]);
+echo $fragment->parse('msg/error_box.php');
 
 $subpage = rex_be_controller::getCurrentPagePart(2, 'overview');
 

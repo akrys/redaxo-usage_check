@@ -25,29 +25,23 @@ $structurePerm = \rex_structure_perm::get($user, 'structure')
 
 					<?php
 					if ($item['slice_data'] === null) {
-						$fragment = new \rex_fragment([
-							'text' => \rex_i18n::rawMsg('akrys_usagecheck_module_msg_not_used'),
-						]);
-
-						$fragment = new \rex_fragment([
-							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
-						]);
-						echo $fragment->parse('fragments/msg/error.php');
+						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_module_msg_not_used')]]);
+						echo $fragment->parse('msg/error_box.php');
 					} else {
-						$fragment = new \rex_fragment([
-							'text' => \rex_i18n::rawMsg('akrys_usagecheck_module_msg_used'),
-						]);
-
-						$fragment = new \rex_fragment([
-							'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
-						]);
-						echo $fragment->parse('fragments/msg/info.php');
+						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_module_msg_used')]]);
+						echo $fragment->parse('msg/info_box.php');
 					}
 					?>
 
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
+								<?php
+								$type = akrys\redaxo\addon\UsageCheck\Modules\Modules::TYPE;
+								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
+								?>
+
+								<li><a href="<?= $url; ?>"><?= \rex_i18n::rawMsg('akrys_usagecheck_linktext_detail_page') ?></a></li>
 
 								<?php
 								$user = \rex::getUser();
@@ -63,39 +57,40 @@ $structurePerm = \rex_structure_perm::get($user, 'structure')
 
 									<?php
 								}
+								/*
+								  if ($item['slice_data'] !== null) {
+								  $usages = explode("\n", $item['slice_data']);
 
-								if ($item['slice_data'] !== null) {
-									$usages = explode("\n", $item['slice_data']);
-
-									$index = 'akrys_usagecheck_module_linktext_edit_slice';
-									$linkTextRaw = \rex_i18n::rawMsg($index);
-									foreach ($usages as $usageRaw) {
-										$usage = explode("\t", $usageRaw);
-										$sliceID = $usage[0];
-										$clang = $usage[1];
-										$ctype = $usage[2];
-										$articleID = $usage[3];
-										$categoryID = $usage[4];
-										$articleName = $usage[5];
+								  $index = 'akrys_usagecheck_module_linktext_edit_slice';
+								  $linkTextRaw = \rex_i18n::rawMsg($index);
+								  foreach ($usages as $usageRaw) {
+								  $usage = explode("\t", $usageRaw);
+								  $sliceID = $usage[0];
+								  $clang = $usage[1];
+								  $ctype = $usage[2];
+								  $articleID = $usage[3];
+								  $categoryID = $usage[4];
+								  $articleName = $usage[5];
 
 
-										$hasPerm = $structurePerm->hasCategoryPerm($articleID);
+								  $hasPerm = $structurePerm->hasCategoryPerm($articleID);
 
-										if ($hasPerm) {
-											$href = 'index.php?page=content&article_id='.$articleID.
-												'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.
-												'&function=edit#slice'.$sliceID;
-											$linkText = $linkTextRaw;
-											$linkText = str_replace('$sliceID$', $sliceID, $linkText);
-											$linkText = str_replace('$articleName$', $articleName, $linkText);
-											?>
+								  if ($hasPerm) {
+								  $href = 'index.php?page=content&article_id='.$articleID.
+								  '&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.
+								  '&function=edit#slice'.$sliceID;
+								  $linkText = $linkTextRaw;
+								  $linkText = str_replace('$sliceID$', $sliceID, $linkText);
+								  $linkText = str_replace('$articleName$', $articleName, $linkText);
+								  ?>
 
-											<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
+								  <li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
 
-											<?php
-										}
-									}
-								}
+								  <?php
+								  }
+								  }
+								  }
+								 */
 								?>
 
 							</ol>

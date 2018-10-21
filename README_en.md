@@ -5,6 +5,9 @@ This addon searches for pictures, modules and templates that are not used anymor
 With realase of Version 2.0 the support for Redaxo 4 will be dropped due to (for me, onreproducable) encoding problems
 on some Redaxo 5 instances.
 
+With realase of Version 2.1 edit links moved to a detail page. This leads to the ability to avoid `group_concat`, which
+sometimes cut its result, if it gets too long.
+
 ## Installation
 
 ### Standard installation
