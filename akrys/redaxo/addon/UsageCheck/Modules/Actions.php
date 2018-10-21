@@ -90,7 +90,7 @@ SQL;
 		} else {
 			$where = '';
 			if (!$this->showAll) {
-				$whereArray[] = 'where ma.id is null';
+				$whereArray[] = 'ma.id is null';
 			}
 
 			$additionalFields = ', ma.module_id as modul';

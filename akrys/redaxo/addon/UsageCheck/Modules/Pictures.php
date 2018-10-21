@@ -468,6 +468,10 @@ SQL;
 			}
 		}
 
+		if ($item['usagecheck_s_id'] > 0) {
+			$used = true;
+		}
+
 		if ($item['usagecheck_metaArtIDs'] > 0) {
 			$used = true;
 		}
