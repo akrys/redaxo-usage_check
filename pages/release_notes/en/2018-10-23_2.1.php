@@ -11,6 +11,6 @@
 		PHP-Error: Warning: count(): Parameter must be an array or an object that implements Countable<br />
 		Perhaps, counting the errors on addon boot didn't work properly before the change.
 	</li>
-	<li>Building a detail page for images avoiding <tt>group_concat</tt> which could be buggy.</li>
+	<li>Building a detail page for images avoiding <code>group_concat</code> which could be buggy.</li>
 	<li>Bugfix translation index on action page</li>
 </ul>

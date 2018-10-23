@@ -11,6 +11,6 @@
 		PHP-Fehler: Warning: count(): Parameter must be an array or an object that implements Countable<br />
 		Möglicherweise hat das Zählen der Fehler beim Addon-Boot vorher schon nicht richtig funktioniert.
 	</li>
-	<li>Detailseite für Bilder. Dort wird <tt>group_concat</tt> mit den dazu gehörigen Nebenwirkungen nicht mehr genutzt.</li>
+	<li>Detailseite für Bilder. Dort wird <code>group_concat</code> mit den dazu gehörigen Nebenwirkungen nicht mehr genutzt.</li>
 	<li>Bugfix falscher Index bei einer Übersetzung auf der Aktionen-Seite</li>
 </ul>
