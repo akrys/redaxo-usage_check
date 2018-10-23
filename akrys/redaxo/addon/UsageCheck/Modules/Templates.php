@@ -8,7 +8,6 @@
  */
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
-use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 use \akrys\redaxo\addon\UsageCheck\Permission;
 
 /**
@@ -16,50 +15,16 @@ use \akrys\redaxo\addon\UsageCheck\Permission;
  *
  * @author akrys
  */
-abstract class Templates
+class Templates
+	extends \akrys\redaxo\addon\UsageCheck\Lib\BaseModule
 {
-	/**
-	 * Anzeigemodus für "Alle Anzeigen"
-	 * @var boolean
-	 */
-	private $showAll = false;
+	const TYPE = 'templates';
 
 	/**
 	 * Anzeigemodus für "Ianktive zeigen"
 	 * @var boolean
 	 */
 	private $showInactive = false;
-
-	/**
-	 * Redaxo-Spezifische Version wählen.
-	 * @return \akrys\redaxo\addon\UsageCheck\Modules\Templates
-	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public static function create()
-	{
-		$object = null;
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_5:
-				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Templates();
-				break;
-		}
-
-		if (!isset($object)) {
-			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
-		}
-
-		return $object;
-	}
-
-	/**
-	 * Anzeigemodus "alle zeigen" umstellen
-	 * @param boolean $bln
-	 */
-	public function showAll($bln)
-	{
-		$this->showAll = (boolean) $bln;
-	}
 
 	/**
 	 * Anzeigemodus "inaktive zeigen" umstellen
@@ -79,43 +44,63 @@ abstract class Templates
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public function getTemplates()
+	public function get()
 	{
 		$showInactive = $this->showInactive;
 
-		if (!Permission::getVersion()->check(Permission::PERM_STRUCTURE)) {
+		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
 			//Permission::PERM_TEMPLATE
 			return false;
 		}
 
-		//Parameter-Korrektur, wenn der User KEIN Admin ist
-		//Der darf die inaktiven Templats nämlich sowieso nicht sehen.
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_5:
-				$user = \rex::getUser();
-				if (!$user->isAdmin() && $showInactive === true) {
-					$showInactive = false;
-				}
-				break;
+		$user = \rex::getUser();
+		if (!$user->isAdmin() && $showInactive === true) {
+			$showInactive = false;
 		}
 
-		$rexSQL = RedaxoCall::getAPI()->getSQL();
+		$rexSQL = $this->getRexSql();
 
-		$where = '';
-		$having = '';
-
-		$this->addParamCriteria($where, $having);
-		$this->addParamStatementKeywords($where, $having);
-		$sql = $this->getSQL($where, $having);
+		$sql = $this->getSQL();
 		$return = $rexSQL->getArray($sql);
 		// @codeCoverageIgnoreStart
 		//SQL-Fehler an der Stelle recht schwer zu testen, aber dennoch sinnvoll enthalten zu sein.
 		if (!$return) {
 			\akrys\redaxo\addon\UsageCheck\Error::getInstance()->add($rexSQL->getError());
 		}
-		// @codeCoverageIgnoreStart
+		// @codeCoverageIgnoreEnd
 
 		return $return;
+	}
+
+	/**
+	 * Details zu einem Eintrag holen
+	 * @param int $item_id
+	 * @return array
+	 */
+	public function getDetails(/* int */$item_id)
+	{
+		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
+			//Permission::PERM_TEMPLATE
+			return false;
+		}
+
+		$rexSQL = $this->getRexSql();
+		$sql = $this->getSQL($item_id);
+		$res = $rexSQL->getArray($sql);
+
+		foreach ($res as $articleData) {
+			if (isset($articleData['usagecheck_article_a_id']) && (int) $articleData['usagecheck_article_a_id'] > 0) {
+				$result['articles'][$articleData['usagecheck_article_a_id'].'_'.$articleData['usagecheck_article_a_clang_id']] = $articleData;
+			}
+			if (isset($articleData['usagecheck_template_t2_id']) && (int) $articleData['usagecheck_template_t2_id'] > 0) {
+				$result['templates'][$articleData['usagecheck_template_t2_id']] = $articleData;
+			}
+		}
+		return [
+			'first' => $res[0],
+			'result' => $result,
+			'fields' => $this->tableFields,
+		];
 	}
 
 	/**
@@ -129,10 +114,10 @@ abstract class Templates
 	private function addParamCriteria(&$where, &$having)
 	{
 		if (!$this->showAll) {
-			$having.='articles is null and templates is null';
+			$having .= 'articles is null and templates is null';
 		}
 		if (!$this->showInactive) {
-			$where.='t.active = 1';
+			$where .= 't.active = 1';
 		}
 	}
 
@@ -156,73 +141,67 @@ abstract class Templates
 	}
 
 	/**
-	 * SQL für Redaxo
-	 * @param string $where
-	 * @param string $having
+	 * SQL für Redaxo 5
+	 * @param int $detail_id
 	 * @return string
 	 */
-	abstract protected function getSQL($where, $having);
-
-	/**
-	 * Menüparameter ermittln
-	 * @param boolean $showAll
-	 * @param boolean $showInactive
-	 * @return array
-	 */
-	protected function getMenuParameter($showAll, $showInactive)
+	protected function getSQL(/* int */$detail_id = null)
 	{
-		$return = array();
+		$rexSQL = \rex_sql::factory();
 
-		$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_unused');
-		$return['showAllParam'] = '';
-		$return['showAllParamCurr'] = '&showall=true';
-		$return['showAllLinktext'] = $text;
-		if (!$showAll) {
-			$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_all');
-			$return['showAllParam'] = '&showall=true';
-			$return['showAllParamCurr'] = '';
-			$return['showAllLinktext'] = $text;
+		$where = '';
+		$having = '';
+
+		$groupBy = null;
+
+		//Keine integer oder Datumswerte in einem concat!
+		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
+		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
+
+		$templateTable = $this->getTable('template');
+		$articleTable = $this->getTable('article');
+
+		$additionalFields = '';
+		if ($detail_id) {
+			$additionalFields = <<<SQL
+	,
+		a.id usagecheck_article_a_id,
+		a.parent_id usagecheck_article_a_parent_id,
+		a.startarticle usagecheck_article_a_startarticle,
+		a.name usagecheck_article_a_name,
+		a.clang_id usagecheck_article_a_clang_id,
+
+		t2.id as usagecheck_template_t2_id,
+		t2.name as usagecheck_template_t2_name
+SQL;
+			$where .= 'where t.id='.$rexSQL->escape($detail_id);
+		} else {
+			$additionalFields = <<<SQL
+	,count(a.id) articles
+	,count(t2.id) templates
+SQL;
+			$groupBy = 'group by a.template_id,t.id';
+
+			$this->addParamCriteria($where, $having);
+			$this->addParamStatementKeywords($where, $having);
 		}
 
-		$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_active');
-		$return['showInactiveParam'] = '';
-		$return['showInactiveParamCurr'] = '&showinactive=true';
-		$return['showInactiveLinktext'] = $text;
-		if (!$showInactive) {
-			$text = RedaxoCall::getAPI()->getI18N('akrys_usagecheck_template_link_show_active_inactive');
-			$return['showInactiveParam'] = '&showinactive=true';
-			$return['showInactiveParamCurr'] = '';
-			$return['showInactiveLinktext'] = $text;
-		}
-		return $return;
+		$sql = <<<SQL
+SELECT
+	t.*,
+	a.id as article_id
+	$additionalFields
+FROM `$templateTable` t
+left join $articleTable a on t.id=a.template_id
+left join `$templateTable` t2 on t.id <> t2.id and t2.content like concat('%TEMPLATE[', t.id, ']%')
+
+$where
+
+$groupBy
+
+$having
+
+SQL;
+		return $sql;
 	}
-
-	/**
-	 * Menu-Ausgabe
-	 * @param string $subpage
-	 * @param boolean $showAll
-	 * @param boolean $showInactive
-	 */
-	abstract public function outputMenu($subpage, $showAll, $showInactive);
-
-	/**
-	 * Edit-Link generieren
-	 * @param array $item
-	 * @param string $linkText
-	 */
-	abstract public function outputTemplateEdit($item, $linkText);
-
-	/**
-	 * ArticlePerm ermitteln
-	 * @param int $articleID
-	 * @return boolean
-	 */
-	abstract public function hasArticlePerm($articleID);
-
-	/**
-	 * Template-EditLink zusammenbauen
-	 * @param int $tplID
-	 * @return string
-	 */
-	abstract public function getEditLink($tplID);
 }

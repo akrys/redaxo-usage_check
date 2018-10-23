@@ -25,39 +25,3 @@ spl_autoload_register(array('akrys\\redaxo\\addon\\UsageCheck\\Config', 'autoloa
 if (class_exists(rex_fragment::class)) {
 	rex_fragment::addDirectory(realpath(__DIR__));
 }
-
-
-//	//zu aktivieren, wenn es mit dem Autoloader doch nicht funktioniert.
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Permission.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Error.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Exception/CloneException.php';
-//
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RedaxoCall.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/RedaxoCallAPI.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/RedaxoCallAPI.php';
-//
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/LangFile.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Exception/LangFileGenError.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Exception/FunctionNotCallableException.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Exception/InvalidVersionException.php';
-//
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Actions.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/Modules/Actions.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/Modules/Actions.php';
-//
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Modules.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/Modules/Modules.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/Modules/Modules.php';
-//
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Templates.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/Modules/Templates.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/Modules/Templates.php';
-//
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Pictures.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/Modules/Pictures.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/Modules/Pictures.php';
-//
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV4/Permission.php';
-//	require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/RexV5/Permission.php';
-//phpcpd hat den code als duplikat in der Redaxo 4 und in der Redaxo 5 Config gefunden.

@@ -9,51 +9,16 @@
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
 use \akrys\redaxo\addon\UsageCheck\Permission;
-use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 
 /**
  * Description of Modules
  *
  * @author akrys
  */
-abstract class Modules
+class Modules
+	extends \akrys\redaxo\addon\UsageCheck\Lib\BaseModule
 {
-	/**
-	 * Anzeigemodus für "Alle Anzeigen"
-	 * @var boolean
-	 */
-	private $showAll = false;
-
-	/**
-	 * Redaxo-Spezifische Version wählen.
-	 * @return \akrys\redaxo\addon\UsageCheck\Modules\Modules
-	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public static function create()
-	{
-		$object = null;
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_5:
-				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Modules();
-				break;
-		}
-
-		if (!isset($object)) {
-			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
-		}
-
-		return $object;
-	}
-
-	/**
-	 * Anzeigemodus "alle zeigen" umstellen
-	 * @param boolean $bln
-	 */
-	public function showAll($bln)
-	{
-		$this->showAll = (boolean) $bln;
-	}
+	const TYPE = 'modules';
 
 	/**
 	 * Nicht genutze Module holen
@@ -63,51 +28,108 @@ abstract class Modules
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
-	public function getModules()
+	public function get()
 	{
-		$showAll = $this->showAll;
-
-		if (!Permission::getVersion()->check(Permission::PERM_STRUCTURE)) {
+		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
 			//Permission::PERM_MODUL
 			return false;
 		}
 
-		$rexSQL = RedaxoCall::getAPI()->getSQL();
-
-		$where = '';
-		if (!$showAll) {
-			$where.='where s.id is null';
-		}
-		$sql = $this->getSQL($where);
+		$rexSQL = $this->getRexSql();
+		$sql = $this->getSQL();
 
 		return $rexSQL->getArray($sql);
 	}
 
 	/**
+	 * Details zu einem Eintrag holen
+	 * @param int $item_id
+	 * @return array
+	 */
+	public function getDetails($item_id)
+	{
+		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
+			//Permission::PERM_MODUL
+			return false;
+		}
+
+		$rexSQL = $this->getRexSql();
+		$sql = $this->getSQL($item_id);
+		$res = $rexSQL->getArray($sql);
+		$result = [];
+		foreach ($res as $articleData) {
+			if (isset($articleData['usagecheck_s_id']) && (int) $articleData['usagecheck_s_id'] > 0) {
+				$result['modules'][$articleData['usagecheck_s_id']] = $articleData;
+			}
+		}
+		return [
+			'first' => $res[0],
+			'result' => $result,
+			'fields' => $this->tableFields,
+		];
+	}
+//
+///////////////////// Tmplementation aus RexV5 /////////////////////
+//
+
+	/**
 	 * SQL generieren
-	 * @param string $where
+	 * @param int $detail_id
 	 * @return string
 	 */
-	abstract protected function getSQL($where);
+	protected function getSQL(/* int */$detail_id = null)
+	{
+		$additionalFields = '';
+		$whereArray = [];
+		$groupBy = 'group by m.id';
 
-	/**
-	 * Menü ausgeben
-	 * @return void
-	 * @param string $subpage
-	 * @param string $showAllParam
-	 * @param string $showAllLinktext
-	 */
-	abstract public function outputMenu($subpage, $showAllParam, $showAllLinktext);
+		$rexSQL = \rex_sql::factory();
+		if ($detail_id) {
+			$whereArray[] = 'm.id='.$rexSQL->escape($detail_id);
+			$groupBy = '';
+			$additionalFields = <<<SQL
+			,s.id usagecheck_s_id,
+			s.clang_id usagecheck_s_clang_id,
+			s.ctype_id usagecheck_s_ctype_id,
+			a.id usagecheck_a_id ,
+			a.parent_id usagecheck_a_parent_id,
+			a.name usagecheck_a_name
 
-	/**
-	 * Abfrage der Rechte für das Modul
-	 *
-	 * Unit Testing
-	 * Die Rechteverwaltung ist zu nah am RedaxoCore, um das auf die Schnelle simulieren zu können.
-	 * @codeCoverageIgnore
-	 *
-	 * @param array $item
-	 * @return boolean
-	 */
-	abstract public function hasRights($item);
+SQL;
+		} else {
+			if (!$this->showAll) {
+				$whereArray[] .= 's.id is null';
+			}
+
+			$additionalFields = ', s.id as slice_data';
+		}
+
+		if (count($whereArray) > 0) {
+			$where = 'where '.implode(' and ', $whereArray);
+		}
+
+		//Keine integer oder Datumswerte in einem concat!
+		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
+		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
+		$moduleTable = $this->getTable('module');
+		$articleSliceTable = $this->getTable('article_slice');
+		$articleTable = $this->getTable('article');
+
+		$sql = <<<SQL
+SELECT m.name,
+	m.id,
+	m.createdate,
+	m.updatedate
+
+	$additionalFields
+FROM `$moduleTable` m
+left join $articleSliceTable s on s.module_id=m.id
+left join $articleTable a on s.article_id=a.id and s.clang_id=a.clang_id
+
+$where
+$groupBy
+
+SQL;
+		return $sql;
+	}
 }

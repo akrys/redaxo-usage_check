@@ -29,7 +29,7 @@ class Config
 	 *
 	 * @var string
 	 */
-	const VERSION = '2.0';
+	const VERSION = '2.1';
 
 	/**
 	 * release state

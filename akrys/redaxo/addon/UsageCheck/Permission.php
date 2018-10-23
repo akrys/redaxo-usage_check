@@ -9,7 +9,7 @@ namespace akrys\redaxo\addon\UsageCheck;
  * User-Rechte für Zugriffe abfragen.
  *
  */
-abstract class Permission
+class Permission
 {
 	/**
 	 * Name des Rechts für Templates
@@ -33,46 +33,13 @@ abstract class Permission
 	 * Name des Rechts für Module
 	 * @var string
 	 */
-	const PERM_MODUL = 'module';
-
-	/**
-	 * Name des Rechts für das XFormaddon
-	 * @var string
-	 */
-	const PERM_XFORM = 'xform';
+	const PERM_MODUL = 'modules';
 
 	/**
 	 * Name des Rechts für das Struktur
 	 * @var string
 	 */
 	const PERM_STRUCTURE = 'structure';
-
-	/**
-	 * Schnittstellenversion zu Redaxo 4 oder 5
-	 * @var RedaxoCall
-	 */
-	private static $api;
-
-	/**
-	 * Rechteverwaltung nach Redaxo 4 oder Redaxo5 erstellen
-	 * @return Permission
-	 * @throws Exception\InvalidVersionException
-	 * @SuppressWarnings(PHPMD.StaticAccess)
-	 */
-	public static function getVersion()
-	{
-		if (!isset(self::$api)) {
-			switch (\akrys\redaxo\addon\UsageCheck\RedaxoCall::getRedaxoVersion()) {
-				case \akrys\redaxo\addon\UsageCheck\RedaxoCall::REDAXO_VERSION_5:
-					// Redaxo 5
-					self::$api = new RexV5\Permission();
-					break;
-				default:
-					throw new Exception\InvalidVersionException();
-			}
-		}
-		return self::$api;
-	}
 
 	/**
 	 * Prüft die Rechte für den aktuellen User.
@@ -83,13 +50,68 @@ abstract class Permission
 	 *
 	 * @param string $perm eine der PERM-Konstanten
 	 * @return boolean
+	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	abstract public function check($perm);
+	public function check($perm)
+	{
+		$user = \rex::getUser();
+		$complexPerm = $user->getComplexPerm($perm);
+
+		$hasSpecialPerm = true;
+		switch (get_class($complexPerm)) {
+			case 'rex_media_perm':
+				/* @var $complexPerm \rex_media_perm */
+				$hasSpecialPerm = $complexPerm->hasMediaPerm();
+				break;
+			case 'rex_structure_perm':
+				/* @var $complexPerm \rex_structure_perm */
+				$hasSpecialPerm = $complexPerm->hasStructurePerm();
+				break;
+			case 'rex_module_perm':
+				/* @var $complexPerm \rex_module_perm */
+				$hasSpecialPerm = $complexPerm->hasAll();
+				break;
+			default:
+				throw new \Exception('"'.get_class($complexPerm).'": unknown permission class');
+				break;
+		}
+
+		return $user->isAdmin() || $user->hasPerm($perm) || $hasSpecialPerm;
+		/* || (isset($complexPerm) && $complexPerm->hasAll()) */
+	}
+// <editor-fold defaultstate="collapsed" desc="Singleton">
+	/**
+	 * Instance
+	 * @var Error
+	 */
+	private static $instance = null;
 
 	/**
-	 * Permission Mapping
-	 * @param string $perm
-	 * @return string
+	 * create Singleton Instance
+	 * @return Error
 	 */
-	abstract protected function mapPerm($perm);
+	public static function getInstance()
+	{
+		if (self::$instance == null) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+
+	/**
+	 * Konstuktor
+	 */
+	final private function __construct()
+	{
+		//;
+	}
+
+	/**
+	 * forbid cloning
+	 */
+	final public function __clone()
+	{
+		throw new Exception\CloneException();
+	}
+// </editor-fold>
 }

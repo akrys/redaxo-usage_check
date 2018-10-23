@@ -8,7 +8,6 @@
  */
 namespace akrys\redaxo\addon\UsageCheck\Modules;
 
-use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
 use \akrys\redaxo\addon\UsageCheck\Permission;
 
 /**
@@ -16,44 +15,22 @@ use \akrys\redaxo\addon\UsageCheck\Permission;
  *
  * @author akrys
  */
-abstract class Pictures
+class Pictures
+	extends \akrys\redaxo\addon\UsageCheck\Lib\BaseModule
 {
-	/**
-	 * Anzeigemodus für "Alle Anzeigen"
-	 * @var boolean
-	 */
-	private $showAll = false;
+	const TYPE = 'media';
 
 	/**
-	 * Redaxo-Spezifische Version wählen.
-	 * @return \akrys\redaxo\addon\UsageCheck\Modules\Pictures
-	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
-	 * @SuppressWarnings(PHPMD.StaticAccess)
+	 * Yform Integration
+	 * @var \akrys\redaxo\addon\UsageCheck\Lib\PictureYFrom
 	 */
-	public static function create()
-	{
-		$object = null;
-		switch (RedaxoCall::getRedaxoVersion()) {
-			case RedaxoCall::REDAXO_VERSION_5:
-				$object = new \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures();
-				break;
-		}
-
-		if (!isset($object)) {
-			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
-		}
-
-		return $object;
-	}
+	private $yform = null;
 
 	/**
-	 * Anzeigemodus "alle zeigen" umstellen
-	 * @param boolean $bln
+	 * Tabellenfelder
+	 * @var array
 	 */
-	public function showAll($bln)
-	{
-		$this->showAll = (boolean) $bln;
-	}
+	private $tableFields;
 
 	/**
 	 * Nicht genutze Bilder holen
@@ -63,69 +40,226 @@ abstract class Pictures
 	 * @todo bei Instanzen mit vielen Dateien im Medienpool testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
-	public function getPictures()
+	public function get()
 	{
-		$showAll = $this->showAll;
-
-		if (!Permission::getVersion()->check(Permission::PERM_MEDIA)) {
+		if (!Permission::getInstance()->check(Permission::PERM_MEDIA)) {
 			return false;
 		}
 
-		$rexSQL = RedaxoCall::getAPI()->getSQL();
+		$rexSQL = $this->getRexSql();
 
-		$sqlPartsXForm = $this->getXFormTableSQLParts();
-		$sqlPartsMeta = $this->getMetaTableSQLParts();
+		if (!isset($this->yform)) {
+			$this->yform = new \akrys\redaxo\addon\UsageCheck\Lib\PictureYFrom($this);
+			$this->yform->setRexSql($rexSQL);
+		}
+
+		$sql = $this->getSQL();
+		return array('result' => $rexSQL->getArray($sql), 'fields' => $this->tableFields);
+	}
+
+	/**
+	 * Details zu einem Eintrag holen
+	 * @param int $item_id
+	 * @return array
+	 */
+	public function getDetails($item_id)
+	{
+		if (!Permission::getInstance()->check(Permission::PERM_MEDIA)) {
+			return false;
+		}
+
+		$rexSQL = $this->getRexSql();
+		if (!isset($this->yform)) {
+			$this->yform = new \akrys\redaxo\addon\UsageCheck\Lib\PictureYFrom($this);
+			$this->yform->setRexSql($rexSQL);
+		}
+
+		$sql = $this->getSQL($item_id);
+		$res = $rexSQL->getArray($sql);
+		$result = [];
+		foreach ($res as $articleData) {
+			if (isset($articleData['usagecheck_s_id']) && (int) $articleData['usagecheck_s_id'] > 0) {
+				$result['slices'][$articleData['usagecheck_s_id']] = $articleData;
+			}
+
+			if (isset($articleData['usagecheck_metaArtIDs']) && (int) $articleData['usagecheck_metaArtIDs'] > 0) {
+				$result['art_meta'][$articleData['usagecheck_art_id'].'_'.$articleData['usagecheck_art_clang']] = $articleData;
+			}
+
+			if (isset($articleData['usagecheck_metaCatIDs']) && (int) $articleData['usagecheck_metaCatIDs'] > 0) {
+				$result['cat_meta'][$articleData['usagecheck_cat_id'].'_'.$articleData['usagecheck_cat_clang']] = $articleData;
+			}
+
+			if (isset($articleData['usagecheck_metaMedIDs']) && (int) $articleData['usagecheck_metaMedIDs'] > 0) {
+				$result['media_meta'][$articleData['usagecheck_med_id']] = $articleData;
+			}
+
+			foreach ($this->tableFields as $table => $field) {
+				if (!isset($articleData['usagecheck_'.$table.'_id'])) {
+					continue;
+				}
+				$result['yform'][$table][$field[0]['table_out']][$articleData['usagecheck_'.$table.'_id']] = $articleData;
+			}
+		}
+		return [
+			'first' => $res[0],
+			'result' => $result,
+			'fields' => $this->tableFields,
+		];
+	}
+//
+///////////////////// Tmplementation aus RexV5 /////////////////////
+//
+
+	/**
+	 * Spezifisches SQL für redaxo 5
+	 * @param int $detail_id
+	 * @return string
+	 */
+	protected function getSQL(/* int */$detail_id = null)
+	{
+		$sqlPartsYForm = $this->yform->getYFormTableSQLParts($detail_id);
+		$sqlPartsMeta = $this->getMetaTableSQLParts($detail_id);
 
 		$havingClauses = array();
 		$additionalSelect = '';
 		$additionalJoins = '';
-		$tableFields = array();
+		$this->tableFields = array();
 
 
-		$havingClauses = array_merge($havingClauses, $sqlPartsXForm['havingClauses']);
-		$additionalSelect .= $sqlPartsXForm['additionalSelect'];
-		$additionalJoins .= $sqlPartsXForm['additionalJoins'];
-		$tableFields = array_merge($tableFields, $sqlPartsXForm['tableFields']);
+		$havingClauses = array_merge($havingClauses, $sqlPartsYForm['havingClauses']);
+		$additionalSelect .= $sqlPartsYForm['additionalSelect'];
+		$additionalJoins .= $sqlPartsYForm['additionalJoins'];
+		$this->tableFields = array_merge($this->tableFields, $sqlPartsYForm['tableFields']);
 
 		$havingClauses = array_merge($havingClauses, $sqlPartsMeta['havingClauses']);
 		$additionalSelect .= $sqlPartsMeta['additionalSelect'];
 		$additionalJoins .= $sqlPartsMeta['additionalJoins'];
-		$tableFields = array_merge($tableFields, $sqlPartsMeta['tableFields']);
+		$this->tableFields = array_merge($this->tableFields, $sqlPartsMeta['tableFields']);
 
-		$sql = $this->getPictureSQL($additionalSelect, $additionalJoins);
 
-		if (!$showAll) {
-			$sql .= 'where s.id is null ';
-			$havingClauses[] = 'metaCatIDs is null and metaArtIDs is null and metaMedIDs is null';
+		$mediaTable = $this->getTable('media');
+		$articleSliceTable = $this->getTable('article_slice');
+		$articleTable = $this->getTable('article');
+
+		$sql = 'SELECT f.*';
+		$sql .= $this->addGroupFields($detail_id, $additionalSelect);
+		$sql .= <<<SQL
+
+FROM $mediaTable f
+left join `$articleSliceTable` s on (
+    s.media1=f.filename
+ OR s.media2=f.filename
+ OR s.media3=f.filename
+ OR s.media4=f.filename
+ OR s.media5=f.filename
+ OR s.media6=f.filename
+ OR s.media7=f.filename
+ OR s.media8=f.filename
+ OR s.media9=f.filename
+ OR s.media10=f.filename
+ OR find_in_set(f.filename, s.medialist1)
+ OR find_in_set(f.filename, s.medialist2)
+ OR find_in_set(f.filename, s.medialist3)
+ OR find_in_set(f.filename, s.medialist4)
+ OR find_in_set(f.filename, s.medialist5)
+ OR find_in_set(f.filename, s.medialist6)
+ OR find_in_set(f.filename, s.medialist7)
+ OR find_in_set(f.filename, s.medialist8)
+ OR find_in_set(f.filename, s.medialist9)
+ OR find_in_set(f.filename, s.medialist10)
+)
+
+left join $articleTable a on (a.id=s.article_id and a.clang_id=s.clang_id)
+
+$additionalJoins
+
+SQL;
+
+		if (!isset($detail_id)) {
+			if (!$this->showAll) {
+				$sql .= 'where s.id is null ';
+				$havingClauses[] = ' ifnull(usagecheck_metaCatIDs, 0) = 0 and ifnull(usagecheck_metaArtIDs, 0) = 0 and ifnull(usagecheck_metaMedIDs, 0) = 0';
+			}
+
+			$sql .= 'group by f.filename ';
+			if (!$this->showAll && isset($havingClauses) && count($havingClauses) > 0) {
+				$sql .= 'having '.implode(' and ', $havingClauses).'';
+			}
+		} else {
+			$sql .= 'where f.id = '.$this->getRexSql()->escape($detail_id);
 		}
-
-		$sql .= 'group by f.filename ';
-
-		if (!$showAll && isset($havingClauses) && count($havingClauses) > 0) {
-			$sql .= 'having '.implode(' and ', $havingClauses).'';
-		}
-
-		return array('result' => $rexSQL->getArray($sql), 'fields' => $tableFields);
+		return $sql;
 	}
 
 	/**
-	 * SQL Parts für die Metadaten generieren
-	 * @return array
+	 * Felder - Grupppierung
+	 * @param int $detail_id
+	 * @param string $additionalSelect
+	 * @return string
 	 */
-	abstract protected function getMetaTableSQLParts();
+	private function addGroupFields($detail_id, $additionalSelect)
+	{
+		if (isset($detail_id)) {
+			return <<<SQL
+	,
+	s.id as usagecheck_s_id,
+	s.article_id as usagecheck_s_article_id,
+	a.name as usagecheck_a_name,
+	s.clang_id as usagecheck_s_clang_id,
+	s.ctype_id as usagecheck_s_ctype_id
+
+	$additionalSelect
+SQL;
+		}
+
+
+		return <<<SQL
+, count(s.id) as count
+
+$additionalSelect
+
+SQL;
+	}
 
 	/**
-	 * Meta-Bildfelder ermitteln.
-	 * @return array
-	 */
-	abstract protected function getMetaNames();
-
-	/**
-	 * SQL Partsfür XForm/YForm generieren.
+	 * Namen der Tabelle und des Feldes ermitteln.
 	 *
-	 * @return array
+	 * Wenn das allgemein in in der Funktion getMetaTableSQLParts integriert wäre, meckert phpmd eine zu hohe
+	 * Komplexität an.
+	 *
+	 * @param string $name
+	 * @return string
+	 *
+	 * @return array Indezes field, table
 	 */
-	protected function getXFormTableSQLParts()
+	private function getTableNames($name)
+	{
+		$return = array();
+		if (preg_match('/'.preg_quote(\rex_metainfo_article_handler::PREFIX, '/').'/', $name)) {
+			$return['field'] = 'joinArtMeta';
+			$return['table'] = 'rex_article_art_meta';
+			return $return;
+		} elseif (preg_match('/'.preg_quote(\rex_metainfo_category_handler::PREFIX, '/').'/', $name)) {
+			$return['field'] = 'joinCatMeta';
+			$return['table'] = 'rex_article_cat_meta';
+			return $return;
+		} elseif (preg_match('/'.preg_quote(\rex_metainfo_media_handler::PREFIX, '/').'/', $name)) {
+			$return['field'] = 'joinMedMeta';
+			$return['table'] = 'rex_article_med_meta';
+			return $return;
+		}
+		throw new \Exception('Table not valid');
+	}
+
+	/**
+	 * SQL Parts für die Metadaten innerhalb von Redaxo5 generieren
+	 *
+	 * @param int $detail_id
+	 * @return array
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 */
+	private function getMetaTableSQLParts(/* int */ $detail_id = null)
 	{
 		$return = array(
 			'additionalSelect' => '',
@@ -134,214 +268,233 @@ abstract class Pictures
 			'havingClauses' => array(),
 		);
 
-		RedaxoCall::getAPI()->getSQL();
+		$joinArtMeta = '';
+		$joinCatMeta = '';
+		$joinMedMeta = '';
 
-		$tables = $this->getXFormSQL($return);
+		$names = $this->getMetaNames();
 
-		$xTables = array();
-		foreach ($tables as $table) {
-			$xTables[$table['table_name']][] = array(
-				'name' => $table['f1'],
-				'name_out' => $table['f2'],
-				'table_out' => $table['table_out'],
-				'type' => $table['type_name'],
-				//in YForm 2, muss man prüfen, ob be_media einen multiple modifier hat.
-				//siehe Kommentare in \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures::getXFormSQL
-				'multiple' => (isset($table['multiple']) && $table['multiple'] == '1'),
-			);
-		}
+		foreach ($names as $name) {
+			try {
+				$table = $this->getTableNames($name['name']);
+				$fieldname = $table['field'];
+				$tablename = $table['table'];
 
-		foreach ($xTables as $tableName => $fields) {
-			$return['additionalSelect'] .= ', group_concat(distinct '.$tableName.'.id';
-			$return['additionalJoins'] .= 'LEFT join '.$tableName.' on (';
-
-			foreach ($fields as $key => $field) {
-				if ($key > 0) {
-					$return['additionalJoins'] .= ' OR ';
+				switch ($name['type']) {
+					case 'REX_MEDIA_WIDGET':
+						if ($$fieldname != '') {
+							$$fieldname .= ' or ';
+						}
+						$$fieldname .= ''.$tablename.'.'.$name['name'].' = f.filename';
+						break;
+					case 'REX_MEDIALIST_WIDGET':
+						if ($$fieldname != '') {
+							$$fieldname .= ' or ';
+						}
+						$$fieldname .= 'FIND_IN_SET(f.filename, '.$tablename.'.'.$name['name'].')';
+						break;
 				}
-
-				$return['additionalJoins'] .= $this->getJoinCondition($field, $tableName);
+			} catch (\Exception $e) {
+				//;
 			}
-
-			$return['tableFields'][$tableName] = $fields;
-			$return['additionalJoins'] .= ')'.PHP_EOL;
-			$return['additionalSelect'] .= ' Separator "\n") as '.$tableName.PHP_EOL;
-			$return['havingClauses'][] = $tableName.' IS NULL';
 		}
 
+		$this->addArtSelectAndJoinStatements($return, $joinArtMeta, $detail_id);
+		$this->addCatSelectAndJoinStatements($return, $joinCatMeta, $detail_id);
+		$this->addMedSelectAndJoinStatements($return, $joinMedMeta, $detail_id);
 
 		return $return;
 	}
 
 	/**
-	 * Auslagerung der Join-Conditions
+	 * Select und Joinstatments im Array anfügen
 	 *
-	 * PHPMD meckert eine zu hohe Komplexität an. (11 satt der maximalen 10)
-	 * Das dürfte an der Anpassung zu YForm 2 liegen, da dort in be_media nun mehrere Dateien angegeben werden dürfen.
-	 * Die Prüfung auf $field['multiple'] ist dann eine ebene zu tief.
+	 * Komplexitätsvermeidung von getMetaTableSQLParts
 	 *
-	 * @param array $field
-	 * @param string $tableName
-	 * @return string
-	 */
-	private function getJoinCondition($field, $tableName)
-	{
-		$joinCondition = '';
-		switch ($field['type']) {
-			case 'be_mediapool': // Redaxo 4
-			case 'mediafile':
-				$joinCondition = $tableName.'.'.$field['name'].' = f.filename';
-				break;
-			case 'be_medialist': // Redaxo 5, YForm 1
-				$joinCondition = 'FIND_IN_SET(f.filename, '.$tableName.'.'.$field['name'].')';
-				break;
-			case 'be_media': // Redaxo 5
-				$joinCondition = $tableName.'.'.$field['name'].' = f.filename';
-				if ($field['multiple']) {
-					//YForm 2 kann mehrere Dateien aufnehmen
-					//siehe Kommentare in \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures::getXFormSQL
-					$joinCondition = 'FIND_IN_SET(f.filename, '.$tableName.'.'.$field['name'].')';
-				}
-				break;
-		}
-		return $joinCondition;
-	}
-
-	/**
-	 * XFormTables holen
-	 *
-	 * @return array
 	 * @param array &$return
+	 * @param string $joinArtMeta
+	 * @param int $detail_id
 	 */
-	abstract protected function getXFormSQL(&$return);
+	private function addArtSelectAndJoinStatements(&$return, $joinArtMeta, $detail_id = null)
+	{
+		$selectMetaNull = ',0 as usagecheck_metaArtIDs '.PHP_EOL;
+		if (!$detail_id) {
+			$selectMetaNotNull = ',ifnull(rex_article_art_meta.id,0) as usagecheck_metaArtIDs '.PHP_EOL;
+		} else {
+			$selectMetaNotNull = <<<SQL
+				, rex_article_art_meta.id is not null as usagecheck_metaArtIDs
+				,rex_article_art_meta.id usagecheck_art_id,
+				rex_article_art_meta.name usagecheck_art_name,
+				rex_article_art_meta.clang_id usagecheck_art_clang
+SQL;
+		}
+		$return['additionalSelect'] .= $joinArtMeta == '' ? $selectMetaNull : $selectMetaNotNull;
+
+		if ($joinArtMeta != '') {
+			$return['additionalJoins'] .= 'LEFT join rex_article as rex_article_art_meta on '.
+				'(rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
+		}
+	}
 
 	/**
-	 * kleinste Speichereinheit ermittln.
+	 * Select und Joinstatments im Array anfügen
 	 *
-	 * Dabei zählen, wie oft man sie verkleinern konnte. Daraus ergibt sich die Einheit.
+	 * Komplexitätsvermeidung von getMetaTableSQLParts
 	 *
-	 * @param int $size
-	 * @return array Indezes: index, size
+	 * @param array &$return
+	 * @param string $joinCatMeta
+	 * @param int $detail_id
 	 */
-	private function getSizeReadable($size)
+	private function addCatSelectAndJoinStatements(&$return, $joinCatMeta, /* int */ $detail_id = null)
 	{
-		$return = array(
-			'index' => 0,
-			'size' => $size,
-		);
+		$selectMetaNull = ',0 as usagecheck_metaCatIDs '.PHP_EOL;
+		if (!$detail_id) {
+			$selectMetaNotNull = ',ifnull(rex_article_cat_meta.id,0) as usagecheck_metaCatIDs '.PHP_EOL;
+		} else {
+			$selectMetaNotNull = <<<SQL
+				, rex_article_cat_meta.id is not null as usagecheck_metaCatIDs
+				,rex_article_cat_meta.id usagecheck_cat_id,
+				rex_article_cat_meta.catname usagecheck_cat_name,
+				rex_article_cat_meta.clang_id usagecheck_cat_clang,
+				rex_article_cat_meta.parent_id usagecheck_cat_parent_id
+SQL;
+		}
 
-		$return['index'] = 0;
+		$return['additionalSelect'] .= $joinCatMeta == '' ? $selectMetaNull : $selectMetaNotNull;
 
-		while ($return['size'] > 1024 && $return['index'] <= 6) {
-			$return['index'] ++;
-			$return['size'] /= 1024;
+		if ($joinCatMeta != '') {
+			$return['additionalJoins'] .= 'LEFT join rex_article as rex_article_cat_meta on '.
+				'(rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
+		}
+	}
+
+	/**
+	 * Select und Joinstatments im Array anfügen
+	 *
+	 * Komplexitätsvermeidung von getMetaTableSQLParts
+	 *
+	 * @param array &$return
+	 * @param string $joinMedMeta
+	 * @param int $detail_id
+	 */
+	private function addMedSelectAndJoinStatements(&$return, $joinMedMeta, /* int */ $detail_id = null)
+	{
+		$selectMetaNull = ',0 as usagecheck_metaMedIDs '.PHP_EOL;
+		if (!$detail_id) {
+			$selectMetaNotNull = ',ifnull(rex_article_med_meta.id,0) as usagecheck_metaMedIDs '.PHP_EOL;
+		} else {
+			$selectMetaNotNull = <<<SQL
+				,rex_article_med_meta.id is not null as usagecheck_metaMedIDs
+				,rex_article_med_meta.id usagecheck_med_id,
+				rex_article_med_meta.category_id usagecheck_med_cat_id,
+				rex_article_med_meta.filename usagecheck_med_filename
+SQL;
+		}
+		$return['additionalSelect'] .= $joinMedMeta == '' ? $selectMetaNull : $selectMetaNotNull;
+
+		if ($joinMedMeta != '') {
+			$return['additionalJoins'] .= 'LEFT join rex_media as rex_article_med_meta on '.
+				'(rex_article_med_meta.id is not null and ('.$joinMedMeta.'))'.PHP_EOL;
+		}
+	}
+
+	/**
+	 * Meta-Bildfelder ermitteln.
+	 * @return array
+	 */
+	private function getMetaNames()
+	{
+		$rexSQL = $this->getRexSql();
+//		$articleTable = $this->getTable('article');
+		$metainfoFieldTable = $this->getTable('metainfo_field');
+		$metainfoTypeTable = $this->getTable('metainfo_type');
+
+		$sql = <<<SQL
+select f.name, t.label as type
+from $metainfoFieldTable f
+inner join $metainfoTypeTable t on t.id=f.type_id and t.label like '%MEDIA%'
+
+SQL;
+
+		$names = $rexSQL->getArray($sql);
+
+		return $names;
+	}
+
+	/**
+	 * Anzeige Benutzt/Nicht benutzt erstellen
+	 * @param array $item
+	 * @param array $fields
+	 * @return string
+	 */
+	public static function showUsedInfo($item, $fields)
+	{
+		$return = '';
+		$used = false;
+		if ($item['count'] > 0) {
+			$used = true;
+		}
+
+		$table = '';
+		foreach ($fields as $tablename => $field) {
+			if ($item[$tablename] !== null) {
+				$used = true;
+				$table = $tablename;
+				break;
+			}
+		}
+
+		if ($item['usagecheck_s_id'] > 0) {
+			$used = true;
+		}
+
+		if ($item['usagecheck_metaArtIDs'] > 0) {
+			$used = true;
+		}
+
+		if ($item['usagecheck_metaCatIDs'] > 0) {
+			$used = true;
+		}
+
+		if ($item['usagecheck_metaMedIDs'] > 0) {
+			$used = true;
+		}
+
+		$errors = array();
+		if ($used === false) {
+			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
+		}
+
+		if (!\akrys\redaxo\addon\UsageCheck\Medium::exists($item)) {
+			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_found');
+		}
+
+		//Ob ein Medium lt. Medienpool in Nutzung ist, brauchen wir nur zu prüfen,
+		//wenn wir glauben, dass die Datei ungenutzt ist.
+		//Vielleicht wird sie ja dennoch verwendet ;-)
+		//
+		//Hier wird die Funktion verwendet, die auch beim Löschen von Medien aus dem Medienpool aufgerufen
+		//wird.
+		//
+		//ACHTUNG:
+		//XAMPP 5.6.14-4 mit MariaDB unter MacOS hat ein falsch kompiliertes PCRE-Mdoul an Bord, so dass
+		//alle REGEXP-Abfragen abstürzen.
+		//Der Fehler liegt also nicht hier, und auch nicht im Redaxo-Core
+		if (!$used) {
+			$used = \rex_mediapool_mediaIsInUse($item['filename']);
+
+			if ($used) {
+				$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_in_use');
+			}
+		}
+
+		if (count($errors) > 0) {
+			$fragment = new \rex_fragment(['msg' => $errors]);
+			$return = $fragment->parse('msg/error_box.php');
+		} else {
+			$fragment = new \rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_images_msg_used')]]);
+			$return = $fragment->parse('msg/info_box.php');
 		}
 		return $return;
-	}
-
-	/**
-	 * Dateigröße ermitteln.
-	 *
-	 * Die Größe in Byte auszugeben ist nicht gerade übersichtlich. Daher wird
-	 * hier versucht den Wert in der größt-möglichen Einheit zu ermittln.
-	 *
-	 * @param array $item wichtige Indezes: filesize
-	 * @return string
-	 */
-	public function getSizeOut($item)
-	{
-		$value = $this->getSizeReadable($item['filesize']);
-
-		$value['size'] = round($value['size'], 2);
-		switch ($value['index']) {
-			case 0:
-				$unit = 'B';
-				break;
-			case 1:
-				$unit = 'kB';
-				break;
-			case 2:
-				$unit = 'MB';
-				break;
-			case 3:
-				$unit = 'GB';
-				break;
-			case 4:
-				$unit = 'TB';
-				break;
-			case 5:
-				$unit = 'EB';
-				break;
-			case 6:
-				$unit = 'PB';
-				break;
-			default:
-				$unit = '????';
-				break;
-		}
-
-		return $value['size'].' '.$unit;
-	}
-
-	/**
-	 * Überprüfen, ob eine Datei existiert.
-	 *
-	 * @global type $REX
-	 * @param array $item
-	 * @return boolean
-	 */
-	abstract public function exists($item);
-
-	/**
-	 * Spezifisches SQL
-	 * @param string $additionalSelect
-	 * @param string $additionalJoins
-	 * @return string
-	 */
-	abstract protected function getPictureSQL($additionalSelect, $additionalJoins);
-
-	/**
-	 * Holt ein Medium-Objekt mit Prüfung der Rechte
-	 *
-	 * @param array $item Idezes: category_id, filename
-	 * @return \rex_media
-	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
-	 */
-	abstract public function getMedium($item);
-
-	/**
-	 * Bildvorschau ausgeben
-	 *
-	 * @return void
-	 * @param array $item Ein Element der Ergebnismenge
-	 */
-	abstract public function outputImagePreview($item);
-
-	/**
-	 * Menü URL generieren
-	 * @return string
-	 * @param string $subpage
-	 * @param string $showAllParam
-	 */
-	abstract public function getMeuLink($subpage, $showAllParam);
-
-	/**
-	 * Menü ausgeben
-	 * @return void
-	 * @param string $subpage
-	 * @param string $showAllParam
-	 * @param string $showAllLinktext
-	 */
-	public function outputMenu($subpage, $showAllParam, $showAllLinktext)
-	{
-		$url = $this->getMeuLink($subpage, $showAllParam);
-		$menu = new \rex_fragment([
-			'url' => $url,
-			'linktext' => $showAllLinktext,
-			'texts' => [
-				\akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N('akrys_usagecheck_images_intro_text'),
-			],
-		]);
-		return $menu->parse('fragments/menu/linktext.php');
 	}
 }

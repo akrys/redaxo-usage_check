@@ -1,19 +1,20 @@
 <?php
-$api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
+$user = \rex::getUser();
+$structurePerm = \rex_structure_perm::get($user, 'structure')
 ?>
 
-<table class="<?= $api->getTableClass() ?>">
+<table class="table table-striped">
 	<thead>
 		<tr>
-			<th><?= $api->getI18N('akrys_usagecheck_module_table_heading_name'); ?></th>
-			<th><?= $api->getI18N('akrys_usagecheck_module_table_heading_functions'); ?></th>
+			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_module_table_heading_name'); ?></th>
+			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_module_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
 
 		<?php
 		foreach ($this->items as $item) {
-			if (!$this->modules->hasRights($item)) {
+			if (!$user->isAdmin() && !$user->getComplexPerm('modules')->hasPerm($item['id'])) {
 				continue;
 			}
 			?>
@@ -24,23 +25,30 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 
 					<?php
 					if ($item['slice_data'] === null) {
-						$index = 'akrys_usagecheck_module_msg_not_used';
-						echo $api->getTaggedErrorMsg($api->getI18N($index));
+						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_module_msg_not_used')]]);
+						echo $fragment->parse('msg/error_box.php');
 					} else {
-						$index = 'akrys_usagecheck_module_msg_used';
-						echo $api->getTaggedInfoMsg($api->getI18N($index));
+						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_module_msg_used')]]);
+						echo $fragment->parse('msg/info_box.php');
 					}
 					?>
 
 					<div  class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
+								<?php
+								$type = akrys\redaxo\addon\UsageCheck\Modules\Modules::TYPE;
+								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
+								?>
+
+								<li><a href="<?= $url; ?>"><?= \rex_i18n::rawMsg('akrys_usagecheck_linktext_detail_page') ?></a></li>
 
 								<?php
-								if ($api->isAdmin()) {
+								$user = \rex::getUser();
+								if ($user->isAdmin()) {
 									$url = 'index.php?page=modules/modules&function=edit&module_id='.$item['id'];
 									$index = 'akrys_usagecheck_module_linktext_edit_code';
-									$linkText = $api->getI18N($index);
+									$linkText = \rex_i18n::rawMsg($index);
 									?>
 
 									<li>
@@ -48,39 +56,6 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 									</li>
 
 									<?php
-								}
-
-								if ($item['slice_data'] !== null) {
-									$usages = explode("\n", $item['slice_data']);
-
-									$index = 'akrys_usagecheck_module_linktext_edit_slice';
-									$linkTextRaw = $api->getI18N($index);
-									foreach ($usages as $usageRaw) {
-										$usage = explode("\t", $usageRaw);
-										$sliceID = $usage[0];
-										$clang = $usage[1];
-										$ctype = $usage[2];
-										$articleID = $usage[3];
-										$categoryID = $usage[4];
-										$articleName = $usage[5];
-
-
-										$hasPerm = $api->hasCategoryPerm($articleID);
-
-										if ($hasPerm) {
-											$href = 'index.php?page=content&article_id='.$articleID.
-												'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.
-												'&function=edit#slice'.$sliceID;
-											$linkText = $linkTextRaw;
-											$linkText = str_replace('$sliceID$', $sliceID, $linkText);
-											$linkText = str_replace('$articleName$', $articleName, $linkText);
-											?>
-
-											<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
-
-											<?php
-										}
-									}
 								}
 								?>
 

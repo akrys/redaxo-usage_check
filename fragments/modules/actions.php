@@ -1,12 +1,9 @@
-<?php
-$api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
-?>
 
-<table class="<?= $api->getTableClass(); ?>">
+<table class="table table-striped">
 	<thead>
 		<tr>
-			<th><?= $api->getI18N('akrys_usagecheck_action_table_heading_name'); ?></th>
-			<th><?= $api->getI18N('akrys_usagecheck_action_table_heading_functions'); ?></th>
+			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_action_table_heading_name'); ?></th>
+			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_action_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -19,11 +16,11 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 				<td>
 					<?php
 					if ($item['modul'] === null) {
-						$msg = $api->getI18N('akrys_usagecheck_action_msg_not_used');
-						echo $api->getTaggedErrorMsg($msg);
+						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_action_msg_not_used')]]);
+						echo $fragment->parse('msg/error_box.php');
 					} else {
-						$msg = $api->getI18N('akrys_usagecheck_action_msg_used');
-						echo $api->getTaggedInfoMsg($msg);
+						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_action_msg_used')]]);
+						echo $fragment->parse('msg/info_box.php');
 					}
 					?>
 
@@ -31,30 +28,23 @@ $api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
 						<span>
 							<ol>
 								<?php
-								$output = $api->getI18N('akrys_usagecheck_action_linktext_edit_code');
+								$type = akrys\redaxo\addon\UsageCheck\Modules\Actions::TYPE;
+								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
 								?>
 
-								<li><?= $this->actions->outputActionEdit($item, $output); ?></li>
+								<li><a href="<?= $url; ?>"><?= \rex_i18n::rawMsg('akrys_usagecheck_linktext_detail_page') ?></a></li>
 
-								<?php
-								if ($item['modul'] !== null) {
-									$usages = explode("\n", $item['modul']);
-									$idex = 'akrys_usagecheck_action_linktext_edit_in_modul';
-									$linkTextRaw = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI()->getI18N($index);
-									foreach ($usages as $usageRaw) {
-										$usage = (explode("\t", $usageRaw));
-										$modulID = $usage[0];
-										$modulName = $usage[1];
-										$href = 'index.php?page=module&subpage=&function=edit&modul_id='.$modulID;
-										$linkText = str_replace('$modulName$', $modulName, $linkTextRaw);
-										?>
+								<li>
+									<?php
+									$url = 'index.php?page=modules/actions&action_id='.$item['id'].'&function=edit';
+									$fragmet = new \rex_fragment([
+										'href' => $url,
+										'text' => \rex_i18n::rawMsg('akrys_usagecheck_action_linktext_edit_code'),
+									]);
+									echo $fragmet->parse('fragments/link.php');
+									?>
 
-										<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
-
-										<?php
-									}
-								}
-								?>
+								</li>
 							</ol>
 						</span>
 					</div>

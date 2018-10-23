@@ -1,13 +1,10 @@
-<?php
-$api = akrys\redaxo\addon\UsageCheck\RedaxoCall::getAPI();
-?>
 
-<table class="<?= $api->getTableClass(); ?>">
+<table class="table table-striped">
 	<thead>
 		<tr>
-			<th><?= $api->getI18N('akrys_usagecheck_changelog_header_version'); ?></th>
-			<th><?= $api->getI18N('akrys_usagecheck_changelog_header_date'); ?></th>
-			<th><?= $api->getI18N('akrys_usagecheck_changelog_header_changes'); ?></th>
+			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_changelog_header_version'); ?></th>
+			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_changelog_header_date'); ?></th>
+			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_changelog_header_changes'); ?></th>
 		</tr>
 	</thead>
 	<tbody>

@@ -1,5 +1,5 @@
 package: usage_check
-version: '2.0'
+version: '2.1'
 author: Axel Krysztofiak
 supportpage: https://github.com/akrys/redaxo-usage_check
 #load: early
@@ -17,6 +17,7 @@ page:
         module: { title: 'translate:akrys_usagecheck_module' }
         action: { title: 'translate:akrys_usagecheck_action', perm: admin }
         template: { title: 'translate:akrys_usagecheck_templates' }
+        details: { title: 'translate:akrys_usagecheck_details', hidden: true }
         changelog: { title: 'translate:akrys_usagecheck_changelog' }
 
 requires:
