@@ -177,17 +177,8 @@ SQL;
 			$where .= 'where t.id='.$rexSQL->escape($detail_id);
 		} else {
 			$additionalFields = <<<SQL
-	,group_concat(distinct concat(
-		cast(a.id as char),"\t",
-		cast(a.parent_id as char),"\t",
-		cast(a.startarticle as char),"\t",
-		a.name,"\t",
-		cast(a.clang_id as char)) Separator "\n"
-	) as articles,
-	group_concat(distinct concat(
-		cast(t2.id as char),"\t",
-		t2.name) Separator "\n"
-	) as templates
+	,count(a.id) articles
+	,count(t2.id) templates
 SQL;
 			$groupBy = 'group by a.template_id,t.id';
 

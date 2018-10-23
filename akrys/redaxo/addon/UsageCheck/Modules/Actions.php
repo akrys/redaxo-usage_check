@@ -94,15 +94,6 @@ SQL;
 			}
 
 			$additionalFields = ', ma.module_id as modul';
-			/*
-			  $additionalFields = <<<SQL
-			  , group_concat(concat(
-			  cast(ma.module_id as char),"\t",
-			  m.name
-			  ) separator "\n") as modul
-
-			  SQL;
-			 */
 		}
 
 		if (count($whereArray) > 0) {

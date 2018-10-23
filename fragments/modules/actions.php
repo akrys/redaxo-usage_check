@@ -45,28 +45,6 @@
 									?>
 
 								</li>
-
-								<?php
-								/*
-								  if ($item['modul'] !== null) {
-								  $usages = explode("\n", $item['modul']);
-								  $index = 'akrys_usagecheck_action_linktext_edit_in_modul';
-								  $linkTextRaw = \rex_i18n::rawMsg($index);
-								  foreach ($usages as $usageRaw) {
-								  $usage = (explode("\t", $usageRaw));
-								  $modulID = $usage[0];
-								  $modulName = $usage[1];
-								  $href = 'index.php?page=modules/modules&start=0&function=edit&module_id='.$modulID;
-								  $linkText = str_replace('$modulName$', $modulName, $linkTextRaw);
-								  ?>
-
-								  <li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
-
-								  <?php
-								  }
-								  }
-								 */
-								?>
 							</ol>
 						</span>
 					</div>
