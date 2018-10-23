@@ -47,8 +47,8 @@ $user = \rex::getUser();
 			}
 		}
 
-//Templates, die in Templates verwendert werden, betrifft
-//nur die Coder, und das wären Admins
+		//Templates, die in Templates verwendert werden, betrifft
+		//nur die Coder, und das wären Admins
 		$hasPerm = $user->isAdmin();
 		if ($hasPerm) {
 			foreach ($this->data['result']['templates'] as $item) {

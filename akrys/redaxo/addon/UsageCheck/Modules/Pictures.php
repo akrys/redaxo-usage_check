@@ -216,13 +216,6 @@ SQL;
 
 		return <<<SQL
 , count(s.id) as count
-		, group_concat(distinct concat(
-	cast(s.id as char),"\\t",
-	cast(s.article_id as char),"\\t",
-	a.name,"\\t",
-	cast(s.clang_id as char),"\\t",
-	cast(s.ctype_id as char)
-) Separator "\\n") as slice_data
 
 $additionalSelect
 
@@ -326,11 +319,6 @@ SQL;
 	{
 		$selectMetaNull = ',0 as usagecheck_metaArtIDs '.PHP_EOL;
 		if (!$detail_id) {
-//			$selectMetaNotNull = ',group_concat(distinct concat('.
-//				'rex_article_art_meta.id,"\t",'.
-//				'rex_article_art_meta.name,"\t",'.
-//				'rex_article_art_meta.clang_id,"\t") Separator "\n") as usagecheck_metaArtIDs '.PHP_EOL;
-
 			$selectMetaNotNull = ',ifnull(rex_article_art_meta.id,0) as usagecheck_metaArtIDs '.PHP_EOL;
 		} else {
 			$selectMetaNotNull = <<<SQL
@@ -361,12 +349,6 @@ SQL;
 	{
 		$selectMetaNull = ',0 as usagecheck_metaCatIDs '.PHP_EOL;
 		if (!$detail_id) {
-//			$selectMetaNotNull = ',group_concat(distinct concat('.
-//				'rex_article_cat_meta.id,"\t",'.
-//				'rex_article_cat_meta.catname,"\t",'.
-//				'rex_article_cat_meta.clang_id,"\t",'.
-//				'rex_article_cat_meta.parent_id) Separator "\n") as usagecheck_metaCatIDs '.PHP_EOL;
-
 			$selectMetaNotNull = ',ifnull(rex_article_cat_meta.id,0) as usagecheck_metaCatIDs '.PHP_EOL;
 		} else {
 			$selectMetaNotNull = <<<SQL
@@ -399,12 +381,6 @@ SQL;
 	{
 		$selectMetaNull = ',0 as usagecheck_metaMedIDs '.PHP_EOL;
 		if (!$detail_id) {
-//			$selectMetaNotNull = ',group_concat(distinct concat('.
-//				'rex_article_med_meta.id,"\t",'.
-//				'rex_article_med_meta.category_id,"\t",'.
-//				'rex_article_med_meta.filename'.
-//				') Separator "\n") as usagecheck_metaMedIDs '.PHP_EOL;
-
 			$selectMetaNotNull = ',ifnull(rex_article_med_meta.id,0) as usagecheck_metaMedIDs '.PHP_EOL;
 		} else {
 			$selectMetaNotNull = <<<SQL

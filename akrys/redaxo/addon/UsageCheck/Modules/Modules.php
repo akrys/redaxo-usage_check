@@ -102,19 +102,6 @@ SQL;
 			}
 
 			$additionalFields = ', s.id as slice_data';
-			/*
-			  $additionalFields = <<<SQL
-			  ,group_concat(
-			  concat(
-			  cast(s.id as char),"\t",
-			  cast(s.clang_id as char),"\t",
-			  cast(s.ctype_id as char),"\t",
-			  cast(a.id as char),"\t",
-			  cast(a.parent_id as char),"\t",
-			  a.name) Separator "\n"
-			  ) slice_data
-			  SQL;
-			 */
 		}
 
 		if (count($whereArray) > 0) {
