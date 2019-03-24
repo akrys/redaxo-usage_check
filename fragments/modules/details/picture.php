@@ -20,7 +20,7 @@ $media = rex_media::get($this->data['first']['filename']);
 	<div style="float:left;margin-left:5px;">
 		<ol>
 			<?php
-			$url = 'index.php?page=mediapool&subpage=detail&file_name='.$item['filename'];
+			$url = 'index.php?page=mediapool&subpage=detail&file_name='.$this->filename;
 			$linkText = \rex_i18n::rawMsg('akrys_usagecheck_images_linktext_edit');
 			?>
 

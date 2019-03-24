@@ -431,7 +431,7 @@ SQL;
 	{
 		$return = '';
 		$used = false;
-		if ($item['count'] > 0) {
+		if (isset($item['count']) && $item['count'] > 0) {
 			$used = true;
 		}
 
@@ -444,19 +444,19 @@ SQL;
 			}
 		}
 
-		if ($item['usagecheck_s_id'] > 0) {
+		if (isset($item['usagecheck_s_id']) && $item['usagecheck_s_id'] > 0) {
 			$used = true;
 		}
 
-		if ($item['usagecheck_metaArtIDs'] > 0) {
+		if (isset($item['usagecheck_metaArtIDs']) && $item['usagecheck_metaArtIDs'] > 0) {
 			$used = true;
 		}
 
-		if ($item['usagecheck_metaCatIDs'] > 0) {
+		if (isset($item['usagecheck_metaCatIDs']) && $item['usagecheck_metaCatIDs'] > 0) {
 			$used = true;
 		}
 
-		if ($item['usagecheck_metaMedIDs'] > 0) {
+		if (isset($item['usagecheck_metaMedIDs']) && $item['usagecheck_metaMedIDs'] > 0) {
 			$used = true;
 		}
 
