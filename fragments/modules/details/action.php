@@ -28,6 +28,7 @@
 		if (isset($this->data['result']['action'])) {
 			$index = 'akrys_usagecheck_action_linktext_edit_in_modul';
 			$linkTextRaw = \rex_i18n::rawMsg($index);
+
 			foreach ($this->data['result']['action'] as $item) {
 				$modulID = $item['usagecheck_ma_module'];
 				$modulName = $item['usage_check_m_name'];
