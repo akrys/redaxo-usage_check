@@ -34,7 +34,7 @@ Dann muss man das Addon nur noch über das Redaxo-Backend installieren und aktiv
 
 ## Kompatibilität
 - PHP Version: __5.6.11__ oder höher
-- getestet mit Redaxo __5.0.1__, __5.1__, __5.2__,  __5.3__,  __5.4__,  __5.5__
+- getestet mit Redaxo __5.0.1__, __5.1__, __5.2__,  __5.3__,  __5.4__,  __5.5__,  __5.6__,  __5.7__
 
 ## Hinweis Code-Analyse-Tools
 Mit der Verison 1.0-Beta7 habe ich Code-Anlayse-Tools, wie z.B. `PHPUnit` eingebaut. Dafür schein es am Einfachsten zu
