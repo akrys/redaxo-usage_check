@@ -40,29 +40,31 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 
 		$index = 'akrys_usagecheck_module_linktext_edit_slice';
 		$linkTextRaw = \rex_i18n::rawMsg($index);
-		foreach ($this->data['result']['modules'] as $item) {
-			$sliceID = $item['usagecheck_s_id'];
-			$clang = $item['usagecheck_s_clang_id'];
-			$ctype = $item['usagecheck_s_ctype_id'];
-			$articleID = $item['usagecheck_a_id'];
-			$categoryID = $item['usagecheck_a_parent_id'];
-			$articleName = $item['usagecheck_a_name'];
+		if (isset($this->data['result']['modules'])) {
+			foreach ($this->data['result']['modules'] as $item) {
+				$sliceID = $item['usagecheck_s_id'];
+				$clang = $item['usagecheck_s_clang_id'];
+				$ctype = $item['usagecheck_s_ctype_id'];
+				$articleID = $item['usagecheck_a_id'];
+				$categoryID = $item['usagecheck_a_parent_id'];
+				$articleName = $item['usagecheck_a_name'];
 
 
-			$hasPerm = $structurePerm->hasCategoryPerm($articleID);
+				$hasPerm = $structurePerm->hasCategoryPerm($articleID);
 
-			if ($hasPerm) {
-				$href = 'index.php?page=content&article_id='.$articleID.
-					'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.
-					'&function=edit#slice'.$sliceID;
-				$linkText = $linkTextRaw;
-				$linkText = str_replace('$sliceID$', $sliceID, $linkText);
-				$linkText = str_replace('$articleName$', $articleName, $linkText);
-				?>
+				if ($hasPerm) {
+					$href = 'index.php?page=content&article_id='.$articleID.
+						'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.'&ctype='.$ctype.
+						'&function=edit#slice'.$sliceID;
+					$linkText = $linkTextRaw;
+					$linkText = str_replace('$sliceID$', $sliceID, $linkText);
+					$linkText = str_replace('$articleName$', $articleName, $linkText);
+					?>
 
-				<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
+					<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
 
-				<?php
+					<?php
+				}
 			}
 		}
 		?>

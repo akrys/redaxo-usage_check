@@ -29,6 +29,12 @@ abstract class BaseModule
 	protected $detailId = null;
 
 	/**
+	 * Tabellenfelder
+	 * @var array
+	 */
+	protected $tableFields = array();
+
+	/**
 	 * Anzeigemodus umstellen
 	 * @param boolean $bln
 	 */

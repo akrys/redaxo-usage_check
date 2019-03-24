@@ -2,6 +2,8 @@
 
 use \akrys\redaxo\addon\UsageCheck\Config;
 
+$errors = [];
+
 $type = rex_get('type', 'string', "");
 switch ($type) {
 	case \akrys\redaxo\addon\UsageCheck\Modules\Actions::TYPE:
