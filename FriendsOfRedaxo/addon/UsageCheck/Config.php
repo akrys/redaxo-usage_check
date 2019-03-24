@@ -4,7 +4,7 @@
  * Config-Datei
  * @author akrys
  */
-namespace akrys\redaxo\addon\UsageCheck;
+namespace FriendsOfRedaxo\addon\UsageCheck;
 
 /**
  * Config-Klasse mit Konstanten für die Runtime
@@ -55,7 +55,7 @@ class Config
 	 */
 	public static function getBaseDir()
 	{
-		return realpath(__DIR__.'/../../../../');
+		return realpath(__DIR__.'/../../../');
 	}
 
 	/**

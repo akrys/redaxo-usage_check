@@ -3,7 +3,7 @@
 /**
  * Frontend-Ausagbe der Übersicht
  */
-use \akrys\redaxo\addon\UsageCheck\Config;
+use \FriendsOfRedaxo\addon\UsageCheck\Config;
 
 $title = new \rex_fragment();
 $title->setVar('name', Config::NAME_OUT);

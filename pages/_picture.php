@@ -3,9 +3,9 @@
 /**
  * Anzeige der nicht verwendeten Bilder.
  */
-use \akrys\redaxo\addon\UsageCheck\Config;
+use \FriendsOfRedaxo\addon\UsageCheck\Config;
 
-$pictures = new \akrys\redaxo\addon\UsageCheck\Modules\Pictures();
+$pictures = new \FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures();
 $pictures->setRexSql(\rex_sql::factory());
 
 $title = new \rex_fragment();
@@ -45,7 +45,7 @@ if ($items === false) {
 	}
 
 // <editor-fold defaultstate="collapsed" desc="Menü">
-	$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.$showAllParam;
+	$url = 'index.php?page='.\FriendsOfRedaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.$showAllParam;
 	$menu = new \rex_fragment([
 		'url' => $url,
 		'linktext' => $showAllLinktext,

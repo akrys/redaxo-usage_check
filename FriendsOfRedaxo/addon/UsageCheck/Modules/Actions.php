@@ -6,9 +6,9 @@
  * @version       1.0 / 2015-08-09
  * @author        akrys
  */
-namespace akrys\redaxo\addon\UsageCheck\Modules;
+namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
-use \akrys\redaxo\addon\UsageCheck\Permission;
+use \FriendsOfRedaxo\addon\UsageCheck\Permission;
 
 /**
  * Description of Modules
@@ -16,7 +16,7 @@ use \akrys\redaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 class Actions
-	extends \akrys\redaxo\addon\UsageCheck\Lib\BaseModule
+	extends \FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule
 {
 	const TYPE = 'actions';
 

@@ -3,7 +3,7 @@
 /**
  * User-Rechte
  */
-namespace akrys\redaxo\addon\UsageCheck;
+namespace FriendsOfRedaxo\addon\UsageCheck;
 
 /**
  * User-Rechte für Zugriffe abfragen.

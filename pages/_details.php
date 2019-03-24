@@ -1,15 +1,15 @@
 <?php
 
-use \akrys\redaxo\addon\UsageCheck\Config;
+use \FriendsOfRedaxo\addon\UsageCheck\Config;
 
 $errors = [];
 
 $type = rex_get('type', 'string', "");
 switch ($type) {
-	case \akrys\redaxo\addon\UsageCheck\Modules\Actions::TYPE:
-	case \akrys\redaxo\addon\UsageCheck\Modules\Modules::TYPE:
-	case \akrys\redaxo\addon\UsageCheck\Modules\Templates::TYPE:
-	case \akrys\redaxo\addon\UsageCheck\Modules\Pictures::TYPE:
+	case \FriendsOfRedaxo\addon\UsageCheck\Modules\Actions::TYPE:
+	case \FriendsOfRedaxo\addon\UsageCheck\Modules\Modules::TYPE:
+	case \FriendsOfRedaxo\addon\UsageCheck\Modules\Templates::TYPE:
+	case \FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::TYPE:
 		//;
 		break;
 	default:
@@ -33,20 +33,20 @@ $id = rex_get('id', 'int');
 
 
 switch ($type) {
-	case akrys\redaxo\addon\UsageCheck\Modules\Pictures::TYPE:
-		$object = new akrys\redaxo\addon\UsageCheck\Modules\Pictures();
+	case FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::TYPE:
+		$object = new FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures();
 		$template = 'modules/details/picture.php';
 		break;
-	case akrys\redaxo\addon\UsageCheck\Modules\Modules::TYPE:
-		$object = new akrys\redaxo\addon\UsageCheck\Modules\Modules();
+	case FriendsOfRedaxo\addon\UsageCheck\Modules\Modules::TYPE:
+		$object = new FriendsOfRedaxo\addon\UsageCheck\Modules\Modules();
 		$template = 'modules/details/module.php';
 		break;
-	case akrys\redaxo\addon\UsageCheck\Modules\Actions::TYPE:
-		$object = new akrys\redaxo\addon\UsageCheck\Modules\Actions();
+	case FriendsOfRedaxo\addon\UsageCheck\Modules\Actions::TYPE:
+		$object = new FriendsOfRedaxo\addon\UsageCheck\Modules\Actions();
 		$template = 'modules/details/action.php';
 		break;
-	case akrys\redaxo\addon\UsageCheck\Modules\Templates::TYPE:
-		$object = new akrys\redaxo\addon\UsageCheck\Modules\Templates();
+	case FriendsOfRedaxo\addon\UsageCheck\Modules\Templates::TYPE:
+		$object = new FriendsOfRedaxo\addon\UsageCheck\Modules\Templates();
 		$template = 'modules/details/template.php';
 		break;
 	default:

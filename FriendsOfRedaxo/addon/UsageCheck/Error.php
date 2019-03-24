@@ -6,7 +6,7 @@
  * @version       1.0 / 2015-10-27
  * @author        akrys
  */
-namespace akrys\redaxo\addon\UsageCheck;
+namespace FriendsOfRedaxo\addon\UsageCheck;
 
 /**
  * Container für Fehlermeldungen
