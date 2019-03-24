@@ -26,11 +26,6 @@ class Pictures
 	 */
 	private $yform = null;
 
-	/**
-	 * Tabellenfelder
-	 * @var array
-	 */
-	private $tableFields;
 
 	/**
 	 * Nicht genutze Bilder holen
