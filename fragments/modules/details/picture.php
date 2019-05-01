@@ -14,7 +14,7 @@ $media = rex_media::get($this->data['first']['filename']);
 
 <div class="basis">
 	<?php
-	echo \akrys\redaxo\addon\UsageCheck\Modules\Pictures::showUsedInfo($this->data['first'], $this->data['fields']);
+	echo \FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::showUsedInfo($this->data['first'], $this->data['fields']);
 	?>
 
 	<div style="float:left;margin-left:5px;">
@@ -221,7 +221,7 @@ $media = rex_media::get($this->data['first']['filename']);
 
 		<?php
 		$url = 'index.php?rex_media_type=rex_mediapool_detail&rex_media_file='.$this->data['first']['filename'];
-		$fileSize = new \akrys\redaxo\addon\UsageCheck\Lib\FileSize($this->data['first']['filesize']);
+		$fileSize = new \FriendsOfRedaxo\addon\UsageCheck\Lib\FileSize($this->data['first']['filesize']);
 
 		if (!stristr($this->data['first']['filetype'], 'image/')) {
 			?>

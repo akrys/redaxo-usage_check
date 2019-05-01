@@ -6,9 +6,9 @@
  * @version       1.0 / 2015-08-08
  * @author        akrys
  */
-namespace akrys\redaxo\addon\UsageCheck\Modules;
+namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
-use \akrys\redaxo\addon\UsageCheck\Permission;
+use \FriendsOfRedaxo\addon\UsageCheck\Permission;
 
 /**
  * Description of Pictures
@@ -16,13 +16,13 @@ use \akrys\redaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 class Pictures
-	extends \akrys\redaxo\addon\UsageCheck\Lib\BaseModule
+	extends \FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule
 {
 	const TYPE = 'media';
 
 	/**
 	 * Yform Integration
-	 * @var \akrys\redaxo\addon\UsageCheck\Lib\PictureYFrom
+	 * @var \FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom
 	 */
 	private $yform = null;
 
@@ -44,7 +44,7 @@ class Pictures
 		$rexSQL = $this->getRexSql();
 
 		if (!isset($this->yform)) {
-			$this->yform = new \akrys\redaxo\addon\UsageCheck\Lib\PictureYFrom($this);
+			$this->yform = new \FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom($this);
 			$this->yform->setRexSql($rexSQL);
 		}
 
@@ -65,7 +65,7 @@ class Pictures
 
 		$rexSQL = $this->getRexSql();
 		if (!isset($this->yform)) {
-			$this->yform = new \akrys\redaxo\addon\UsageCheck\Lib\PictureYFrom($this);
+			$this->yform = new \FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom($this);
 			$this->yform->setRexSql($rexSQL);
 		}
 
@@ -460,7 +460,7 @@ SQL;
 			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
 		}
 
-		if (!\akrys\redaxo\addon\UsageCheck\Medium::exists($item)) {
+		if (!\FriendsOfRedaxo\addon\UsageCheck\Medium::exists($item)) {
 			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_found');
 		}
 

@@ -6,7 +6,7 @@
  * @version       1.0 / 2018-05-13
  * @author        akrys
  */
-namespace akrys\redaxo\addon\UsageCheck\Lib;
+namespace FriendsOfRedaxo\addon\UsageCheck\Lib;
 
 /**
  * Description of PictureYFrom
@@ -42,7 +42,7 @@ class PictureYFrom
 				'table_out' => $table['table_out'],
 				'type' => $table['type_name'],
 				//in YForm 2, muss man prüfen, ob be_media einen multiple modifier hat.
-				//siehe Kommentare in \akrys\redaxo\addon\UsageCheck\RexV5\Modules\Pictures::getYFormSQL
+				//siehe Kommentare in \FriendsOfRedaxo\addon\UsageCheck\RexV5\Modules\Pictures::getYFormSQL
 				'multiple' => (isset($table['multiple']) && $table['multiple'] == '1'),
 			);
 		}

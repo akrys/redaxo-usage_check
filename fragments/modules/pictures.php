@@ -17,14 +17,14 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 		foreach ($this->items['result'] as $item) {
 			$continue = false;
 			try {
-				$medium = akrys\redaxo\addon\UsageCheck\Medium::get($item);
+				$medium = FriendsOfRedaxo\addon\UsageCheck\Medium::get($item);
 			} catch (\Exception $e) {
 				continue;
 			}
 
 			$initCat = null;
 
-			$fileSize = new \akrys\redaxo\addon\UsageCheck\Lib\FileSize($item['filesize']);
+			$fileSize = new \FriendsOfRedaxo\addon\UsageCheck\Lib\FileSize($item['filesize']);
 			?>
 
 			<tr>
@@ -56,14 +56,14 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 				<td style="width:75%;">
 
 					<?php
-					echo \akrys\redaxo\addon\UsageCheck\Modules\Pictures::showUsedInfo($item, $this->items['fields']);
+					echo \FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::showUsedInfo($item, $this->items['fields']);
 					?>
 
 					<div class="rex-message" style="border:0;outline:0;">
 						<span>
 							<ol>
 								<?php
-								$type = akrys\redaxo\addon\UsageCheck\Modules\Pictures::TYPE;
+								$type = FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::TYPE;
 								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
 								?>
 

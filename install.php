@@ -3,7 +3,7 @@
 /*
  * Generelle uninstall-Operationen
  */
-require_once __DIR__.'/akrys/redaxo/addon/UsageCheck/Config.php';
+require_once __DIR__.'/FriendsOfRedaxo/addon/UsageCheck/Config.php';
 
 $error = '';
 /*
@@ -13,7 +13,7 @@ $error = '';
  * Verzeichnis.
  */
 try {
-	\akrys\redaxo\addon\UsageCheck\Config::checkVendorDir();
+	\FriendsOfRedaxo\addon\UsageCheck\Config::checkVendorDir();
 } catch (\Exception $e) {
 	if (\rex::isBackend()) {
 		print $e->getMessage();
@@ -21,7 +21,7 @@ try {
 	die();
 }
 
-spl_autoload_register(array('akrys\\redaxo\\addon\\UsageCheck\\Config', 'autoload'), true, true);
+spl_autoload_register(array('FriendsOfRedaxo\\addon\\UsageCheck\\Config', 'autoload'), true, true);
 
 
 

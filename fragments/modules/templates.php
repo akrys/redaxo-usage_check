@@ -45,7 +45,7 @@ $user = \rex::getUser();
 							<strong><?= \rex_i18n::rawMsg('akrys_usagecheck_template_detail_heading') ?></strong>
 							<ol>
 								<?php
-								$type = akrys\redaxo\addon\UsageCheck\Modules\Templates::TYPE;
+								$type = FriendsOfRedaxo\addon\UsageCheck\Modules\Templates::TYPE;
 								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
 								?>
 

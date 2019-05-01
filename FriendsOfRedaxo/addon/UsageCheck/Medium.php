@@ -6,7 +6,7 @@
  * @version       1.0 / 2018-05-13
  * @author        akrys
  */
-namespace akrys\redaxo\addon\UsageCheck;
+namespace FriendsOfRedaxo\addon\UsageCheck;
 
 /**
  * Description of Medium
@@ -21,7 +21,7 @@ class Medium
 	 *
 	 * @param array $item Idezes: category_id, filename
 	 * @return \rex_media
-	 * @throws \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException
+	 * @throws \FriendsOfRedaxo\addon\UsageCheck\Exception\FunctionNotCallableException
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public static function get($item)
@@ -32,7 +32,7 @@ class Medium
 			!(is_object($complexPerm) &&
 			$complexPerm->hasCategoryPerm($item['category_id']))) {
 			//keine Rechte am Medium
-			throw new \akrys\redaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
+			throw new \FriendsOfRedaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
 		}
 
 		//Das Medium wird später gebraucht.

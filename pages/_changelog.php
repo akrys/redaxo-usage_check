@@ -3,9 +3,9 @@
 /**
  * Frontend-Ausagbe für die Seite Changelog
  */
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
+require_once __DIR__.'/../FriendsOfRedaxo/addon/UsageCheck/Config.php';
 
-use \akrys\redaxo\addon\UsageCheck\Config;
+use \FriendsOfRedaxo\addon\UsageCheck\Config;
 
 $title = new \rex_fragment();
 $title->setVar('name', Config::NAME_OUT);

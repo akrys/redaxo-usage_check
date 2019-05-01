@@ -6,7 +6,7 @@
  * @version       1.0 / 2018-05-13
  * @author        akrys
  */
-namespace akrys\redaxo\addon\UsageCheck\Lib;
+namespace FriendsOfRedaxo\addon\UsageCheck\Lib;
 
 /**
  * Description of ModulesBase

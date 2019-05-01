@@ -3,11 +3,11 @@
 /**
  * Frontend-Ausagbe für die Seite Actions
  */
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Config.php';
+require_once __DIR__.'/../FriendsOfRedaxo/addon/UsageCheck/Config.php';
 
 /* @var $I18N \i18n */
 
-use \akrys\redaxo\addon\UsageCheck\Config;
+use \FriendsOfRedaxo\addon\UsageCheck\Config;
 
 $title = new \rex_fragment();
 $title->setVar('name', Config::NAME_OUT);
@@ -16,8 +16,8 @@ $title->setVar('version', Config::VERSION);
 echo \rex_view::title($title->parse('fragments/title.php'));
 
 
-require_once __DIR__.'/../akrys/redaxo/addon/UsageCheck/Modules/Actions.php';
-$actions = new \akrys\redaxo\addon\UsageCheck\Modules\Actions();
+require_once __DIR__.'/../FriendsOfRedaxo/addon/UsageCheck/Modules/Actions.php';
+$actions = new \FriendsOfRedaxo\addon\UsageCheck\Modules\Actions();
 $actions->setRexSql(\rex_sql::factory());
 
 switch (rex_get('showall', 'string', "")) {
