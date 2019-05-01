@@ -80,6 +80,7 @@ class Modules
 	protected function getSQL(/* int */$detail_id = null)
 	{
 		$additionalFields = '';
+		$where = '';
 		$whereArray = [];
 		$groupBy = 'group by m.id';
 
@@ -105,7 +106,7 @@ SQL;
 		}
 
 		if (count($whereArray) > 0) {
-			$where = 'where '.implode(' and ', $whereArray);
+			$where .= 'where '.implode(' and ', $whereArray);
 		}
 
 		//Keine integer oder Datumswerte in einem concat!
