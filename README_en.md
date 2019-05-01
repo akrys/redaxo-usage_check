@@ -31,7 +31,7 @@ After copying the files you'll need to install and activate this addon using the
 
 ## Compatibility
 - PHP version: __5.6.11__ or later
-- tested on Redaxo versions __5.0.1__, __5.1__, __5.2__,  __5.3__,  __5.4__,  __5.5__
+- tested on Redaxo versions __5.0.1__, __5.1__, __5.2__,  __5.3__,  __5.4__,  __5.5__,  __5.6__,  __5.7__
 
 ## Notice on code-analyzing tools
 As of version 1.0-Beta7, I'm using some code analyzing tools such as `PHPUnit`.

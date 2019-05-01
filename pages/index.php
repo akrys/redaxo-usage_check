@@ -3,7 +3,6 @@
 /**
  * Grundlegendes Frontend
  */
-use \akrys\redaxo\addon\UsageCheck\Config;
 
 $locale = null;
 $language = \rex::getUser()->getLanguage();
@@ -15,7 +14,7 @@ if (!stristr($language, 'de_') && !stristr($language, 'en_')) {
 	rex_i18n::setLocale('en_gb');
 }
 //Fehlerausgabe
-$fragment = new rex_fragment(['msg' => akrys\redaxo\addon\UsageCheck\Error::getInstance()]);
+$fragment = new rex_fragment(['msg' => FriendsOfRedaxo\addon\UsageCheck\Error::getInstance()]);
 echo $fragment->parse('msg/error_box.php');
 
 $subpage = rex_be_controller::getCurrentPagePart(2, 'overview');

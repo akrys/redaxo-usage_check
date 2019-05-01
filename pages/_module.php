@@ -5,9 +5,9 @@
  */
 /* @var $I18N \i18n */
 
-use \akrys\redaxo\addon\UsageCheck\Config;
+use \FriendsOfRedaxo\addon\UsageCheck\Config;
 
-$modules = new \akrys\redaxo\addon\UsageCheck\Modules\Modules();
+$modules = new \FriendsOfRedaxo\addon\UsageCheck\Modules\Modules();
 $modules->setRexSql(\rex_sql::factory());
 
 $showAll = false;
@@ -48,7 +48,7 @@ if ($items === false) {
 	}
 
 // <editor-fold defaultstate="collapsed" desc="Menü">
-	$url = 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.$showAllParam;
+	$url = 'index.php?page='.\FriendsOfRedaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.$showAllParam;
 	$menu = new \rex_fragment([
 		'url' => $url,
 		'linktext' => $showAllLinktext,

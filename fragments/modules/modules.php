@@ -37,7 +37,7 @@ $structurePerm = \rex_structure_perm::get($user, 'structure')
 						<span>
 							<ol>
 								<?php
-								$type = akrys\redaxo\addon\UsageCheck\Modules\Modules::TYPE;
+								$type = FriendsOfRedaxo\addon\UsageCheck\Modules\Modules::TYPE;
 								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
 								?>
 

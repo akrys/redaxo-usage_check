@@ -16,34 +16,36 @@ $user = \rex::getUser();
 	?>
 	<ol>
 		<?php
-		$index = 'akrys_usagecheck_template_linktext_edit_article';
-		$linkTextRaw = \rex_i18n::rawMsg($index);
-		foreach ($this->data['result']['articles'] as $item) {
-			$articleID = $item['usagecheck_article_a_id'];
-			$articleReID = $item['usagecheck_article_a_parent_id'];
-			$startpage = $item['usagecheck_article_a_startarticle'];
-			$articleName = $item['usagecheck_article_a_name'];
-			$clang = $item['usagecheck_article_a_clang_id'];
+		if (isset($this->data['result']['articles'])) {
+			$index = 'akrys_usagecheck_template_linktext_edit_article';
+			$linkTextRaw = \rex_i18n::rawMsg($index);
+			foreach ($this->data['result']['articles'] as $item) {
+				$articleID = $item['usagecheck_article_a_id'];
+				$articleReID = $item['usagecheck_article_a_parent_id'];
+				$startpage = $item['usagecheck_article_a_startarticle'];
+				$articleName = $item['usagecheck_article_a_name'];
+				$clang = $item['usagecheck_article_a_clang_id'];
 
 
-			if ($startpage == 1) {
-				$articleReID = $articleID;
-			}
+				if ($startpage == 1) {
+					$articleReID = $articleID;
+				}
 
-			$perm = \rex_structure_perm::get($user, 'structure');
-			$hasPerm = $perm->hasCategoryPerm($articleID);
+				$perm = \rex_structure_perm::get($user, 'structure');
+				$hasPerm = $perm->hasCategoryPerm($articleID);
 
-			if ($hasPerm) {
-				$href = 'index.php?page=structure&article_id='.$articleID.
-					'&function=edit_art&category_id='.$articleReID.'&clang='.$clang;
-				$linkText = $linkTextRaw;
-				$linkText = str_replace('$articleID$', $articleID, $linkText);
-				$linkText = str_replace('$articleName$', $articleName, $linkText);
-				?>
+				if ($hasPerm) {
+					$href = 'index.php?page=structure&article_id='.$articleID.
+						'&function=edit_art&category_id='.$articleReID.'&clang='.$clang;
+					$linkText = $linkTextRaw;
+					$linkText = str_replace('$articleID$', $articleID, $linkText);
+					$linkText = str_replace('$articleName$', $articleName, $linkText);
+					?>
 
-				<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
+					<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
 
-				<?php
+					<?php
+				}
 			}
 		}
 
@@ -51,21 +53,23 @@ $user = \rex::getUser();
 		//nur die Coder, und das wären Admins
 		$hasPerm = $user->isAdmin();
 		if ($hasPerm) {
-			foreach ($this->data['result']['templates'] as $item) {
-				$index = 'akrys_usagecheck_template_linktext_edit_template';
+			if (isset($this->data['result']['templates'])) {
+				foreach ($this->data['result']['templates'] as $item) {
+					$index = 'akrys_usagecheck_template_linktext_edit_template';
 
-				$id = $item['usagecheck_template_t2_id'];
-				$name = $item['usagecheck_template_t2_name'];
+					$id = $item['usagecheck_template_t2_id'];
+					$name = $item['usagecheck_template_t2_name'];
 
-				$href = 'index.php?page=templates&function=edit&template_id='.$id;
-				$linkText = $name;
-				$linkText = str_replace('$templateName$', $name, $linkText);
-				$linkText = str_replace('$templateID$', $item['id'], $linkText);
-				?>
+					$href = 'index.php?page=templates&function=edit&template_id='.$id;
+					$linkText = $name;
+					$linkText = str_replace('$templateName$', $name, $linkText);
+					$linkText = str_replace('$templateID$', $item['id'], $linkText);
+					?>
 
-				<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
+					<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
 
-				<?php
+					<?php
+				}
 			}
 		}
 		?>

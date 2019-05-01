@@ -1,24 +1,24 @@
 <?php
 
 /**
- * Datei für das Modul "Module"
+ * Datei für die Modul-Actions
  *
  * @version       1.0 / 2015-08-09
  * @author        akrys
  */
-namespace akrys\redaxo\addon\UsageCheck\Modules;
+namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
-use \akrys\redaxo\addon\UsageCheck\Permission;
+use \FriendsOfRedaxo\addon\UsageCheck\Permission;
 
 /**
  * Description of Modules
  *
  * @author akrys
  */
-class Modules
-	extends \akrys\redaxo\addon\UsageCheck\Lib\BaseModule
+class Actions
+	extends \FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule
 {
-	const TYPE = 'modules';
+	const TYPE = 'actions';
 
 	/**
 	 * Nicht genutze Module holen
@@ -30,14 +30,12 @@ class Modules
 	 */
 	public function get()
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
-			//Permission::PERM_MODUL
+		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
 			return false;
 		}
 
 		$rexSQL = $this->getRexSql();
 		$sql = $this->getSQL();
-
 		return $rexSQL->getArray($sql);
 	}
 
@@ -48,18 +46,18 @@ class Modules
 	 */
 	public function getDetails($item_id)
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
-			//Permission::PERM_MODUL
+		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
 			return false;
 		}
+		$result = [];
 
 		$rexSQL = $this->getRexSql();
 		$sql = $this->getSQL($item_id);
 		$res = $rexSQL->getArray($sql);
-		$result = [];
+
 		foreach ($res as $articleData) {
-			if (isset($articleData['usagecheck_s_id']) && (int) $articleData['usagecheck_s_id'] > 0) {
-				$result['modules'][$articleData['usagecheck_s_id']] = $articleData;
+			if (isset($articleData['usagecheck_ma_module']) && (int) $articleData['usagecheck_ma_module'] > 0) {
+				$result['action'][$articleData['usagecheck_ma_module']] = $articleData;
 			}
 		}
 		return [
@@ -68,9 +66,6 @@ class Modules
 			'fields' => $this->tableFields,
 		];
 	}
-//
-///////////////////// Tmplementation aus RexV5 /////////////////////
-//
 
 	/**
 	 * SQL generieren
@@ -79,29 +74,26 @@ class Modules
 	 */
 	protected function getSQL(/* int */$detail_id = null)
 	{
-		$additionalFields = '';
-		$whereArray = [];
-		$groupBy = 'group by m.id';
-
 		$rexSQL = \rex_sql::factory();
+		$additionalFields = '';
+		$where = '';
+		$whereArray = [];
+		$groupBy = 'group by a.id';
+
 		if ($detail_id) {
-			$whereArray[] = 'm.id='.$rexSQL->escape($detail_id);
 			$groupBy = '';
 			$additionalFields = <<<SQL
-			,s.id usagecheck_s_id,
-			s.clang_id usagecheck_s_clang_id,
-			s.ctype_id usagecheck_s_ctype_id,
-			a.id usagecheck_a_id ,
-			a.parent_id usagecheck_a_parent_id,
-			a.name usagecheck_a_name
-
+,ma.module_id as usagecheck_ma_module,
+m.name as usage_check_m_name
 SQL;
+			$whereArray[] = 'a.id='.$rexSQL->escape($detail_id);
 		} else {
+			$where = '';
 			if (!$this->showAll) {
-				$whereArray[] .= 's.id is null';
+				$whereArray[] = 'ma.id is null';
 			}
 
-			$additionalFields = ', s.id as slice_data';
+			$additionalFields = ', ma.module_id as modul';
 		}
 
 		if (count($whereArray) > 0) {
@@ -111,22 +103,19 @@ SQL;
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
+		$actionTable = $this->getTable('action');
+		$moduleActionTable = $this->getTable('module_action');
 		$moduleTable = $this->getTable('module');
-		$articleSliceTable = $this->getTable('article_slice');
-		$articleTable = $this->getTable('article');
 
 		$sql = <<<SQL
-SELECT m.name,
-	m.id,
-	m.createdate,
-	m.updatedate
-
-	$additionalFields
-FROM `$moduleTable` m
-left join $articleSliceTable s on s.module_id=m.id
-left join $articleTable a on s.article_id=a.id and s.clang_id=a.clang_id
+SELECT a.*
+$additionalFields
+FROM $actionTable a
+left join $moduleActionTable ma on ma.action_id=a.id
+left join $moduleTable m on ma.module_id=m.id or m.id is null
 
 $where
+
 $groupBy
 
 SQL;

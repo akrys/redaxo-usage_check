@@ -28,7 +28,7 @@
 						<span>
 							<ol>
 								<?php
-								$type = akrys\redaxo\addon\UsageCheck\Modules\Actions::TYPE;
+								$type = FriendsOfRedaxo\addon\UsageCheck\Modules\Actions::TYPE;
 								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
 								?>
 

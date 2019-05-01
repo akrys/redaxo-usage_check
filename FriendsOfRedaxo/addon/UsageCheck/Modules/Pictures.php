@@ -6,9 +6,9 @@
  * @version       1.0 / 2015-08-08
  * @author        akrys
  */
-namespace akrys\redaxo\addon\UsageCheck\Modules;
+namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
-use \akrys\redaxo\addon\UsageCheck\Permission;
+use \FriendsOfRedaxo\addon\UsageCheck\Permission;
 
 /**
  * Description of Pictures
@@ -16,21 +16,16 @@ use \akrys\redaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 class Pictures
-	extends \akrys\redaxo\addon\UsageCheck\Lib\BaseModule
+	extends \FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule
 {
 	const TYPE = 'media';
 
 	/**
 	 * Yform Integration
-	 * @var \akrys\redaxo\addon\UsageCheck\Lib\PictureYFrom
+	 * @var \FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom
 	 */
 	private $yform = null;
 
-	/**
-	 * Tabellenfelder
-	 * @var array
-	 */
-	private $tableFields;
 
 	/**
 	 * Nicht genutze Bilder holen
@@ -49,7 +44,7 @@ class Pictures
 		$rexSQL = $this->getRexSql();
 
 		if (!isset($this->yform)) {
-			$this->yform = new \akrys\redaxo\addon\UsageCheck\Lib\PictureYFrom($this);
+			$this->yform = new \FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom($this);
 			$this->yform->setRexSql($rexSQL);
 		}
 
@@ -70,7 +65,7 @@ class Pictures
 
 		$rexSQL = $this->getRexSql();
 		if (!isset($this->yform)) {
-			$this->yform = new \akrys\redaxo\addon\UsageCheck\Lib\PictureYFrom($this);
+			$this->yform = new \FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom($this);
 			$this->yform->setRexSql($rexSQL);
 		}
 
@@ -431,7 +426,7 @@ SQL;
 	{
 		$return = '';
 		$used = false;
-		if ($item['count'] > 0) {
+		if (isset($item['count']) && $item['count'] > 0) {
 			$used = true;
 		}
 
@@ -444,19 +439,19 @@ SQL;
 			}
 		}
 
-		if ($item['usagecheck_s_id'] > 0) {
+		if (isset($item['usagecheck_s_id']) && $item['usagecheck_s_id'] > 0) {
 			$used = true;
 		}
 
-		if ($item['usagecheck_metaArtIDs'] > 0) {
+		if (isset($item['usagecheck_metaArtIDs']) && $item['usagecheck_metaArtIDs'] > 0) {
 			$used = true;
 		}
 
-		if ($item['usagecheck_metaCatIDs'] > 0) {
+		if (isset($item['usagecheck_metaCatIDs']) && $item['usagecheck_metaCatIDs'] > 0) {
 			$used = true;
 		}
 
-		if ($item['usagecheck_metaMedIDs'] > 0) {
+		if (isset($item['usagecheck_metaMedIDs']) && $item['usagecheck_metaMedIDs'] > 0) {
 			$used = true;
 		}
 
@@ -465,7 +460,7 @@ SQL;
 			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
 		}
 
-		if (!\akrys\redaxo\addon\UsageCheck\Medium::exists($item)) {
+		if (!\FriendsOfRedaxo\addon\UsageCheck\Medium::exists($item)) {
 			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_found');
 		}
 

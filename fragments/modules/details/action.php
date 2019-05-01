@@ -25,19 +25,21 @@
 		</li>
 
 		<?php
-		$index = 'akrys_usagecheck_action_linktext_edit_in_modul';
-		$linkTextRaw = \rex_i18n::rawMsg($index);
+		if (isset($this->data['result']['action'])) {
+			$index = 'akrys_usagecheck_action_linktext_edit_in_modul';
+			$linkTextRaw = \rex_i18n::rawMsg($index);
 
-		foreach ($this->data['result']['action'] as $item) {
-			$modulID = $item['usagecheck_ma_module'];
-			$modulName = $item['usage_check_m_name'];
-			$href = 'index.php?page=modules/modules&start=0&function=edit&module_id='.$modulID;
-			$linkText = str_replace('$modulName$', $modulName, $linkTextRaw);
-			?>
+			foreach ($this->data['result']['action'] as $item) {
+				$modulID = $item['usagecheck_ma_module'];
+				$modulName = $item['usage_check_m_name'];
+				$href = 'index.php?page=modules/modules&start=0&function=edit&module_id='.$modulID;
+				$linkText = str_replace('$modulName$', $modulName, $linkTextRaw);
+				?>
 
-			<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
+				<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
 
-			<?php
+				<?php
+			}
 		}
 		?>
 

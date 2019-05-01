@@ -9,5 +9,5 @@ node_modules
 /gulpfile.js
 /composer.lock
 /composer.json
-/akrys/redaxo/addon/UsageCheck/Tests
+/FriendsOfRedaxo/addon/UsageCheck/Tests
 

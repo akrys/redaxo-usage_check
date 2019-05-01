@@ -10,6 +10,8 @@ Sucht nach verwaisten Medienpool-Dateien, nicht verwendete Module und Templates.
 		<b>5.2</b>,
 		<b>5.3</b>,
 		<b>5.4</b>,
-		<b>5.5</b>
+		<b>5.5</b>,
+		<b>5.6</b>,
+		<b>5.7</b>
 	</li>
 </ul>

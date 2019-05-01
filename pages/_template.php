@@ -5,7 +5,7 @@
  */
 /* @var $I18N \i18n */
 
-use \akrys\redaxo\addon\UsageCheck\Config;
+use \FriendsOfRedaxo\addon\UsageCheck\Config;
 
 switch (rex_get('showall', 'string', "")) {
 	case 'true':
@@ -34,7 +34,7 @@ $title->setVar('supage_title', \rex_i18n::rawMsg('akrys_usagecheck_template_subp
 $title->setVar('version', Config::VERSION);
 echo \rex_view::title($title->parse('fragments/title.php'));
 
-$templates = new \akrys\redaxo\addon\UsageCheck\Modules\Templates();
+$templates = new \FriendsOfRedaxo\addon\UsageCheck\Modules\Templates();
 $templates->setRexSql(\rex_sql::factory());
 
 if ($showAll) {
@@ -82,13 +82,13 @@ if ($items === false) {
 	$params = [
 		'links' => [
 			[
-				'url' => 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
+				'url' => 'index.php?page='.\FriendsOfRedaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
 				$param['showAllParam'].$param['showInactiveParamCurr'],
 				'text' => rex_i18n::rawMsg($param['showAllLinktext']),
 				'admin' => false,
 			],
 			[
-				'url' => 'index.php?page='.\akrys\redaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
+				'url' => 'index.php?page='.\FriendsOfRedaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
 				$param['showAllParamCurr'].$param['showInactiveParam'],
 				'text' => rex_i18n::rawMsg($param['showInactiveLinktext']),
 				'admin' => true,

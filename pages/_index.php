@@ -3,13 +3,13 @@
 /**
  * Grundlegendes Frontend
  */
-use \akrys\redaxo\addon\UsageCheck\Config;
-use \akrys\redaxo\addon\UsageCheck\RedaxoCall;
+use \FriendsOfRedaxo\addon\UsageCheck\Config;
+use \FriendsOfRedaxo\addon\UsageCheck\RedaxoCall;
 
 //Fehlerausgabe
-if (\akrys\redaxo\addon\UsageCheck\Error::getInstance()->count() > 0) {
+if (\FriendsOfRedaxo\addon\UsageCheck\Error::getInstance()->count() > 0) {
 	$text = '';
-	foreach (\akrys\redaxo\addon\UsageCheck\Error::getInstance() as $error) {
+	foreach (\FriendsOfRedaxo\addon\UsageCheck\Error::getInstance() as $error) {
 		$fragment = new \rex_fragment([
 			'text' => $error,
 		]);
