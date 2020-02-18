@@ -2,7 +2,7 @@
 $user = \rex::getUser();
 $mediaPerm = \rex_structure_perm::get($user, 'media');
 $structurePerm = \rex_structure_perm::get($user, 'structure');
-?>a
+?>
 
 <table class="table table-striped">
 	<thead>
@@ -54,7 +54,6 @@ $structurePerm = \rex_structure_perm::get($user, 'structure');
 					<small style="font-size:0.875em;font-weight:bold;"><?= $item['filetype']; ?></small>
 				</td>
 				<td style="width:75%;">
-asdfasdfasdf
 					<?php
 					echo \FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::showUsedInfo($item, $this->items['fields']);
 					?>
