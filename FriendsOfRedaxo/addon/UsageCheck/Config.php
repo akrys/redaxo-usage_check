@@ -20,16 +20,17 @@ class Config
 
 	/**
 	 * Ausgabename des Addons
+	 * @deprecated
 	 * @var string
 	 */
-	const NAME_OUT = 'Usage Check';
+	const NAME_OUT = 'migrate to \FriendsOfRedaxo\addon\UsageCheck\Addon::getInstance()->getName()';
 
 	/**
 	 * Version des Addons
-	 *
+	 * @deprecated
 	 * @var string
 	 */
-	const VERSION = '2.2';
+	const VERSION = 'migrate to \FriendsOfRedaxo\addon\UsageCheck\Addon::class::getInstance()->getVersion()';
 
 	/**
 	 * release state

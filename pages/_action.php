@@ -5,20 +5,20 @@
  */
 require_once __DIR__.'/../FriendsOfRedaxo/addon/UsageCheck/Config.php';
 
-/* @var $I18N \i18n */
+use FriendsOfRedaxo\addon\UsageCheck\Addon;
+use FriendsOfRedaxo\addon\UsageCheck\Config;
+use FriendsOfRedaxo\addon\UsageCheck\Modules\Actions;
 
-use \FriendsOfRedaxo\addon\UsageCheck\Config;
-
-$title = new \rex_fragment();
-$title->setVar('name', Config::NAME_OUT);
-$title->setVar('supage_title', \rex_i18n::rawMsg('akrys_usagecheck_action_subpagetitle'));
-$title->setVar('version', Config::VERSION);
-echo \rex_view::title($title->parse('fragments/title.php'));
+$title = new rex_fragment();
+$title->setVar('name', Addon::getInstance()->getName());
+$title->setVar('supage_title', rex_i18n::rawMsg('akrys_usagecheck_action_subpagetitle'));
+$title->setVar('version', Addon::getInstance()->getVersion());
+echo rex_view::title($title->parse('fragments/title.php'));
 
 
 require_once __DIR__.'/../FriendsOfRedaxo/addon/UsageCheck/Modules/Actions.php';
-$actions = new \FriendsOfRedaxo\addon\UsageCheck\Modules\Actions();
-$actions->setRexSql(\rex_sql::factory());
+$actions = new Actions();
+$actions->setRexSql(rex_sql::factory());
 
 switch (rex_get('showall', 'string', "")) {
 	case 'true':
@@ -35,29 +35,29 @@ $actions->showAll($showAll);
 $items = $actions->get();
 
 if ($items === false) {
-	$msg = \rex_i18n::rawMsg('akrys_usagecheck_no_rights');
-	$fragment = new \rex_fragment([
+	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
+	$fragment = new rex_fragment([
 		'text' => $index,
 	]);
-	$fragment = new \rex_fragment([
+	$fragment = new rex_fragment([
 		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
 	]);
 	echo $fragment->parse('fragments/msg/error.php');
 } else {
 	$showAllParam = '&showall=true';
-	$showAllLinktext = \rex_i18n::rawMsg('akrys_usagecheck_action_link_show_all');
+	$showAllLinktext = rex_i18n::rawMsg('akrys_usagecheck_action_link_show_all');
 	if ($showAll) {
 		$showAllParam = '';
-		$showAllLinktext = \rex_i18n::rawMsg('akrys_usagecheck_action_link_show_unused');
+		$showAllLinktext = rex_i18n::rawMsg('akrys_usagecheck_action_link_show_unused');
 	}
 
 // <editor-fold defaultstate="collapsed" desc="Menü">
 	$url = 'index.php?page='.Config::NAME.'/'.$subpage.$showAllParam;
-	$menu = new \rex_fragment([
+	$menu = new rex_fragment([
 		'url' => $url,
 		'linktext' => $showAllLinktext,
 		'texts' => [
-			\rex_i18n::rawMsg('akrys_usagecheck_action_intro_text'),
+			rex_i18n::rawMsg('akrys_usagecheck_action_intro_text'),
 		],
 	]);
 	echo $menu->parse('fragments/menu/linktext.php');

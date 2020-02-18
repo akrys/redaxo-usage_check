@@ -1,30 +1,34 @@
 <?php
 
-use \FriendsOfRedaxo\addon\UsageCheck\Config;
+use FriendsOfRedaxo\addon\UsageCheck\Addon;
+use FriendsOfRedaxo\addon\UsageCheck\Modules\Actions;
+use FriendsOfRedaxo\addon\UsageCheck\Modules\Modules;
+use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
+use FriendsOfRedaxo\addon\UsageCheck\Modules\Templates;
 
 $errors = [];
 
 $type = rex_get('type', 'string', "");
 switch ($type) {
-	case \FriendsOfRedaxo\addon\UsageCheck\Modules\Actions::TYPE:
-	case \FriendsOfRedaxo\addon\UsageCheck\Modules\Modules::TYPE:
-	case \FriendsOfRedaxo\addon\UsageCheck\Modules\Templates::TYPE:
-	case \FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::TYPE:
+	case Actions::TYPE:
+	case Modules::TYPE:
+	case Templates::TYPE:
+	case Pictures::TYPE:
 		//;
 		break;
 	default:
-		$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_details_no_valid_type');
+		$errors[] = rex_i18n::rawMsg('akrys_usagecheck_details_no_valid_type');
 		break;
 }
 $id = rex_get('id', 'string', "");
 
 
 
-$title = new \rex_fragment();
-$title->setVar('name', Config::NAME_OUT);
-$title->setVar('supage_title', \rex_i18n::rawMsg('akrys_usagecheck_template_subpagetitle'));
-$title->setVar('version', Config::VERSION);
-echo \rex_view::title($title->parse('fragments/title.php'));
+$title = new rex_fragment();
+$title->setVar('name', Addon::getInstance()->getName());
+$title->setVar('supage_title', rex_i18n::rawMsg('akrys_usagecheck_template_subpagetitle'));
+$title->setVar('version', Addon::getInstance()->getVersion());
+echo rex_view::title($title->parse('fragments/title.php'));
 
 $type = rex_get('type', 'string');
 $id = rex_get('id', 'int');
@@ -33,24 +37,24 @@ $id = rex_get('id', 'int');
 
 
 switch ($type) {
-	case FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::TYPE:
-		$object = new FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures();
+	case Pictures::TYPE:
+		$object = new Pictures();
 		$template = 'modules/details/picture.php';
 		break;
-	case FriendsOfRedaxo\addon\UsageCheck\Modules\Modules::TYPE:
-		$object = new FriendsOfRedaxo\addon\UsageCheck\Modules\Modules();
+	case Modules::TYPE:
+		$object = new Modules();
 		$template = 'modules/details/module.php';
 		break;
-	case FriendsOfRedaxo\addon\UsageCheck\Modules\Actions::TYPE:
-		$object = new FriendsOfRedaxo\addon\UsageCheck\Modules\Actions();
+	case Actions::TYPE:
+		$object = new Actions();
 		$template = 'modules/details/action.php';
 		break;
-	case FriendsOfRedaxo\addon\UsageCheck\Modules\Templates::TYPE:
-		$object = new FriendsOfRedaxo\addon\UsageCheck\Modules\Templates();
+	case Templates::TYPE:
+		$object = new Templates();
 		$template = 'modules/details/template.php';
 		break;
 	default:
-		throw new \Exception('not a valid Type: '.$type);
+		throw new Exception('not a valid Type: '.$type);
 		break;
 }
 

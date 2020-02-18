@@ -3,9 +3,9 @@
 /**
  * Frontend-Ausagbe für die Seite Tempalte
  */
-/* @var $I18N \i18n */
-
-use \FriendsOfRedaxo\addon\UsageCheck\Config;
+use FriendsOfRedaxo\addon\UsageCheck\Addon;
+use FriendsOfRedaxo\addon\UsageCheck\Config;
+use FriendsOfRedaxo\addon\UsageCheck\Modules\Templates;
 
 switch (rex_get('showall', 'string', "")) {
 	case 'true':
@@ -28,14 +28,14 @@ switch (rex_get('showinactive', 'string', "")) {
 }
 
 
-$title = new \rex_fragment();
-$title->setVar('name', Config::NAME_OUT);
-$title->setVar('supage_title', \rex_i18n::rawMsg('akrys_usagecheck_template_subpagetitle'));
-$title->setVar('version', Config::VERSION);
-echo \rex_view::title($title->parse('fragments/title.php'));
+$title = new rex_fragment();
+$title->setVar('name', Addon::getInstance()->getName());
+$title->setVar('supage_title', rex_i18n::rawMsg('akrys_usagecheck_template_subpagetitle'));
+$title->setVar('version', Addon::getInstance()->getVersion());
+echo rex_view::title($title->parse('fragments/title.php'));
 
-$templates = new \FriendsOfRedaxo\addon\UsageCheck\Modules\Templates();
-$templates->setRexSql(\rex_sql::factory());
+$templates = new Templates();
+$templates->setRexSql(rex_sql::factory());
 
 if ($showAll) {
 	$templates->showAll($showAll);
@@ -46,11 +46,11 @@ if ($showInactive) {
 $items = $templates->get();
 
 if ($items === false) {
-	$msg = \rex_i18n::rawMsg('akrys_usagecheck_no_rights');
-	$fragment = new \rex_fragment([
+	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
+	$fragment = new rex_fragment([
 		'text' => $index,
 	]);
-	$fragment = new \rex_fragment([
+	$fragment = new rex_fragment([
 		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
 	]);
 	echo $fragment->parse('fragments/msg/error.php');
@@ -82,13 +82,13 @@ if ($items === false) {
 	$params = [
 		'links' => [
 			[
-				'url' => 'index.php?page='.\FriendsOfRedaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
+				'url' => 'index.php?page='.Config::NAME.'/'.$subpage.
 				$param['showAllParam'].$param['showInactiveParamCurr'],
 				'text' => rex_i18n::rawMsg($param['showAllLinktext']),
 				'admin' => false,
 			],
 			[
-				'url' => 'index.php?page='.\FriendsOfRedaxo\addon\UsageCheck\Config::NAME.'/'.$subpage.
+				'url' => 'index.php?page='.Config::NAME.'/'.$subpage.
 				$param['showAllParamCurr'].$param['showInactiveParam'],
 				'text' => rex_i18n::rawMsg($param['showInactiveLinktext']),
 				'admin' => true,
@@ -97,10 +97,10 @@ if ($items === false) {
 		'texts' => [
 			rex_i18n::rawMsg('akrys_usagecheck_template_intro_text'),
 		],
-		'user' => \rex::getUser(),
+		'user' => rex::getUser(),
 	];
 
-	$menu = new \rex_fragment($params);
+	$menu = new rex_fragment($params);
 
 
 	echo $menu->parse('fragments/menu/linklist.php');
