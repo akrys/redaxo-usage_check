@@ -1,7 +1,7 @@
 <?php
 $user = \rex::getUser();
-$mediaPerm = \rex_structure_perm::get($user, 'media');
-$structurePerm = \rex_structure_perm::get($user, 'structure');
+$mediaPerm =  $user->getComplexPerm('media');
+$structurePerm = $user->getComplexPerm('structure');
 ?>
 
 <table class="table table-striped">

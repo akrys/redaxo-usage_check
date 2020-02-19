@@ -5,8 +5,7 @@ if (count($this->errors) > 0) {
 	return;
 }
 $user = \rex::getUser();
-$mediaPerm = \rex_structure_perm::get($user, 'media');
-$structurePerm = \rex_structure_perm::get($user, 'structure');
+$structurePerm = $user->getComplexPerm('structure');
 ?>
 
 <div class="basis">

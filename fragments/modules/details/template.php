@@ -1,5 +1,6 @@
 <?php
 $user = \rex::getUser();
+$structurePerm = $user->getComplexPerm('structure');
 ?>
 
 <div class="basis">
@@ -31,9 +32,7 @@ $user = \rex::getUser();
 					$articleReID = $articleID;
 				}
 
-				$perm = \rex_structure_perm::get($user, 'structure');
-				$hasPerm = $perm->hasCategoryPerm($articleID);
-
+				$hasPerm = $structurePerm->hasCategoryPerm($articleID);
 				if ($hasPerm) {
 					$href = 'index.php?page=structure&article_id='.$articleID.
 						'&function=edit_art&category_id='.$articleReID.'&clang='.$clang;
@@ -54,16 +53,17 @@ $user = \rex::getUser();
 		$hasPerm = $user->isAdmin();
 		if ($hasPerm) {
 			if (isset($this->data['result']['templates'])) {
-				foreach ($this->data['result']['templates'] as $item) {
-					$index = 'akrys_usagecheck_template_linktext_edit_template';
+				$index = 'akrys_usagecheck_template_linktext_edit_template';
+				$linkTextRaw = \rex_i18n::rawMsg($index);
 
+				foreach ($this->data['result']['templates'] as $item) {
 					$id = $item['usagecheck_template_t2_id'];
 					$name = $item['usagecheck_template_t2_name'];
 
 					$href = 'index.php?page=templates&function=edit&template_id='.$id;
-					$linkText = $name;
+					$linkText = $linkTextRaw;
 					$linkText = str_replace('$templateName$', $name, $linkText);
-					$linkText = str_replace('$templateID$', $item['id'], $linkText);
+					$linkText = str_replace('$templateID$', $id, $linkText);
 					?>
 
 					<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>

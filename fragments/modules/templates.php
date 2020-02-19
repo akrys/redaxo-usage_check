@@ -51,20 +51,19 @@ $user = \rex::getUser();
 
 								<li><a href="<?= $url; ?>"><?= \rex_i18n::rawMsg('akrys_usagecheck_linktext_detail_page') ?></a></li>
 
-								<li>
-									<?php
-									if ($user->isAdmin()) {
-										$url = 'index.php?page=templates&function=edit&template_id='.$item['id'];
 
-										$fragmet = new \rex_fragment([
-											'href' => $url,
-											'text' => \rex_i18n::rawMsg('akrys_usagecheck_template_linktext_edit_code'),
-										]);
-										echo $fragmet->parse('fragments/link.php');
-									}
-									?>
+								<?php
+								if ($user->isAdmin()) {
+									$url = 'index.php?page=templates&function=edit&template_id='.$item['id'];
 
-								</li>
+									$fragmet = new \rex_fragment([
+										'href' => $url,
+										'text' => \rex_i18n::rawMsg('akrys_usagecheck_template_linktext_edit_code'),
+									]);
+									?><li><?= $fragmet->parse('fragments/link.php'); ?></li><?php
+								}
+								?>
+
 							</ol>
 						</span>
 					</div>
