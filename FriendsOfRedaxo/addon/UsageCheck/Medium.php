@@ -8,6 +8,11 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck;
 
+use FriendsOfRedaxo\addon\UsageCheck\Exception\FunctionNotCallableException;
+use rex;
+use rex_media;
+use rex_path;
+
 /**
  * Description of Medium
  *
@@ -20,24 +25,24 @@ class Medium
 	 * Holt ein Medium-Objekt mit Prüfung der Rechte
 	 *
 	 * @param array $item Idezes: category_id, filename
-	 * @return \rex_media
-	 * @throws \FriendsOfRedaxo\addon\UsageCheck\Exception\FunctionNotCallableException
+	 * @return rex_media
+	 * @throws FunctionNotCallableException
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public static function get($item)
 	{
-		$user = \rex::getUser();
+		$user = rex::getUser();
 		$complexPerm = $user->getComplexPerm('media');
 		if (!$user->isAdmin() &&
 			!(is_object($complexPerm) &&
 			$complexPerm->hasCategoryPerm($item['category_id']))) {
 			//keine Rechte am Medium
-			throw new \FriendsOfRedaxo\addon\UsageCheck\Exception\FunctionNotCallableException();
+			throw new FunctionNotCallableException();
 		}
 
 		//Das Medium wird später gebraucht.
-		/* @var $medium \rex_media */
-		$medium = \rex_media::get($item['filename']);
+		/* @var $medium rex_media */
+		$medium = rex_media::get($item['filename']);
 		return $medium;
 	}
 
@@ -51,6 +56,6 @@ class Medium
 	 */
 	public static function exists($item)
 	{
-		return file_exists(\rex_path::media().DIRECTORY_SEPARATOR.$item['filename']);
+		return file_exists(rex_path::media().DIRECTORY_SEPARATOR.$item['filename']);
 	}
 }

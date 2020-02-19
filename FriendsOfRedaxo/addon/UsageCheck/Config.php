@@ -65,7 +65,7 @@ class Config
 	 * Performance-Probleme durch den rex_autoloader verhindern.
 	 * Dieser versucht alle Dateien zu analysieren.
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 * @codeCoverageIgnore
 	 */
 	public static function checkVendorDir()
@@ -73,7 +73,7 @@ class Config
 		if (!isset($_SERVER['argv'])) {
 			$vendorDir = self::getBaseDir().'/vendor';
 			if (file_exists($vendorDir) && is_dir($vendorDir)) {
-				throw new \Exception('Please delete '.realpath($vendorDir));
+				throw new Exception('Please delete '.realpath($vendorDir));
 			}
 
 //			$nodeDir = self::getBaseDir().'/node_modules';

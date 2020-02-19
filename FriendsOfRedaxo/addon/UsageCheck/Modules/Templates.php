@@ -8,7 +8,11 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
-use \FriendsOfRedaxo\addon\UsageCheck\Permission;
+use FriendsOfRedaxo\addon\UsageCheck\Error;
+use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
+use FriendsOfRedaxo\addon\UsageCheck\Permission;
+use rex;
+use rex_sql;
 
 /**
  * Description of Templates
@@ -16,7 +20,7 @@ use \FriendsOfRedaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 class Templates
-	extends \FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule
+	extends BaseModule
 {
 	const TYPE = 'templates';
 
@@ -53,7 +57,7 @@ class Templates
 			return false;
 		}
 
-		$user = \rex::getUser();
+		$user = rex::getUser();
 		if (!$user->isAdmin() && $showInactive === true) {
 			$showInactive = false;
 		}
@@ -65,7 +69,7 @@ class Templates
 		// @codeCoverageIgnoreStart
 		//SQL-Fehler an der Stelle recht schwer zu testen, aber dennoch sinnvoll enthalten zu sein.
 		if (!$return) {
-			\FriendsOfRedaxo\addon\UsageCheck\Error::getInstance()->add($rexSQL->getError());
+			Error::getInstance()->add($rexSQL->getError());
 		}
 		// @codeCoverageIgnoreEnd
 
@@ -147,7 +151,7 @@ class Templates
 	 */
 	protected function getSQL(/* int */$detail_id = null)
 	{
-		$rexSQL = \rex_sql::factory();
+		$rexSQL = rex_sql::factory();
 
 		$where = '';
 		$having = '';

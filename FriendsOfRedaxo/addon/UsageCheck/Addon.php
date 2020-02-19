@@ -1,20 +1,15 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-namespace FriendsOfRedaxo\addon\UsageCheck;
-
-use rex_addon;
-
 /**
  * Datei für ...
  *
  * @version       1.0 / 2020-02-18
  * @author        akrys
  */
+namespace FriendsOfRedaxo\addon\UsageCheck;
+
+use FriendsOfRedaxo\addon\UsageCheck\Exception\CloneException;
+use rex_addon;
 
 /**
  * Description of Addon
@@ -47,40 +42,39 @@ final class Addon
 		$page = $this->addon->getProperty('page');
 		return $page['title'];
 	}
-	/*	 * ********************* Singleton ********************** */
+	// <editor-fold defaultstate="collapsed" desc="Singleton">
+	/**
+	 * Instance
+	 * @var Error
+	 */
+	private static $instance = null;
 
 	/**
-	 * Konstruktor
-	 */
-	private function __construct()
-	{
-		$this->addon = rex_addon::get(Config::NAME);
-	}
-	/**
-	 * Speichert die Instanz der Klasse.<br />
-	 *
-	 * @var          Addon
-	 */
-	private static $instance;
-
-	/**
-	 * nicht erlaubt...
-	 */
-	private function __clone()
-	{
-		//no code
-	}
-
-	/**
-	 * Gibt die Instanz.
-	 *
-	 * @return Addon
+	 * create Singleton Instance
+	 * @return Error
 	 */
 	public static function getInstance()
 	{
-		if (!isset(self::$instance)) {
+		if (self::$instance == null) {
 			self::$instance = new self();
 		}
 		return self::$instance;
 	}
+
+	/**
+	 * Konstuktor
+	 */
+	final private function __construct()
+	{
+		$this->addon = rex_addon::get(Config::NAME);
+	}
+
+	/**
+	 * forbid cloning
+	 */
+	final public function __clone()
+	{
+		throw new CloneException();
+	}
+// </editor-fold>
 }

@@ -23,12 +23,6 @@ abstract class BaseModule
 	protected $showAll = false;
 
 	/**
-	 *
-	 * @var type
-	 */
-	protected $detailId = null;
-
-	/**
 	 * Tabellenfelder
 	 * @var array
 	 */
