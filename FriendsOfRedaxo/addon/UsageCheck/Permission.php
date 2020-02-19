@@ -5,6 +5,12 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck;
 
+use FriendsOfRedaxo\addon\UsageCheck\Exception\CloneException;
+use rex;
+use rex_media_perm;
+use rex_module_perm;
+use rex_structure_perm;
+
 /**
  * User-Rechte für Zugriffe abfragen.
  *
@@ -54,25 +60,25 @@ class Permission
 	 */
 	public function check($perm)
 	{
-		$user = \rex::getUser();
+		$user = rex::getUser();
 		$complexPerm = $user->getComplexPerm($perm);
 
 		$hasSpecialPerm = true;
 		switch (get_class($complexPerm)) {
 			case 'rex_media_perm':
-				/* @var $complexPerm \rex_media_perm */
+				/* @var $complexPerm rex_media_perm */
 				$hasSpecialPerm = $complexPerm->hasMediaPerm();
 				break;
 			case 'rex_structure_perm':
-				/* @var $complexPerm \rex_structure_perm */
+				/* @var $complexPerm rex_structure_perm */
 				$hasSpecialPerm = $complexPerm->hasStructurePerm();
 				break;
 			case 'rex_module_perm':
-				/* @var $complexPerm \rex_module_perm */
+				/* @var $complexPerm rex_module_perm */
 				$hasSpecialPerm = $complexPerm->hasAll();
 				break;
 			default:
-				throw new \Exception('"'.get_class($complexPerm).'": unknown permission class');
+				throw new Exception('"'.get_class($complexPerm).'": unknown permission class');
 				break;
 		}
 
@@ -111,7 +117,7 @@ class Permission
 	 */
 	final public function __clone()
 	{
-		throw new Exception\CloneException();
+		throw new CloneException();
 	}
 // </editor-fold>
 }

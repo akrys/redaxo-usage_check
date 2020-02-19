@@ -6,8 +6,8 @@ if (count($this->errors) > 0) {
 }
 
 $user = \rex::getUser();
-$mediaPerm = \rex_structure_perm::get($user, 'media');
-$structurePerm = \rex_structure_perm::get($user, 'structure');
+$mediaPerm =  $user->getComplexPerm('media');
+$structurePerm = $user->getComplexPerm('structure');
 
 $media = rex_media::get($this->data['first']['filename']);
 ?>
@@ -116,15 +116,13 @@ $media = rex_media::get($this->data['first']['filename']);
 					case 'media_meta':
 						$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_med';
 						$linkTextRaw = \rex_i18n::rawMsg($index);
-
 						foreach ($items as $item) {
 							//file_id,"\t",category_id,"\t",filename
 							$fileID = $item['usagecheck_med_id'];
 							$fileCatID = $item['usagecheck_med_cat_id'];
 							$filename = $item['usagecheck_med_filename'];
 
-							$hasPerm = $mediaPerm->hasCategoryPerm($fileCatID);
-
+							$hasPerm = $mediaPerm->hasMediaPerm($fileID);
 							if ($hasPerm) {
 								$linkText = $linkTextRaw;
 								$linkText = str_replace('$filename$', $filename, $linkText);

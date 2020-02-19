@@ -8,7 +8,17 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
-use \FriendsOfRedaxo\addon\UsageCheck\Permission;
+use Exception;
+use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
+use FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom;
+use FriendsOfRedaxo\addon\UsageCheck\Medium;
+use FriendsOfRedaxo\addon\UsageCheck\Permission;
+use rex_fragment;
+use rex_i18n;
+use rex_metainfo_article_handler;
+use rex_metainfo_category_handler;
+use rex_metainfo_media_handler;
+use function rex_mediapool_mediaIsInUse;
 
 /**
  * Description of Pictures
@@ -16,16 +26,15 @@ use \FriendsOfRedaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 class Pictures
-	extends \FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule
+	extends BaseModule
 {
 	const TYPE = 'media';
 
 	/**
 	 * Yform Integration
-	 * @var \FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom
+	 * @var PictureYFrom
 	 */
 	private $yform = null;
-
 
 	/**
 	 * Nicht genutze Bilder holen
@@ -44,7 +53,7 @@ class Pictures
 		$rexSQL = $this->getRexSql();
 
 		if (!isset($this->yform)) {
-			$this->yform = new \FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom($this);
+			$this->yform = new PictureYFrom($this);
 			$this->yform->setRexSql($rexSQL);
 		}
 
@@ -65,7 +74,7 @@ class Pictures
 
 		$rexSQL = $this->getRexSql();
 		if (!isset($this->yform)) {
-			$this->yform = new \FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom($this);
+			$this->yform = new PictureYFrom($this);
 			$this->yform->setRexSql($rexSQL);
 		}
 
@@ -231,20 +240,20 @@ SQL;
 	private function getTableNames($name)
 	{
 		$return = array();
-		if (preg_match('/'.preg_quote(\rex_metainfo_article_handler::PREFIX, '/').'/', $name)) {
+		if (preg_match('/'.preg_quote(rex_metainfo_article_handler::PREFIX, '/').'/', $name)) {
 			$return['field'] = 'joinArtMeta';
 			$return['table'] = 'rex_article_art_meta';
 			return $return;
-		} elseif (preg_match('/'.preg_quote(\rex_metainfo_category_handler::PREFIX, '/').'/', $name)) {
+		} elseif (preg_match('/'.preg_quote(rex_metainfo_category_handler::PREFIX, '/').'/', $name)) {
 			$return['field'] = 'joinCatMeta';
 			$return['table'] = 'rex_article_cat_meta';
 			return $return;
-		} elseif (preg_match('/'.preg_quote(\rex_metainfo_media_handler::PREFIX, '/').'/', $name)) {
+		} elseif (preg_match('/'.preg_quote(rex_metainfo_media_handler::PREFIX, '/').'/', $name)) {
 			$return['field'] = 'joinMedMeta';
 			$return['table'] = 'rex_article_med_meta';
 			return $return;
 		}
-		throw new \Exception('Table not valid');
+		throw new Exception('Table not valid');
 	}
 
 	/**
@@ -289,7 +298,7 @@ SQL;
 						$$fieldname .= 'FIND_IN_SET(f.filename, '.$tablename.'.'.$name['name'].')';
 						break;
 				}
-			} catch (\Exception $e) {
+			} catch (Exception $e) {
 				//;
 			}
 		}
@@ -457,11 +466,11 @@ SQL;
 
 		$errors = array();
 		if ($used === false) {
-			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
+			$errors[] = rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
 		}
 
-		if (!\FriendsOfRedaxo\addon\UsageCheck\Medium::exists($item)) {
-			$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_found');
+		if (!Medium::exists($item)) {
+			$errors[] = rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_found');
 		}
 
 		//Ob ein Medium lt. Medienpool in Nutzung ist, brauchen wir nur zu prüfen,
@@ -476,18 +485,18 @@ SQL;
 		//alle REGEXP-Abfragen abstürzen.
 		//Der Fehler liegt also nicht hier, und auch nicht im Redaxo-Core
 		if (!$used) {
-			$used = \rex_mediapool_mediaIsInUse($item['filename']);
+			$used = rex_mediapool_mediaIsInUse($item['filename']);
 
 			if ($used) {
-				$errors[] = \rex_i18n::rawMsg('akrys_usagecheck_images_msg_in_use');
+				$errors[] = rex_i18n::rawMsg('akrys_usagecheck_images_msg_in_use');
 			}
 		}
 
 		if (count($errors) > 0) {
-			$fragment = new \rex_fragment(['msg' => $errors]);
+			$fragment = new rex_fragment(['msg' => $errors]);
 			$return = $fragment->parse('msg/error_box.php');
 		} else {
-			$fragment = new \rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_images_msg_used')]]);
+			$fragment = new rex_fragment(['msg' => [rex_i18n::rawMsg('akrys_usagecheck_images_msg_used')]]);
 			$return = $fragment->parse('msg/info_box.php');
 		}
 		return $return;

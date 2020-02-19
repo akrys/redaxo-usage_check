@@ -8,7 +8,9 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
-use \FriendsOfRedaxo\addon\UsageCheck\Permission;
+use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
+use FriendsOfRedaxo\addon\UsageCheck\Permission;
+use rex_sql;
 
 /**
  * Description of Modules
@@ -16,7 +18,7 @@ use \FriendsOfRedaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 class Actions
-	extends \FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule
+	extends BaseModule
 {
 	const TYPE = 'actions';
 
@@ -74,7 +76,7 @@ class Actions
 	 */
 	protected function getSQL(/* int */$detail_id = null)
 	{
-		$rexSQL = \rex_sql::factory();
+		$rexSQL = rex_sql::factory();
 		$additionalFields = '';
 		$where = '';
 		$whereArray = [];

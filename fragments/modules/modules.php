@@ -1,6 +1,5 @@
 <?php
 $user = \rex::getUser();
-$structurePerm = \rex_structure_perm::get($user, 'structure')
 ?>
 
 <table class="table table-striped">

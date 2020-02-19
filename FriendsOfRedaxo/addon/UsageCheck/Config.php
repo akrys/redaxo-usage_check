@@ -20,16 +20,17 @@ class Config
 
 	/**
 	 * Ausgabename des Addons
+	 * @deprecated
 	 * @var string
 	 */
-	const NAME_OUT = 'Usage Check';
+	const NAME_OUT = 'migrate to \FriendsOfRedaxo\addon\UsageCheck\Addon::getInstance()->getName()';
 
 	/**
 	 * Version des Addons
-	 *
+	 * @deprecated
 	 * @var string
 	 */
-	const VERSION = '2.2';
+	const VERSION = 'migrate to \FriendsOfRedaxo\addon\UsageCheck\Addon::class::getInstance()->getVersion()';
 
 	/**
 	 * release state
@@ -64,7 +65,7 @@ class Config
 	 * Performance-Probleme durch den rex_autoloader verhindern.
 	 * Dieser versucht alle Dateien zu analysieren.
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 * @codeCoverageIgnore
 	 */
 	public static function checkVendorDir()
@@ -72,7 +73,7 @@ class Config
 		if (!isset($_SERVER['argv'])) {
 			$vendorDir = self::getBaseDir().'/vendor';
 			if (file_exists($vendorDir) && is_dir($vendorDir)) {
-				throw new \Exception('Please delete '.realpath($vendorDir));
+				throw new Exception('Please delete '.realpath($vendorDir));
 			}
 
 //			$nodeDir = self::getBaseDir().'/node_modules';

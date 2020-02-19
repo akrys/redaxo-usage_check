@@ -8,6 +8,10 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck\Lib;
 
+use Exception;
+use rex;
+use rex_sql;
+
 /**
  * Description of RexBase
  *
@@ -17,13 +21,13 @@ class RexBase
 {
 	/**
 	 * rexSQL instanz
-	 * @var \rex_sql
+	 * @var rex_sql
 	 */
 	private $rexSql;
 
 	/**
 	 * rex Instanz
-	 * @var \rex
+	 * @var rex
 	 */
 	private $rex;
 
@@ -38,12 +42,12 @@ class RexBase
 	/**
 	 * sql-Instanz verwalten
 	 *
-	 * @return \rex_sql
+	 * @return rex_sql
 	 */
 	public function getRexSql()
 	{
 		if (!$this->rexSql) {
-			throw new \Exception('no sql given');
+			throw new Exception('no sql given');
 		}
 
 		return $this->rexSql;
@@ -51,10 +55,10 @@ class RexBase
 
 	/**
 	 * sql-Instanz verwalten
-	 * @param \rex_sql $sql
+	 * @param rex_sql $sql
 	 * @return $this
 	 */
-	public function setRexSql(\rex_sql $sql)
+	public function setRexSql(rex_sql $sql)
 	{
 		$this->rexSql = $sql;
 		return $this;
@@ -69,7 +73,7 @@ class RexBase
 	protected function getTable($table)
 	{
 		if (!$this->rex) {
-			$this->rex = new \rex;
+			$this->rex = new rex;
 		}
 		return $this->rex->getTable($table);
 	}
