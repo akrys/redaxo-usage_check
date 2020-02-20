@@ -8,7 +8,9 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
-use \FriendsOfRedaxo\addon\UsageCheck\Permission;
+use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
+use FriendsOfRedaxo\addon\UsageCheck\Permission;
+use rex_sql;
 
 /**
  * Description of Modules
@@ -16,7 +18,7 @@ use \FriendsOfRedaxo\addon\UsageCheck\Permission;
  * @author akrys
  */
 class Modules
-	extends \FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule
+	extends BaseModule
 {
 	const TYPE = 'modules';
 
@@ -84,7 +86,7 @@ class Modules
 		$whereArray = [];
 		$groupBy = 'group by m.id';
 
-		$rexSQL = \rex_sql::factory();
+		$rexSQL = rex_sql::factory();
 		if ($detail_id) {
 			$whereArray[] = 'm.id='.$rexSQL->escape($detail_id);
 			$groupBy = '';

@@ -8,6 +8,10 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck;
 
+use FriendsOfRedaxo\addon\UsageCheck\Exception\CloneException;
+use Iterator;
+use rex_fragment;
+
 /**
  * Container für Fehlermeldungen
  *
@@ -19,7 +23,7 @@ namespace FriendsOfRedaxo\addon\UsageCheck;
  * @author akrys
  */
 class Error
-	implements \Iterator
+	implements Iterator
 {
 	/**
 	 * Error Messages
@@ -47,16 +51,16 @@ class Error
 	 *
 	 * @return int
 	 */
-	public function count(){
+	public function count()
+	{
 		return count($this->errors);
 	}
-
 // <editor-fold defaultstate="collapsed" desc="Iterator Implementation">
 
 	/**
 	 * Move forward to next element
 	 *
-	 * @see \Iterator::next()
+	 * @see Iterator::next()
 	 * @link https://secure.php.net/manual/en/iterator.next.php
 	 *
 	 * @return int
@@ -70,7 +74,7 @@ class Error
 	/**
 	 * Return the current element
 	 *
-	 * @see \Iterator::current()
+	 * @see Iterator::current()
 	 * @link https://secure.php.net/manual/en/iterator.current.php
 	 *
 	 * @return string
@@ -86,7 +90,7 @@ class Error
 	/**
 	 * Rewind the Iterator to the first element
 	 *
-	 * @see \Iterator::rewind()
+	 * @see Iterator::rewind()
 	 * @link https://secure.php.net/manual/en/iterator.rewind.php
 	 */
 	public function rewind()
@@ -97,7 +101,7 @@ class Error
 	/**
 	 * Return the key of the current element
 	 *
-	 * @see \Iterator::key()
+	 * @see Iterator::key()
 	 * @link https://secure.php.net/manual/en/iterator.key.php
 	 *
 	 * @return int
@@ -110,7 +114,7 @@ class Error
 	/**
 	 * Checks if current position is valid
 	 *
-	 * @see \Iterator::valid()
+	 * @see Iterator::valid()
 	 * @link https://secure.php.net/manual/en/iterator.valid.php
 	 *
 	 * @return boolean
@@ -155,12 +159,12 @@ class Error
 	 */
 	final public function __clone()
 	{
-		throw new Exception\CloneException();
+		throw new CloneException();
 	}
 // </editor-fold>
 
 	/**
-	 *
+	 * Fehlerausgabe
 	 * @param type $messages
 	 */
 	public static function getMessageOutputFragment($messages)
@@ -169,14 +173,14 @@ class Error
 		$text = '';
 		foreach ($messages as $error) {
 			if (trim($error) !== '') {
-				$fragment = new \rex_fragment([
+				$fragment = new rex_fragment([
 					'text' => $error,
 				]);
 
 				$text .= $fragment->parse('fragments/msg/tagged_msg.php');
 			}
 		}
-		$fragment = new \rex_fragment([
+		$fragment = new rex_fragment([
 			'text' => $text,
 		]);
 

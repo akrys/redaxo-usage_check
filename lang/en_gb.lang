@@ -66,7 +66,7 @@ akrys_usagecheck_action_linktext_edit_code = Edit source code
 
 
 akrys_usagecheck_template_subpagetitle = Templates
-akrys_usagecheck_template_intro_text = <p>Templates can be used in 2 ways: <ol><li>Connecting them to articles (column: article)</li><li>as an include in another template (column: template)</li></ol></p><p>Deactivated templates are shown using a slightly lighter color.</p>
+akrys_usagecheck_template_intro_text = <p>Templates are usually set at the time an article is created or edited.<br />Admin only: Deactivated templates are shown using a slightly lighter color. They can be used as an include inside other templates.</p>
 akrys_usagecheck_template_link_show_all = Show all templates
 akrys_usagecheck_template_link_show_unused = Show unused templates only
 akrys_usagecheck_template_link_show_active = Show active templates only
@@ -78,7 +78,7 @@ akrys_usagecheck_template_msg_used = OK, this is used
 akrys_usagecheck_template_msg_not_used = not used
 akrys_usagecheck_template_detail_heading = Usage
 akrys_usagecheck_template_linktext_edit_article = edit article (ID: $articleID$, Artikel: "$articleName$")
-akrys_usagecheck_template_linktext_edit_template = edit REX_TEMPLATE[$templateID$] in "$templateName$"
+akrys_usagecheck_template_linktext_edit_template = edit Template (ID: $templateID$) in "$templateName$"
 akrys_usagecheck_template_linktext_edit_code = Edit source code
 
 

@@ -8,6 +8,11 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck\Lib;
 
+use FriendsOfRedaxo\addon\UsageCheck\Lib\RexBase;
+use rex;
+use rex_addon;
+use rex_plugin;
+
 /**
  * Description of PictureYFrom
  *
@@ -83,11 +88,11 @@ class PictureYFrom
 
 		$rexSQL = $this->getRexSql();
 
-		if (!\rex_addon::get('yform')->isAvailable()) {
+		if (!rex_addon::get('yform')->isAvailable()) {
 			return $tabels;
 		}
 
-		if (!\rex_plugin::get('yform', 'manager')->isAvailable()) {
+		if (!rex_plugin::get('yform', 'manager')->isAvailable()) {
 			return $tabels;
 		}
 
@@ -145,7 +150,7 @@ SQL;
 		$rexSQL = $this->getRexSql();
 
 		if (!isset($dbs)) { // Normalfall, wenn wir nicht gerade Unit-Tests laufen lassen
-			$dbs = \rex::getProperty('db');
+			$dbs = rex::getProperty('db');
 		}
 
 		$where = array();
