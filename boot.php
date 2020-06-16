@@ -22,6 +22,4 @@ try {
 
 spl_autoload_register(array('FriendsOfRedaxo\\addon\\UsageCheck\\Config', 'autoload'), true, true);
 
-if (class_exists(rex_fragment::class)) {
-	rex_fragment::addDirectory(realpath(__DIR__));
-}
+rex_fragment::addDirectory(realpath(__DIR__));
