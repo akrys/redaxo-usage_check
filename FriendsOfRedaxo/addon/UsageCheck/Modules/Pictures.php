@@ -204,7 +204,7 @@ SQL;
 				$havingClauses[] = ' ifnull(usagecheck_metaCatIDs, 0) = 0 and ifnull(usagecheck_metaArtIDs, 0) = 0 and ifnull(usagecheck_metaMedIDs, 0) = 0';
 			}
 
-			$sql .= 'group by f.filename ';
+			$sql .= 'group by f.filename, f.id,rex_article_art_meta.id,rex_article_cat_meta.id ';
 			if (!$this->showAll && isset($havingClauses) && count($havingClauses) > 0) {
 				$sql .= 'having '.implode(' and ', $havingClauses).'';
 			}

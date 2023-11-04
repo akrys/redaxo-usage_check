@@ -84,7 +84,7 @@ class Modules
 		$additionalFields = '';
 		$where = '';
 		$whereArray = [];
-		$groupBy = 'group by m.id';
+		$groupBy = 'group by m.id,s.id';
 
 		$rexSQL = rex_sql::factory();
 		if ($detail_id) {
