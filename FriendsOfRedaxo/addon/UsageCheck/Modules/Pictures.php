@@ -25,8 +25,7 @@ use function rex_mediapool_mediaIsInUse;
  *
  * @author akrys
  */
-class Pictures
-	extends BaseModule
+class Pictures extends BaseModule
 {
 	const TYPE = 'media';
 
@@ -130,7 +129,6 @@ class Pictures
 		$additionalJoins = '';
 		$this->tableFields = array();
 
-
 		$havingClauses = array_merge($havingClauses, $sqlPartsYForm['havingClauses']);
 		$additionalSelect .= $sqlPartsYForm['additionalSelect'];
 		$additionalJoins .= $sqlPartsYForm['additionalJoins'];
@@ -140,7 +138,6 @@ class Pictures
 		$additionalSelect .= $sqlPartsMeta['additionalSelect'];
 		$additionalJoins .= $sqlPartsMeta['additionalJoins'];
 		$this->tableFields = array_merge($this->tableFields, $sqlPartsMeta['tableFields']);
-
 
 		$mediaTable = $this->getTable('media');
 		$articleSliceTable = $this->getTable('article_slice');
@@ -172,6 +169,27 @@ left join `$articleSliceTable` s on (
  OR find_in_set(f.filename, s.medialist8)
  OR find_in_set(f.filename, s.medialist9)
  OR find_in_set(f.filename, s.medialist10)
+
+ OR s.value1 like concat('%',f.filename,'%')
+ OR s.value2 like concat('%',f.filename,'%')
+ OR s.value3 like concat('%',f.filename,'%')
+ OR s.value4 like concat('%',f.filename,'%')
+ OR s.value5 like concat('%',f.filename,'%')
+ OR s.value6 like concat('%',f.filename,'%')
+ OR s.value7 like concat('%',f.filename,'%')
+ OR s.value8 like concat('%',f.filename,'%')
+ OR s.value9 like concat('%',f.filename,'%')
+ OR s.value10 like concat('%',f.filename,'%')
+ OR s.value11 like concat('%',f.filename,'%')
+ OR s.value12 like concat('%',f.filename,'%')
+ OR s.value13 like concat('%',f.filename,'%')
+ OR s.value14 like concat('%',f.filename,'%')
+ OR s.value15 like concat('%',f.filename,'%')
+ OR s.value16 like concat('%',f.filename,'%')
+ OR s.value17 like concat('%',f.filename,'%')
+ OR s.value18 like concat('%',f.filename,'%')
+ OR s.value19 like concat('%',f.filename,'%')
+ OR s.value20 like concat('%',f.filename,'%')
 )
 
 left join $articleTable a on (a.id=s.article_id and a.clang_id=s.clang_id)
@@ -435,6 +453,7 @@ SQL;
 	{
 		$return = '';
 		$used = false;
+
 		if (isset($item['count']) && $item['count'] > 0) {
 			$used = true;
 		}
@@ -444,6 +463,11 @@ SQL;
 			if ($item[$tablename] !== null) {
 				$used = true;
 				$table = $tablename;
+				break;
+			}
+
+			if ($item['usagecheck_'.$tablename.'_id']) {
+				$used = true;
 				break;
 			}
 		}
