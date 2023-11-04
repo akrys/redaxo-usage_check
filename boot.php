@@ -23,3 +23,7 @@ try {
 spl_autoload_register(array('FriendsOfRedaxo\\addon\\UsageCheck\\Config', 'autoload'), true, true);
 
 rex_fragment::addDirectory(realpath(__DIR__));
+
+if (rex::isBackend()) {
+	rex_view::addCssFile($this->getAssetsUrl('css/style.css'));
+}

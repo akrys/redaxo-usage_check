@@ -6,18 +6,18 @@ if (count($this->errors) > 0) {
 }
 
 $user = \rex::getUser();
-$mediaPerm =  $user->getComplexPerm('media');
+$mediaPerm = $user->getComplexPerm('media');
 $structurePerm = $user->getComplexPerm('structure');
 
 $media = rex_media::get($this->data['first']['filename']);
 ?>
 
-<div class="basis">
+<div class="basis picture">
 	<?php
 	echo \FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::showUsedInfo($this->data['first'], $this->data['fields']);
 	?>
 
-	<div style="float:left;margin-left:5px;">
+	<div class="useList">
 		<ol>
 			<?php
 			$url = 'index.php?page=mediapool&subpage=detail&file_name='.$this->filename;
@@ -188,7 +188,7 @@ $media = rex_media::get($this->data['first']['filename']);
 				$title = \rex_i18n::rawMsg('akrys_usagecheck_images_category_header');
 				?>
 
-				<small style="font-size:0.875em;">
+				<small>
 					<br />
 					<strong><?= $title ?></strong>
 					<br />
@@ -215,7 +215,7 @@ $media = rex_media::get($this->data['first']['filename']);
 		}
 		?>
 	</div>
-	<div style="float:right;padding:5px;margin:0 5px 0;">
+	<div class="detail">
 
 		<?php
 		$url = 'index.php?rex_media_type=rex_mediapool_detail&rex_media_file='.$this->data['first']['filename'];
@@ -235,7 +235,6 @@ $media = rex_media::get($this->data['first']['filename']);
 			$fragment = new \rex_fragment([
 				'src' => $url,
 				'alt' => '',
-//		'style' => 'max-width:150px;max-height: 150px;',
 			]);
 			echo $fragment->parse('fragments/image.php');
 			?>
@@ -251,7 +250,7 @@ $media = rex_media::get($this->data['first']['filename']);
 		?>
 
 
-		<table style="border: 0px solid #000000;max-width:700px;">
+		<table class="detaillist">
 			<?php
 			foreach ($this->data['first'] as $key => $value) {
 				if (preg_match('/^usagecheck_/', $key)) {
@@ -260,8 +259,8 @@ $media = rex_media::get($this->data['first']['filename']);
 				?>
 
 				<tr>
-					<th style="border: 1px solid #000000;padding: 0 5px;"><?= $key ?></th>
-					<td style="border: 1px solid #000000;padding: 0 5px; width:75%;"><?= $value ?></td>
+					<th><?= $key ?></th>
+					<td<?= mb_strlen($value) > 100 ? ' class="longcontent"' : '' ?> data-length="<?= mb_strlen($value) ?>"><?= $value ?></td>
 				</tr>
 
 				<?php
