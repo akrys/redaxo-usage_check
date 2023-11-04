@@ -466,7 +466,7 @@ SQL;
 				break;
 			}
 
-			if ($item['usagecheck_'.$tablename.'_id']) {
+			if (isset($item['usagecheck_'.$tablename.'_id']) && $item['usagecheck_'.$tablename.'_id']) {
 				$used = true;
 				break;
 			}

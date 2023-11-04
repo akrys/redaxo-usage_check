@@ -63,12 +63,11 @@ class Error
 	 * @see Iterator::next()
 	 * @link https://secure.php.net/manual/en/iterator.next.php
 	 *
-	 * @return int
 	 */
-	public function next()
+	#[\ReturnTypeWillChange]
+	public function next()/*: void*/
 	{
 		$this->index++;
-		return $this->current();
 	}
 
 	/**
@@ -79,7 +78,8 @@ class Error
 	 *
 	 * @return string
 	 */
-	public function current()
+	#[\ReturnTypeWillChange]
+	public function current()/*:string*/
 	{
 		if (!$this->valid()) {
 			return false;
@@ -93,7 +93,8 @@ class Error
 	 * @see Iterator::rewind()
 	 * @link https://secure.php.net/manual/en/iterator.rewind.php
 	 */
-	public function rewind()
+	#[\ReturnTypeWillChange]
+	public function rewind()/*: void*/
 	{
 		$this->index = 0;
 	}
@@ -106,7 +107,8 @@ class Error
 	 *
 	 * @return int
 	 */
-	public function key()
+	#[\ReturnTypeWillChange]
+	public function key()/*:int*/
 	{
 		return $this->index;
 	}
@@ -119,7 +121,8 @@ class Error
 	 *
 	 * @return boolean
 	 */
-	public function valid()
+	#[\ReturnTypeWillChange]
+	public function valid()/*: bool*/
 	{
 		if (!isset($this->errors[$this->index])) {
 			return false;
