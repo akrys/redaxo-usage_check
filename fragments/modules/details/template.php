@@ -3,7 +3,7 @@ $user = \rex::getUser();
 $structurePerm = $user->getComplexPerm('structure');
 ?>
 
-<div class="basis">
+<div class="basis template">
 	<strong><?= \rex_i18n::rawMsg('akrys_usagecheck_templates'); ?> "<?= $this->data['first']['name'] ?>"</strong><br />
 
 	<?php

@@ -8,7 +8,7 @@ $user = \rex::getUser();
 $structurePerm = $user->getComplexPerm('structure');
 ?>
 
-<div class="basis">
+<div class="basis module">
 	<strong><?= \rex_i18n::rawMsg('akrys_usagecheck_module'); ?> "<?= $this->data['first']['name'] ?>"</strong><br />
 
 	<?php

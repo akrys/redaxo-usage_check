@@ -80,7 +80,7 @@ class Actions
 		$additionalFields = '';
 		$where = '';
 		$whereArray = [];
-		$groupBy = 'group by a.id';
+		$groupBy = 'group by a.id,ma.module_id';
 
 		if ($detail_id) {
 			$groupBy = '';

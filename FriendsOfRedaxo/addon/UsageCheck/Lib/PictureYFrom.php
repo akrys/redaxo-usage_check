@@ -18,8 +18,7 @@ use rex_plugin;
  *
  * @author akrys
  */
-class PictureYFrom
-	extends RexBase
+class PictureYFrom extends RexBase
 {
 
 	/**
@@ -111,9 +110,8 @@ class PictureYFrom
 select f.table_name, t.name as table_out,f.name as f1, f.label as f2,f.type_name $additionalFields
 from $yformFieldTable f
 left join $yformTableTable t on t.table_name=f.table_name
-where type_name in ('be_media','be_medialist','mediafile')
+where f.type_name in ('be_media','be_medialist','mediafile','imagelist','custom_link')
 SQL;
-
 		$yformtableExists = count($yformfield) > 0;
 		$yformfieldExists = count($yformtable) > 0;
 
@@ -198,6 +196,8 @@ SQL;
 				$joinCondition = 'FIND_IN_SET(f.filename, '.$tableName.'.'.$field['name'].')';
 				break;
 			case 'be_media': // Redaxo 5
+			case 'imagelist':
+			case 'custom_link':
 				$joinCondition = $tableName.'.'.$field['name'].' = f.filename';
 				if ($field['multiple']) {
 					//YForm 2 kann mehrere Dateien aufnehmen

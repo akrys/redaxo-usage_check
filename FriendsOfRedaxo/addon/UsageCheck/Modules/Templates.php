@@ -184,7 +184,7 @@ SQL;
 	,count(a.id) articles
 	,count(t2.id) templates
 SQL;
-			$groupBy = 'group by a.template_id,t.id';
+			$groupBy = 'group by a.template_id,t.id,a.id';
 
 			$this->addParamCriteria($where, $having);
 			$this->addParamStatementKeywords($where, $having);

@@ -1,0 +1,103 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/*
+    Created on : 04.11.2023, 14:37:50
+    Author     : akrys
+*/
+
+/*
+	https://caniuse.com/css-nesting
+	Alle Browser seit 2023-03 werden unterstützt. Admins sollten ja wohl nicht mit uralt browsern unterwegs sein.
+*/
+
+
+.usage_check.base {
+	& .basis {
+		& .useList{
+			float:left;
+			margin-left:5px;
+
+			& small {
+				font-size:0.875em;
+			}
+		}
+	}
+
+	& .module{
+		&.picture {
+			& .name {
+				& img {
+					max-width:150px;
+					max-height: 150px;
+				}
+
+				& .filetype {
+					font-size:0.875em;
+					font-weight:bold;
+				}
+			}
+			& .function {
+				& small {
+					font-size: 0.875em;
+				}
+			}
+		}
+
+		&.template {
+			& tr.active{}
+			& tr.inactive{opacity:0.80;}
+		}
+
+		&.details {
+			& .picture {
+				& .detail {
+					float:right;
+					padding:5px;
+					margin:0 5px 0;
+				}
+
+				& table.detaillist {
+					border: 0px solid #000000;
+					max-width:700px;
+
+					& th{
+						border: 1px solid #000000;
+						padding: 0 5px;
+						max-width:300px;
+						vertical-align:top;
+					}
+
+					& td{
+						border: 1px solid #000000;
+						padding: 0 5px;
+						max-width:400px;
+						&.longcontent{
+							overflow:scroll;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	& .version {
+		font-size:10px;color:#c2c2c2
+	}
+
+	& table.table.table-striped {
+		& th.function {
+			width: 75%;
+		}
+
+		& .rex-message {
+			border:0;
+			outline:0;
+
+			&.list {
+				margin-top: 15px;
+			}
+		}
+	}
+}

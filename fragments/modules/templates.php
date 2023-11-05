@@ -5,8 +5,8 @@ $user = \rex::getUser();
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_template_table_heading_name'); ?></th>
-			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_template_table_heading_functions'); ?></th>
+			<th class="name"><?= \rex_i18n::rawMsg('akrys_usagecheck_template_table_heading_name'); ?></th>
+			<th class="function"><?= \rex_i18n::rawMsg('akrys_usagecheck_template_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -14,7 +14,7 @@ $user = \rex::getUser();
 		<?php
 		foreach ($this->items as $item) {
 			?>
-			<tr<?= $item['active'] == 1 ? '' : ' style = "opacity:0.80;"' ?>>
+			<tr class="<?= $item['active'] == 1 ? 'active' : 'inactive' ?>">
 				<td>
 					<?php
 					echo $item['name'];
@@ -40,7 +40,7 @@ $user = \rex::getUser();
 					}
 					?>
 
-					<div  class="rex-message" style="border:0;outline:0;">
+					<div class="rex-message list">
 						<span>
 							<strong><?= \rex_i18n::rawMsg('akrys_usagecheck_template_detail_heading') ?></strong>
 							<ol>

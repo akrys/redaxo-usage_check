@@ -7,8 +7,8 @@ $structurePerm = $user->getComplexPerm('structure');
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_images_table_heading_name'); ?></th>
-			<th><?= \rex_i18n::rawMsg('akrys_usagecheck_images_table_heading_functions'); ?></th>
+			<th class="name"><?= \rex_i18n::rawMsg('akrys_usagecheck_images_table_heading_name'); ?></th>
+			<th class="function"><?= \rex_i18n::rawMsg('akrys_usagecheck_images_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -28,7 +28,7 @@ $structurePerm = $user->getComplexPerm('structure');
 			?>
 
 			<tr>
-				<td>
+				<td class="name">
 
 					<?php
 					if (stristr($item['filetype'], 'image/')) {
@@ -37,7 +37,6 @@ $structurePerm = $user->getComplexPerm('structure');
 						$fragment = new \rex_fragment([
 							'src' => $url,
 							'alt' => '',
-							'style' => 'max-width:150px;max-height: 150px;',
 						]);
 						echo $fragment->parse('fragments/image.php');
 					}
@@ -51,14 +50,14 @@ $structurePerm = $user->getComplexPerm('structure');
 					?>
 
 					<br />
-					<small style="font-size:0.875em;font-weight:bold;"><?= $item['filetype']; ?></small>
+					<small class="filetype"><?= $item['filetype']; ?></small>
 				</td>
-				<td style="width:75%;">
+				<td class="function">
 					<?php
 					echo \FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::showUsedInfo($item, $this->items['fields']);
 					?>
 
-					<div class="rex-message" style="border:0;outline:0;">
+					<div class="rex-message list">
 						<span>
 							<ol>
 								<?php
@@ -78,7 +77,7 @@ $structurePerm = $user->getComplexPerm('structure');
 						</span>
 					</div>
 
-					<div  class="rex-message" style="border:0;outline:0;">
+					<div  class="rex-message">
 						<span>
 
 							<?php
@@ -91,7 +90,7 @@ $structurePerm = $user->getComplexPerm('structure');
 								$title = \rex_i18n::rawMsg('akrys_usagecheck_images_category_header');
 								?>
 
-								<small style="font-size:0.875em;">
+								<small>
 									<br />
 									<strong><?= $title ?></strong>
 									<br />
