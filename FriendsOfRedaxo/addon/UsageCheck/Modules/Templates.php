@@ -120,7 +120,7 @@ class Templates extends BaseModule
 	private function addParamCriteria(string &$where, string &$having): void
 	{
 		if (!$this->showAll) {
-			$having .= 'articles is null and templates is null';
+			$having .= '(articles is null or articles = 0) and (templates is null or templates = 0)';
 		}
 		if (!$this->showInactive) {
 			$where .= 't.active = 1';
@@ -182,6 +182,7 @@ class Templates extends BaseModule
 SQL;
 			$groupBy = 'group by a.template_id,t.id,a.id';
 			$where .= 'where t.id='.$rexSQL->escape($detail_id);
+			$groupBy = 'group by a.template_id,t.id,a.id';
 		} else {
 			$additionalFields = <<<SQL
 	,count(a.id) articles
