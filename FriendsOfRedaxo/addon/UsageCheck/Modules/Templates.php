@@ -118,7 +118,7 @@ class Templates
 	private function addParamCriteria(&$where, &$having)
 	{
 		if (!$this->showAll) {
-			$having .= 'articles is null and templates is null';
+			$having .= '(articles is null or articles = 0) and (templates is null or templates = 0)';
 		}
 		if (!$this->showInactive) {
 			$where .= 't.active = 1';
@@ -179,12 +179,13 @@ class Templates
 		t2.name as usagecheck_template_t2_name
 SQL;
 			$where .= 'where t.id='.$rexSQL->escape($detail_id);
+			$groupBy = 'group by a.template_id,t.id,a.id';
 		} else {
 			$additionalFields = <<<SQL
 	,count(a.id) articles
 	,count(t2.id) templates
 SQL;
-			$groupBy = 'group by a.template_id,t.id,a.id';
+			$groupBy = 'group by a.template_id,t.id';
 
 			$this->addParamCriteria($where, $having);
 			$this->addParamStatementKeywords($where, $having);
@@ -193,7 +194,7 @@ SQL;
 		$sql = <<<SQL
 SELECT
 	t.*,
-	a.id as article_id
+	group_concat(a.id) as article_id
 	$additionalFields
 FROM `$templateTable` t
 left join $articleTable a on t.id=a.template_id

@@ -84,7 +84,7 @@ class Modules
 		$additionalFields = '';
 		$where = '';
 		$whereArray = [];
-		$groupBy = 'group by m.id,s.id';
+		$groupBy = 'group by m.id';
 
 		$rexSQL = rex_sql::factory();
 		if ($detail_id) {
@@ -104,7 +104,7 @@ SQL;
 				$whereArray[] .= 's.id is null';
 			}
 
-			$additionalFields = ', s.id as slice_data';
+			$additionalFields = ', group_concat(s.id) as slice_data';
 		}
 
 		if (count($whereArray) > 0) {
