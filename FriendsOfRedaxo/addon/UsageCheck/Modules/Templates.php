@@ -118,7 +118,7 @@ class Templates
 	private function addParamCriteria(&$where, &$having)
 	{
 		if (!$this->showAll) {
-			$having .= 'articles is null and templates is null';
+			$having .= '(articles is null or articles = 0) and (templates is null or templates = 0)';
 		}
 		if (!$this->showInactive) {
 			$where .= 't.active = 1';
