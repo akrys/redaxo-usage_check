@@ -80,7 +80,7 @@ class Actions
 		$additionalFields = '';
 		$where = '';
 		$whereArray = [];
-		$groupBy = 'group by a.id,ma.module_id';
+		$groupBy = 'group by a.id';
 
 		if ($detail_id) {
 			$groupBy = '';
@@ -89,13 +89,14 @@ class Actions
 m.name as usage_check_m_name
 SQL;
 			$whereArray[] = 'a.id='.$rexSQL->escape($detail_id);
+			$groupBy = 'group by a.id,ma.module_id';
 		} else {
 			$where = '';
 			if (!$this->showAll) {
 				$whereArray[] = 'ma.id is null';
 			}
 
-			$additionalFields = ', ma.module_id as modul';
+			$additionalFields = ', group_concat(ma.module_id) as modul';
 		}
 
 		if (count($whereArray) > 0) {
