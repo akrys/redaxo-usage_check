@@ -19,8 +19,7 @@ use rex_sql;
  *
  * @author akrys
  */
-class Templates
-	extends BaseModule
+class Templates extends BaseModule
 {
 	const TYPE = 'templates';
 
@@ -28,15 +27,15 @@ class Templates
 	 * Anzeigemodus für "Ianktive zeigen"
 	 * @var boolean
 	 */
-	private $showInactive = false;
+	private bool $showInactive = false;
 
 	/**
 	 * Anzeigemodus "inaktive zeigen" umstellen
 	 * @param boolean $bln
 	 */
-	public function showInactive($bln)
+	public function showInactive(bool $bln)
 	{
-		$this->showInactive = (boolean) $bln;
+		$this->showInactive = $bln;
 	}
 
 	/**
@@ -48,7 +47,7 @@ class Templates
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public function get()
+	public function get(): array
 	{
 		$showInactive = $this->showInactive;
 
@@ -69,7 +68,10 @@ class Templates
 		// @codeCoverageIgnoreStart
 		//SQL-Fehler an der Stelle recht schwer zu testen, aber dennoch sinnvoll enthalten zu sein.
 		if (!$return) {
-			Error::getInstance()->add($rexSQL->getError());
+			$error = 'SQL: '.$sql.PHP_EOL.
+				'ErrorNo: '.$rexSQL->getErrno().PHP_EOL.
+				'Error: '.$rexSQL->getError().PHP_EOL;
+			Error::getInstance()->add($error);
 		}
 		// @codeCoverageIgnoreEnd
 
@@ -81,7 +83,7 @@ class Templates
 	 * @param int $item_id
 	 * @return array
 	 */
-	public function getDetails(/* int */$item_id)
+	public function getDetails(int $item_id): array
 	{
 		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
 			//Permission::PERM_TEMPLATE
@@ -115,7 +117,7 @@ class Templates
 	 * @param string &$where
 	 * @param string &$having
 	 */
-	private function addParamCriteria(&$where, &$having)
+	private function addParamCriteria(string &$where, string &$having): void
 	{
 		if (!$this->showAll) {
 			$having .= 'articles is null and templates is null';
@@ -133,7 +135,7 @@ class Templates
 	 * @param string &$where
 	 * @param string &$having
 	 */
-	private function addParamStatementKeywords(&$where, &$having)
+	private function addParamStatementKeywords(string &$where, string &$having): void
 	{
 		if ($where !== '') {
 			$where = 'where '.$where.' ';
@@ -149,7 +151,7 @@ class Templates
 	 * @param int $detail_id
 	 * @return string
 	 */
-	protected function getSQL(/* int */$detail_id = null)
+	protected function getSQL(int $detail_id = null): string
 	{
 		$rexSQL = rex_sql::factory();
 
@@ -178,13 +180,14 @@ class Templates
 		t2.id as usagecheck_template_t2_id,
 		t2.name as usagecheck_template_t2_name
 SQL;
+			$groupBy = 'group by a.template_id,t.id,a.id';
 			$where .= 'where t.id='.$rexSQL->escape($detail_id);
 		} else {
 			$additionalFields = <<<SQL
 	,count(a.id) articles
 	,count(t2.id) templates
 SQL;
-			$groupBy = 'group by a.template_id,t.id,a.id';
+			$groupBy = 'group by a.template_id,t.id';
 
 			$this->addParamCriteria($where, $having);
 			$this->addParamStatementKeywords($where, $having);
@@ -193,7 +196,7 @@ SQL;
 		$sql = <<<SQL
 SELECT
 	t.*,
-	a.id as article_id
+	group_concat(a.id) as article_id
 	$additionalFields
 FROM `$templateTable` t
 left join $articleTable a on t.id=a.template_id

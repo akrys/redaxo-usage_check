@@ -27,7 +27,7 @@ class PictureYFrom extends RexBase
 	 * @param int $detail_id
 	 * @return array
 	 */
-	public function getYFormTableSQLParts(/* int */ $detail_id = null)
+	public function getYFormTableSQLParts(int $detail_id = null): array
 	{
 		$return = array(
 			'additionalSelect' => '',
@@ -81,7 +81,7 @@ class PictureYFrom extends RexBase
 	 * @return array
 	 * @param array &$return
 	 */
-	public function getYFormSQL()
+	public function getYFormSQL(): array
 	{
 		$tabels = array();
 
@@ -143,7 +143,7 @@ SQL;
 	 * @returns boolean
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	private function hasMultiple($yformFieldTable, $dbs = null)
+	private function hasMultiple(string $yformFieldTable, ?array $dbs = null): bool
 	{
 		$rexSQL = $this->getRexSql();
 
@@ -184,7 +184,7 @@ SQL;
 	 * @param string $tableName
 	 * @return string
 	 */
-	private function getJoinCondition($field, $tableName)
+	private function getJoinCondition(array $field, string $tableName): string
 	{
 		$joinCondition = '';
 		switch ($field['type']) {

@@ -58,7 +58,7 @@ class Permission
 	 * @return boolean
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public function check($perm)
+	public function check(string $perm): bool
 	{
 		$user = rex::getUser();
 		$complexPerm = $user->getComplexPerm($perm);

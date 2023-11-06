@@ -17,8 +17,7 @@ use rex_sql;
  *
  * @author akrys
  */
-class Actions
-	extends BaseModule
+class Actions extends BaseModule
 {
 	const TYPE = 'actions';
 
@@ -30,10 +29,10 @@ class Actions
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
-	public function get()
+	public function get(): array
 	{
 		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
-			return false;
+			return [];
 		}
 
 		$rexSQL = $this->getRexSql();
@@ -46,7 +45,7 @@ class Actions
 	 * @param int $item_id
 	 * @return array
 	 */
-	public function getDetails($item_id)
+	public function getDetails(int $item_id): array
 	{
 		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
 			return false;
@@ -74,13 +73,13 @@ class Actions
 	 * @param int $detail_id
 	 * @return string
 	 */
-	protected function getSQL(/* int */$detail_id = null)
+	protected function getSQL(int $detail_id = null): string
 	{
 		$rexSQL = rex_sql::factory();
 		$additionalFields = '';
 		$where = '';
 		$whereArray = [];
-		$groupBy = 'group by a.id,ma.module_id';
+		$groupBy = 'group by a.id';
 
 		if ($detail_id) {
 			$groupBy = '';
@@ -89,13 +88,14 @@ class Actions
 m.name as usage_check_m_name
 SQL;
 			$whereArray[] = 'a.id='.$rexSQL->escape($detail_id);
+			$groupBy = 'group by a.id,ma.module_id';
 		} else {
 			$where = '';
 			if (!$this->showAll) {
 				$whereArray[] = 'ma.id is null';
 			}
 
-			$additionalFields = ', ma.module_id as modul';
+			$additionalFields = ', group_concat(ma.module_id) as modul';
 		}
 
 		if (count($whereArray) > 0) {
@@ -121,6 +121,7 @@ $where
 $groupBy
 
 SQL;
+		print $sql;
 		return $sql;
 	}
 }

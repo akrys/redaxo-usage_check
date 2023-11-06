@@ -1,5 +1,5 @@
 package: usage_check
-version: '2.4'
+version: '3.0'
 author: Axel Krysztofiak
 supportpage: https://github.com/akrys/redaxo-usage_check
 #load: early
@@ -23,5 +23,5 @@ page:
 requires:
     redaxo: '>5'
     php:
-        version: '>=5.6'
+        version: '>=8.1'
         extensions: []

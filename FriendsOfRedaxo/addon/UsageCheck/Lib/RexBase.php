@@ -23,13 +23,13 @@ class RexBase
 	 * rexSQL instanz
 	 * @var rex_sql
 	 */
-	private $rexSql;
+	private rex_sql $rexSql;
 
 	/**
 	 * rex Instanz
-	 * @var rex
+	 * @var ?rex
 	 */
-	private $rex;
+	private ?rex $rex = null;
 
 	/**
 	 * Konstruktor
@@ -44,7 +44,7 @@ class RexBase
 	 *
 	 * @return rex_sql
 	 */
-	public function getRexSql()
+	public function getRexSql(): rex_sql
 	{
 		if (!$this->rexSql) {
 			throw new Exception('no sql given');
@@ -58,7 +58,7 @@ class RexBase
 	 * @param rex_sql $sql
 	 * @return $this
 	 */
-	public function setRexSql(rex_sql $sql)
+	public function setRexSql(rex_sql $sql): self
 	{
 		$this->rexSql = $sql;
 		return $this;
@@ -70,7 +70,7 @@ class RexBase
 	 * @param string $table
 	 * @return string
 	 */
-	protected function getTable($table)
+	protected function getTable(string $table): string
 	{
 		if (!$this->rex) {
 			$this->rex = new rex;

@@ -13,47 +13,46 @@ namespace FriendsOfRedaxo\addon\UsageCheck\Lib;
  *
  * @author akrys
  */
-abstract class BaseModule
-	extends RexBase
+abstract class BaseModule extends RexBase
 {
 	/**
 	 * Anzeigemodus
 	 * @var boolean
 	 */
-	protected $showAll = false;
+	protected bool $showAll = false;
 
 	/**
 	 * Tabellenfelder
 	 * @var array
 	 */
-	protected $tableFields = array();
+	protected array $tableFields = array();
 
 	/**
 	 * Anzeigemodus umstellen
 	 * @param boolean $bln
 	 */
-	public function showAll($bln)
+	public function showAll(bool $bln)
 	{
-		$this->showAll = (boolean) $bln;
+		$this->showAll = $bln;
 	}
 
 	/**
 	 * Daten holen
 	 * @return array
 	 */
-	abstract public function get();
+	abstract public function get(): array;
 
 	/**
 	 * SQL genereieren
 	 * @param int $datail_id
-	 * @return array
+	 * @return string
 	 */
-	abstract protected function getSQL(/* int */$datail_id = null);
+	abstract protected function getSQL(int $datail_id = null): string;
 
 	/**
 	 * Details holen
 	 * @param int $item_id
 	 * @return array
 	 */
-	abstract public function getDetails(/* int */$item_id);
+	abstract public function getDetails(int $item_id): array;
 }
