@@ -9,6 +9,8 @@
 namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
 use Exception;
+use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
+use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
 use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
 use FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom;
 use FriendsOfRedaxo\addon\UsageCheck\Medium;
@@ -27,7 +29,10 @@ use function rex_mediapool_mediaIsInUse;
  */
 class Pictures extends BaseModule
 {
-	const TYPE = 'media';
+	/**
+	 * @var ModuleType
+	 */
+	const TYPE = ModuleType::PICTURES;
 
 	/**
 	 * Yform Integration
@@ -45,7 +50,7 @@ class Pictures extends BaseModule
 	 */
 	public function get(): array
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_MEDIA)) {
+		if (!Permission::getInstance()->check(Perm::PERM_MEDIA)) {
 			return false;
 		}
 
@@ -67,7 +72,7 @@ class Pictures extends BaseModule
 	 */
 	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_MEDIA)) {
+		if (!Permission::getInstance()->check(Perm::PERM_MEDIA)) {
 			return false;
 		}
 

@@ -5,6 +5,8 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck;
 
+use Exception;
+use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
 use FriendsOfRedaxo\addon\UsageCheck\Exception\CloneException;
 use rex;
 use rex_media_perm;
@@ -18,36 +20,6 @@ use rex_structure_perm;
 class Permission
 {
 	/**
-	 * Name des Rechts für Templates
-	 * @var string
-	 */
-	const PERM_TEMPLATE = 'template';
-
-	/**
-	 * Name des Rechts für den Mediapool
-	 * @var string
-	 */
-	const PERM_MEDIAPOOL = 'mediapool';
-
-	/**
-	 * Name des Rechts für den Mediapool
-	 * @var string
-	 */
-	const PERM_MEDIA = 'media';
-
-	/**
-	 * Name des Rechts für Module
-	 * @var string
-	 */
-	const PERM_MODUL = 'modules';
-
-	/**
-	 * Name des Rechts für das Struktur
-	 * @var string
-	 */
-	const PERM_STRUCTURE = 'structure';
-
-	/**
 	 * Prüft die Rechte für den aktuellen User.
 	 *
 	 * Unit Testing
@@ -58,10 +30,10 @@ class Permission
 	 * @return boolean
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public function check(string $perm): bool
+	public function check(Perm $perm): bool
 	{
 		$user = rex::getUser();
-		$complexPerm = $user->getComplexPerm($perm);
+		$complexPerm = $user->getComplexPerm($perm->value);
 
 		$hasSpecialPerm = true;
 		switch (get_class($complexPerm)) {

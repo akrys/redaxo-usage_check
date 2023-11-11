@@ -1,11 +1,14 @@
 <?php
+
+use FriendsOfRedaxo\addon\UsageCheck\Lib\FileSize;
+use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
 if (count($this->errors) > 0) {
 	$fragment = new rex_fragment(['msg' => $this->errors]);
 	echo $fragment->parse('msg/error_box.php');
 	return;
 }
 
-$user = \rex::getUser();
+$user = rex::getUser();
 $mediaPerm = $user->getComplexPerm('media');
 $structurePerm = $user->getComplexPerm('structure');
 
@@ -14,14 +17,14 @@ $media = rex_media::get($this->data['first']['filename']);
 
 <div class="basis picture">
 	<?php
-	echo \FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::showUsedInfo($this->data['first'], $this->data['fields']);
+	echo Pictures::showUsedInfo($this->data['first'], $this->data['fields']);
 	?>
 
 	<div class="useList">
 		<ol>
 			<?php
 			$url = 'index.php?page=mediapool&subpage=detail&file_name='.$this->filename;
-			$linkText = \rex_i18n::rawMsg('akrys_usagecheck_images_linktext_edit');
+			$linkText = rex_i18n::rawMsg('akrys_usagecheck_images_linktext_edit');
 			?>
 
 			<li><a href="<?= $url ?>" target="_blank"><?= $linkText; ?></a><br /></li>
@@ -31,7 +34,7 @@ $media = rex_media::get($this->data['first']['filename']);
 				switch ($type) {
 					case 'slices':
 						$index = 'akrys_usagecheck_images_linktext_edit_in_slice';
-						$linkTextRaw = \rex_i18n::rawMsg($index);
+						$linkTextRaw = rex_i18n::rawMsg($index);
 
 						foreach ($items as $item) {
 							//s.id,"\\t",s.article_id,"\\t",s.clang,"\\t",s.ctype
@@ -60,7 +63,7 @@ $media = rex_media::get($this->data['first']['filename']);
 						break;
 					case 'art_meta':
 						$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_art';
-						$linkTextRaw = \rex_i18n::rawMsg($index);
+						$linkTextRaw = rex_i18n::rawMsg($index);
 						foreach ($items as $item) {
 							$articleID = $item['usagecheck_art_id'];
 							$articleName = $item['usagecheck_art_name'];
@@ -86,7 +89,7 @@ $media = rex_media::get($this->data['first']['filename']);
 						break;
 					case 'cat_meta':
 						$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_cat';
-						$linkTextRaw = \rex_i18n::rawMsg($index);
+						$linkTextRaw = rex_i18n::rawMsg($index);
 
 						foreach ($items as $item) {
 							//http://51.redaxo.akrys-dev.local/redaxo/index.php?page=structure&category_id=5&article_id=0&clang=1&edit_id=11&function=edit_cat&catstart=0
@@ -115,7 +118,7 @@ $media = rex_media::get($this->data['first']['filename']);
 						break;
 					case 'media_meta':
 						$index = 'akrys_usagecheck_images_linktext_edit_in_metadata_med';
-						$linkTextRaw = \rex_i18n::rawMsg($index);
+						$linkTextRaw = rex_i18n::rawMsg($index);
 						foreach ($items as $item) {
 							//file_id,"\t",category_id,"\t",filename
 							$fileID = $item['usagecheck_med_id'];
@@ -137,15 +140,15 @@ $media = rex_media::get($this->data['first']['filename']);
 						break;
 					case 'yform':
 						$index = 'akrys_usagecheck_images_linktext_edit_in_yformtable';
-						$linkTextRaw = \rex_i18n::rawMsg($index);
+						$linkTextRaw = rex_i18n::rawMsg($index);
 						foreach ($items as $table => $fields) {
 							foreach ($fields as $field => $entries) {
 								foreach ($entries as $id => $item) {
 
 									$id = $item['usagecheck_'.$table.'_id'];
-									$hasPerm = \rex::getUser()->isAdmin() || (
-										\rex::getUser()->hasPerm('yform[]') &&
-										\rex::getUser()->hasPerm('yform[table:'.$table.']')
+									$hasPerm = rex::getUser()->isAdmin() || (
+										rex::getUser()->hasPerm('yform[]') &&
+										rex::getUser()->hasPerm('yform[table:'.$table.']')
 										);
 
 									$linkText = $linkTextRaw;
@@ -185,7 +188,7 @@ $media = rex_media::get($this->data['first']['filename']);
 			$initCat = $media->getCategory();
 
 			if (isset($initCat)) {
-				$title = \rex_i18n::rawMsg('akrys_usagecheck_images_category_header');
+				$title = rex_i18n::rawMsg('akrys_usagecheck_images_category_header');
 				?>
 
 				<small>
@@ -219,7 +222,7 @@ $media = rex_media::get($this->data['first']['filename']);
 
 		<?php
 		$url = 'index.php?rex_media_type=rex_mediapool_detail&rex_media_file='.$this->data['first']['filename'];
-		$fileSize = new \FriendsOfRedaxo\addon\UsageCheck\Lib\FileSize($this->data['first']['filesize']);
+		$fileSize = new FileSize($this->data['first']['filesize']);
 
 		if (!stristr($this->data['first']['filetype'], 'image/')) {
 			?>
@@ -232,7 +235,7 @@ $media = rex_media::get($this->data['first']['filename']);
 			<?php
 		} else {
 
-			$fragment = new \rex_fragment([
+			$fragment = new rex_fragment([
 				'src' => $url,
 				'alt' => '',
 			]);

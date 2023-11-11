@@ -8,6 +8,8 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
+use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
+use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
 use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
 use FriendsOfRedaxo\addon\UsageCheck\Permission;
 use rex_sql;
@@ -19,7 +21,10 @@ use rex_sql;
  */
 class Actions extends BaseModule
 {
-	const TYPE = 'actions';
+	/**
+	 * @var ModuleType
+	 */
+	const TYPE = ModuleType::ACTIONS;
 
 	/**
 	 * Nicht genutze Module holen
@@ -31,7 +36,7 @@ class Actions extends BaseModule
 	 */
 	public function get(): array
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
+		if (!Permission::getInstance()->check(Perm::PERM_MODUL)) {
 			return [];
 		}
 
@@ -47,7 +52,7 @@ class Actions extends BaseModule
 	 */
 	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
+		if (!Permission::getInstance()->check(Perm::PERM_MODUL)) {
 			return false;
 		}
 		$result = [];
@@ -121,7 +126,7 @@ $where
 $groupBy
 
 SQL;
-		print $sql;
+
 		return $sql;
 	}
 }

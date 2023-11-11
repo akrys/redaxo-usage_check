@@ -40,7 +40,7 @@ class Error implements Iterator
 	 * add a text to the messages
 	 * @param string $text
 	 */
-	public function add(string $text)
+	public function add(string $text): void
 	{
 		$this->errors[] = $text;
 	}

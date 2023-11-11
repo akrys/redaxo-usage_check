@@ -8,6 +8,8 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
+use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
+use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
 use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
 use FriendsOfRedaxo\addon\UsageCheck\Permission;
 use rex_sql;
@@ -19,7 +21,10 @@ use rex_sql;
  */
 class Modules extends BaseModule
 {
-	const TYPE = 'modules';
+	/**
+	 * @var ModuleType
+	 */
+	const TYPE = ModuleType::MODULES;
 
 	/**
 	 * Nicht genutze Module holen
@@ -31,7 +36,7 @@ class Modules extends BaseModule
 	 */
 	public function get(): array
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
+		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
 			//Permission::PERM_MODUL
 			return [];
 		}
@@ -49,7 +54,7 @@ class Modules extends BaseModule
 	 */
 	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
+		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
 			//Permission::PERM_MODUL
 			return [];
 		}

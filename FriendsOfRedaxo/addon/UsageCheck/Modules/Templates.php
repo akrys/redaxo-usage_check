@@ -8,6 +8,8 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
+use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
+use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
 use FriendsOfRedaxo\addon\UsageCheck\Error;
 use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
 use FriendsOfRedaxo\addon\UsageCheck\Permission;
@@ -21,7 +23,10 @@ use rex_sql;
  */
 class Templates extends BaseModule
 {
-	const TYPE = 'templates';
+	/**
+	 * @var ModuleType
+	 */
+	const TYPE = ModuleType::TEMPLATES;
 
 	/**
 	 * Anzeigemodus für "Ianktive zeigen"
@@ -51,7 +56,7 @@ class Templates extends BaseModule
 	{
 		$showInactive = $this->showInactive;
 
-		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
+		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
 			//Permission::PERM_TEMPLATE
 			return false;
 		}
@@ -85,7 +90,7 @@ class Templates extends BaseModule
 	 */
 	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_STRUCTURE)) {
+		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
 			//Permission::PERM_TEMPLATE
 			return false;
 		}

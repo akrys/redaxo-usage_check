@@ -19,20 +19,6 @@ class Config
 	const NAME = 'usage_check';
 
 	/**
-	 * Ausgabename des Addons
-	 * @deprecated
-	 * @var string
-	 */
-	const NAME_OUT = 'migrate to \FriendsOfRedaxo\addon\UsageCheck\Addon::getInstance()->getName()';
-
-	/**
-	 * Version des Addons
-	 * @deprecated
-	 * @var string
-	 */
-	const VERSION = 'migrate to \FriendsOfRedaxo\addon\UsageCheck\Addon::class::getInstance()->getVersion()';
-
-	/**
 	 * release state
 	 * @var int
 	 */

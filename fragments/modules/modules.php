@@ -1,12 +1,14 @@
 <?php
-$user = \rex::getUser();
+
+use FriendsOfRedaxo\addon\UsageCheck\Modules\Modules;
+$user = rex::getUser();
 ?>
 
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th class="name"><?= \rex_i18n::rawMsg('akrys_usagecheck_module_table_heading_name'); ?></th>
-			<th class="function"><?= \rex_i18n::rawMsg('akrys_usagecheck_module_table_heading_functions'); ?></th>
+			<th class="name"><?= rex_i18n::rawMsg('akrys_usagecheck_module_table_heading_name'); ?></th>
+			<th class="function"><?= rex_i18n::rawMsg('akrys_usagecheck_module_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -24,10 +26,10 @@ $user = \rex::getUser();
 
 					<?php
 					if ($item['slice_data'] === null) {
-						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_module_msg_not_used')]]);
+						$fragment = new rex_fragment(['msg' => [rex_i18n::rawMsg('akrys_usagecheck_module_msg_not_used')]]);
 						echo $fragment->parse('msg/error_box.php');
 					} else {
-						$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_module_msg_used')]]);
+						$fragment = new rex_fragment(['msg' => [rex_i18n::rawMsg('akrys_usagecheck_module_msg_used')]]);
 						echo $fragment->parse('msg/info_box.php');
 					}
 					?>
@@ -36,18 +38,18 @@ $user = \rex::getUser();
 						<span>
 							<ol>
 								<?php
-								$type = FriendsOfRedaxo\addon\UsageCheck\Modules\Modules::TYPE;
-								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
+								$type = Modules::TYPE;
+								$url = "index.php?page=usage_check/details&type=".$type->value."&id=".$item['id'];
 								?>
 
-								<li><a href="<?= $url; ?>"><?= \rex_i18n::rawMsg('akrys_usagecheck_linktext_detail_page') ?></a></li>
+								<li><a href="<?= $url; ?>"><?= rex_i18n::rawMsg('akrys_usagecheck_linktext_detail_page') ?></a></li>
 
 								<?php
-								$user = \rex::getUser();
+								$user = rex::getUser();
 								if ($user->isAdmin()) {
 									$url = 'index.php?page=modules/modules&function=edit&module_id='.$item['id'];
 									$index = 'akrys_usagecheck_module_linktext_edit_code';
-									$linkText = \rex_i18n::rawMsg($index);
+									$linkText = rex_i18n::rawMsg($index);
 									?>
 
 									<li>
