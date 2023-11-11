@@ -19,24 +19,6 @@ class Config
 	const NAME = 'usage_check';
 
 	/**
-	 * release state
-	 * @var int
-	 */
-	const RELEASE_STATE = 0;
-
-	/**
-	 * Status: LIVE-Version
-	 * @var int
-	 */
-	const RELEASE_STATE_LIVE = 1;
-
-	/**
-	 * Status: DEV-Version
-	 * @var int
-	 */
-	const RELEASE_STATE_DEV = 0;
-
-	/**
 	 * (Absolutes) Basis Verzeichnis holen
 	 * @return string
 	 */
