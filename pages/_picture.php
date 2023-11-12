@@ -3,7 +3,6 @@
 /**
  * Anzeige der nicht verwendeten Bilder.
  */
-
 use FriendsOfRedaxo\addon\UsageCheck\Addon;
 use FriendsOfRedaxo\addon\UsageCheck\Config;
 use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
@@ -28,6 +27,13 @@ switch (rex_get('showall', 'string', "")) {
 		//
 		break;
 }
+$catParam = '';
+$fileCat = rex_get('rex_file_category', 'int', 0);
+if ($fileCat) {
+	$pictures->setCategory($fileCat);
+	$catParam = '&rex_file_category='.$fileCat;
+}
+
 $items = $pictures->get();
 
 if ($items === false) {
@@ -48,7 +54,7 @@ if ($items === false) {
 	}
 
 // <editor-fold defaultstate="collapsed" desc="Menü">
-	$url = 'index.php?page='.Config::NAME.'/'.$subpage.$showAllParam;
+	$url = 'index.php?page='.Config::NAME.'/'.$subpage.$showAllParam.$catParam;
 	$menu = new rex_fragment([
 		'url' => $url,
 		'linktext' => $showAllLinktext,

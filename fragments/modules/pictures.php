@@ -3,10 +3,36 @@
 use FriendsOfRedaxo\addon\UsageCheck\Lib\FileSize;
 use FriendsOfRedaxo\addon\UsageCheck\Medium;
 use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
+
 $user = rex::getUser();
-$mediaPerm =  $user->getComplexPerm('media');
+$mediaPerm = $user->getComplexPerm('media');
 $structurePerm = $user->getComplexPerm('structure');
 ?>
+
+
+Kategoriefilter:<br />
+
+<form action="index.php" method="get">
+	<input type="hidden" name="page" value="usage_check/picture" />
+	<input type="hidden" name="showall" value="<?= rex_get('showall', 'string', "") ?>" />
+
+	<?php
+	$catsSel = new rex_media_category_select();
+	$catsSel->setSize(1);
+	$catsSel->setStyle('class="form-control selectpicker"');
+	$catsSel->setName('rex_file_category');
+	$catsSel->setId('rex_file_category');
+	$catsSel->setAttribute('class', 'selectpicker form-control');
+	$catsSel->setAttribute('data-live-search', 'true');
+	$catsSel->setSelected(rex_get('rex_file_category', 'int', 0));
+	$catsSel->addOption(rex_i18n::msg('pool_kats_no'), '0');
+
+	$catsSel->setAttribute('onchange', 'this.form.submit()');
+
+	echo $catsSel->get();
+	?>
+</form>
+<br />
 
 <table class="table table-striped">
 	<thead>
