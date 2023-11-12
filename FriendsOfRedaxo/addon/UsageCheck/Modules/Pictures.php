@@ -33,7 +33,24 @@ class Pictures extends BaseModule
 	 * Yform Integration
 	 * @var PictureYFrom
 	 */
-	private $yform = null;
+	private ?PictureYFrom $yform = null;
+
+	/**
+	 * Category ID.
+	 *
+	 * @var int
+	 */
+	private ?int $catId = null;
+
+	/**
+	 * Kategorie setzen
+	 *
+	 * @param int $id
+	 */
+	public function setCategory(int $id)
+	{
+		$this->catId = $id;
+	}
 
 	/**
 	 * Nicht genutze Bilder holen
@@ -198,10 +215,18 @@ $additionalJoins
 
 SQL;
 
+		$where = [];
 		if (!isset($detail_id)) {
 			if (!$this->showAll) {
-				$sql .= 'where s.id is null ';
+				$where[] = 's.id is null ';
 				$havingClauses[] = ' ifnull(usagecheck_metaCatIDs, 0) = 0 and ifnull(usagecheck_metaArtIDs, 0) = 0 and ifnull(usagecheck_metaMedIDs, 0) = 0';
+			}
+			if ($this->catId) {
+				$where[] = "category_id=".$this->getRexSql()->escape($this->catId)." ";
+			}
+
+			if ($where) {
+				$sql .= 'where '.implode(' and ', $where);
 			}
 
 			$sql .= 'group by f.filename, f.id,rex_article_art_meta.id,rex_article_cat_meta.id ';
