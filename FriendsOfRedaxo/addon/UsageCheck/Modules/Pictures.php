@@ -33,21 +33,21 @@ class Pictures extends BaseModule
 	 * Yform Integration
 	 * @var PictureYFrom
 	 */
-	private ?PictureYFrom $yform = null;
+	private /*?PictureYFrom*/ $yform = null;
 
 	/**
 	 * Category ID.
 	 *
 	 * @var int
 	 */
-	private ?int $catId = null;
+	private /*?int*/ $catId = null;
 
 	/**
 	 * Kategorie setzen
 	 *
 	 * @param int $id
 	 */
-	public function setCategory(int $id)
+	public function setCategory(/*int*/ $id)
 	{
 		$this->catId = $id;
 	}
