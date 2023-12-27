@@ -79,7 +79,7 @@ class Pictures extends BaseModule
 		}
 
 		$sql = $this->getSQL();
-		return array('result' => $rexSQL->getArray($sql), 'fields' => $this->tableFields);
+		return ['result' => $rexSQL->getArray($sql), 'fields' => $this->tableFields];
 	}
 
 	/**
@@ -146,10 +146,10 @@ class Pictures extends BaseModule
 		$sqlPartsYForm = $this->yform->getYFormTableSQLParts($detail_id);
 		$sqlPartsMeta = $this->getMetaTableSQLParts($detail_id);
 
-		$havingClauses = array();
+		$havingClauses = [];
 		$additionalSelect = '';
 		$additionalJoins = '';
-		$this->tableFields = array();
+		$this->tableFields = [];
 
 		$havingClauses = array_merge($havingClauses, $sqlPartsYForm['havingClauses']);
 		$additionalSelect .= $sqlPartsYForm['additionalSelect'];
@@ -286,7 +286,7 @@ SQL;
 	 */
 	private function getTableNames(string $name): array
 	{
-		$return = array();
+		$return = [];
 		if (preg_match('/'.preg_quote(rex_metainfo_article_handler::PREFIX, '/').'/', $name)) {
 			$return['field'] = 'joinArtMeta';
 			$return['table'] = 'rex_article_art_meta';
@@ -312,12 +312,12 @@ SQL;
 	 */
 	private function getMetaTableSQLParts(int $detail_id = null): array
 	{
-		$return = array(
+		$return = [
 			'additionalSelect' => '',
 			'additionalJoins' => '',
-			'tableFields' => array(),
-			'havingClauses' => array(),
-		);
+			'tableFields' => [],
+			'havingClauses' => [],
+		];
 
 		$joinArtMeta = '';
 		$joinCatMeta = '';
@@ -517,7 +517,7 @@ SQL;
 			$used = true;
 		}
 
-		$errors = array();
+		$errors = [];
 		if ($used === false) {
 			$errors[] = rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
 		}

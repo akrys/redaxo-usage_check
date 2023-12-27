@@ -84,10 +84,10 @@ class FileSize
 	 */
 	private function getSizeReadable(int $size): array
 	{
-		$return = array(
+		$return = [
 			'index' => 0,
 			'size' => $size,
-		);
+		];
 
 		$return['index'] = 0;
 

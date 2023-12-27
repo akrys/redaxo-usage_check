@@ -29,18 +29,18 @@ class PictureYFrom extends RexBase
 	 */
 	public function getYFormTableSQLParts(int $detail_id = null): array
 	{
-		$return = array(
+		$return = [
 			'additionalSelect' => '',
 			'additionalJoins' => '',
-			'tableFields' => array(),
-			'havingClauses' => array(),
-		);
+			'tableFields' => [],
+			'havingClauses' => [],
+		];
 
 		$tables = $this->getYFormSQL();
 
-		$xTables = array();
+		$xTables = [];
 		foreach ($tables as $table) {
-			$xTables[$table['table_name']][] = array(
+			$xTables[$table['table_name']][] = [
 				'name' => $table['f1'],
 				'name_out' => $table['f2'],
 				'table_out' => $table['table_out'],
@@ -48,7 +48,7 @@ class PictureYFrom extends RexBase
 				//in YForm 2, muss man prüfen, ob be_media einen multiple modifier hat.
 				//siehe Kommentare in \FriendsOfRedaxo\addon\UsageCheck\RexV5\Modules\Pictures::getYFormSQL
 				'multiple' => (isset($table['multiple']) && $table['multiple'] == '1'),
-			);
+			];
 		}
 
 		foreach ($xTables as $tableName => $fields) {
@@ -83,7 +83,7 @@ class PictureYFrom extends RexBase
 	 */
 	public function getYFormSQL(): array
 	{
-		$tabels = array();
+		$tabels = [];
 
 		$rexSQL = $this->getRexSql();
 
@@ -151,7 +151,7 @@ SQL;
 			$dbs = rex::getProperty('db');
 		}
 
-		$where = array();
+		$where = [];
 		foreach ($dbs as $db) {
 			if (isset($db['name']) && $db['name'] != '') {
 				$where[] .= "(TABLE_NAME=? and TABLE_SCHEMA=? and COLUMN_NAME='multiple')";

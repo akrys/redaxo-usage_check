@@ -25,7 +25,7 @@ abstract class BaseModule extends RexBase
 	 * Tabellenfelder
 	 * @var array
 	 */
-	protected array $tableFields = array();
+	protected array $tableFields = [];
 
 	/**
 	 * Anzeigemodus umstellen
