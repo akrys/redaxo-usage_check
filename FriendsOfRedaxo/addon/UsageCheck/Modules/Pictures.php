@@ -9,6 +9,8 @@
 namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
 use Exception;
+use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
+use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
 use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
 use FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom;
 use FriendsOfRedaxo\addon\UsageCheck\Medium;
@@ -27,27 +29,30 @@ use function rex_mediapool_mediaIsInUse;
  */
 class Pictures extends BaseModule
 {
-	const TYPE = 'media';
+	/**
+	 * @var ModuleType
+	 */
+	const TYPE = ModuleType::PICTURES;
 
 	/**
 	 * Yform Integration
 	 * @var PictureYFrom
 	 */
-	private /*?PictureYFrom*/ $yform = null;
+	private ?PictureYFrom $yform = null;
 
 	/**
 	 * Category ID.
 	 *
 	 * @var int
 	 */
-	private /*?int*/ $catId = null;
+	private ?int $catId = null;
 
 	/**
 	 * Kategorie setzen
 	 *
 	 * @param int $id
 	 */
-	public function setCategory(/*int*/ $id)
+	public function setCategory(int $id)
 	{
 		$this->catId = $id;
 	}
@@ -60,9 +65,9 @@ class Pictures extends BaseModule
 	 * @todo bei Instanzen mit vielen Dateien im Medienpool testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
-	public function get()
+	public function get(): array
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_MEDIA)) {
+		if (!Permission::getInstance()->check(Perm::PERM_MEDIA)) {
 			return false;
 		}
 
@@ -74,7 +79,7 @@ class Pictures extends BaseModule
 		}
 
 		$sql = $this->getSQL();
-		return array('result' => $rexSQL->getArray($sql), 'fields' => $this->tableFields);
+		return ['result' => $rexSQL->getArray($sql), 'fields' => $this->tableFields];
 	}
 
 	/**
@@ -82,9 +87,9 @@ class Pictures extends BaseModule
 	 * @param int $item_id
 	 * @return array
 	 */
-	public function getDetails($item_id)
+	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_MEDIA)) {
+		if (!Permission::getInstance()->check(Perm::PERM_MEDIA)) {
 			return false;
 		}
 
@@ -136,15 +141,15 @@ class Pictures extends BaseModule
 	 * @param int $detail_id
 	 * @return string
 	 */
-	protected function getSQL(/* int */$detail_id = null)
+	protected function getSQL(int $detail_id = null): string
 	{
 		$sqlPartsYForm = $this->yform->getYFormTableSQLParts($detail_id);
 		$sqlPartsMeta = $this->getMetaTableSQLParts($detail_id);
 
-		$havingClauses = array();
+		$havingClauses = [];
 		$additionalSelect = '';
 		$additionalJoins = '';
-		$this->tableFields = array();
+		$this->tableFields = [];
 
 		$havingClauses = array_merge($havingClauses, $sqlPartsYForm['havingClauses']);
 		$additionalSelect .= $sqlPartsYForm['additionalSelect'];
@@ -241,11 +246,11 @@ SQL;
 
 	/**
 	 * Felder - Grupppierung
-	 * @param int $detail_id
+	 * @param int|null $detail_id
 	 * @param string $additionalSelect
 	 * @return string
 	 */
-	private function addGroupFields($detail_id, $additionalSelect)
+	private function addGroupFields(?int $detail_id, string $additionalSelect): string
 	{
 		if (isset($detail_id)) {
 			return <<<SQL
@@ -276,13 +281,12 @@ SQL;
 	 * Komplexität an.
 	 *
 	 * @param string $name
-	 * @return string
 	 *
 	 * @return array Indezes field, table
 	 */
-	private function getTableNames($name)
+	private function getTableNames(string $name): array
 	{
-		$return = array();
+		$return = [];
 		if (preg_match('/'.preg_quote(rex_metainfo_article_handler::PREFIX, '/').'/', $name)) {
 			$return['field'] = 'joinArtMeta';
 			$return['table'] = 'rex_article_art_meta';
@@ -306,14 +310,14 @@ SQL;
 	 * @return array
 	 * @SuppressWarnings(PHPMD.ElseExpression)
 	 */
-	private function getMetaTableSQLParts(/* int */ $detail_id = null)
+	private function getMetaTableSQLParts(int $detail_id = null): array
 	{
-		$return = array(
+		$return = [
 			'additionalSelect' => '',
 			'additionalJoins' => '',
-			'tableFields' => array(),
-			'havingClauses' => array(),
-		);
+			'tableFields' => [],
+			'havingClauses' => [],
+		];
 
 		$joinArtMeta = '';
 		$joinCatMeta = '';
@@ -362,7 +366,7 @@ SQL;
 	 * @param string $joinArtMeta
 	 * @param int $detail_id
 	 */
-	private function addArtSelectAndJoinStatements(&$return, $joinArtMeta, $detail_id = null)
+	private function addArtSelectAndJoinStatements(array &$return, string $joinArtMeta, ?int $detail_id = null)
 	{
 		$selectMetaNull = ',0 as usagecheck_metaArtIDs '.PHP_EOL;
 		if (!$detail_id) {
@@ -392,7 +396,7 @@ SQL;
 	 * @param string $joinCatMeta
 	 * @param int $detail_id
 	 */
-	private function addCatSelectAndJoinStatements(&$return, $joinCatMeta, /* int */ $detail_id = null)
+	private function addCatSelectAndJoinStatements(array &$return, string $joinCatMeta, int $detail_id = null)
 	{
 		$selectMetaNull = ',0 as usagecheck_metaCatIDs '.PHP_EOL;
 		if (!$detail_id) {
@@ -424,7 +428,7 @@ SQL;
 	 * @param string $joinMedMeta
 	 * @param int $detail_id
 	 */
-	private function addMedSelectAndJoinStatements(&$return, $joinMedMeta, /* int */ $detail_id = null)
+	private function addMedSelectAndJoinStatements(array &$return, string $joinMedMeta, int $detail_id = null)
 	{
 		$selectMetaNull = ',0 as usagecheck_metaMedIDs '.PHP_EOL;
 		if (!$detail_id) {
@@ -449,7 +453,7 @@ SQL;
 	 * Meta-Bildfelder ermitteln.
 	 * @return array
 	 */
-	private function getMetaNames()
+	private function getMetaNames(): array
 	{
 		$rexSQL = $this->getRexSql();
 //		$articleTable = $this->getTable('article');
@@ -474,7 +478,7 @@ SQL;
 	 * @param array $fields
 	 * @return string
 	 */
-	public static function showUsedInfo($item, $fields)
+	public static function showUsedInfo(array $item, array $fields): string
 	{
 		$return = '';
 		$used = false;
@@ -513,7 +517,7 @@ SQL;
 			$used = true;
 		}
 
-		$errors = array();
+		$errors = [];
 		if ($used === false) {
 			$errors[] = rex_i18n::rawMsg('akrys_usagecheck_images_msg_not_used');
 		}

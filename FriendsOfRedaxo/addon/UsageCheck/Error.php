@@ -22,26 +22,25 @@ use rex_fragment;
  *
  * @author akrys
  */
-class Error
-	implements Iterator
+class Error implements Iterator
 {
 	/**
 	 * Error Messages
-	 * @var array
+	 * @var string[]
 	 */
-	private $errors = array();
+	private array $errors = [];
 
 	/**
 	 * Iterator-Zählervariable
 	 * @var int
 	 */
-	private $index = 0;
+	private int $index = 0;
 
 	/**
 	 * add a text to the messages
 	 * @param string $text
 	 */
-	public function add($text)
+	public function add(string $text): void
 	{
 		$this->errors[] = $text;
 	}
@@ -51,7 +50,7 @@ class Error
 	 *
 	 * @return int
 	 */
-	public function count()
+	public function count(): int
 	{
 		return count($this->errors);
 	}
@@ -64,8 +63,7 @@ class Error
 	 * @link https://secure.php.net/manual/en/iterator.next.php
 	 *
 	 */
-	#[\ReturnTypeWillChange]
-	public function next()/*: void*/
+	public function next(): void
 	{
 		$this->index++;
 	}
@@ -78,8 +76,7 @@ class Error
 	 *
 	 * @return string
 	 */
-	#[\ReturnTypeWillChange]
-	public function current()/*:string*/
+	public function current(): string
 	{
 		if (!$this->valid()) {
 			return false;
@@ -93,8 +90,7 @@ class Error
 	 * @see Iterator::rewind()
 	 * @link https://secure.php.net/manual/en/iterator.rewind.php
 	 */
-	#[\ReturnTypeWillChange]
-	public function rewind()/*: void*/
+	public function rewind(): void
 	{
 		$this->index = 0;
 	}
@@ -107,8 +103,7 @@ class Error
 	 *
 	 * @return int
 	 */
-	#[\ReturnTypeWillChange]
-	public function key()/*:int*/
+	public function key(): int
 	{
 		return $this->index;
 	}
@@ -121,8 +116,7 @@ class Error
 	 *
 	 * @return boolean
 	 */
-	#[\ReturnTypeWillChange]
-	public function valid()/*: bool*/
+	public function valid(): bool
 	{
 		if (!isset($this->errors[$this->index])) {
 			return false;
@@ -154,7 +148,7 @@ class Error
 	 */
 	final private function __construct()
 	{
-		$this->errors = array();
+		$this->errors = [];
 	}
 
 	/**
@@ -168,9 +162,9 @@ class Error
 
 	/**
 	 * Fehlerausgabe
-	 * @param type $messages
+	 * @param array $messages
 	 */
-	public static function getMessageOutputFragment($messages)
+	public static function getMessageOutputFragment(array $messages): rex_fragment
 	{
 
 		$text = '';

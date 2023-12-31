@@ -8,6 +8,8 @@
  */
 namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
 
+use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
+use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
 use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
 use FriendsOfRedaxo\addon\UsageCheck\Permission;
 use rex_sql;
@@ -17,10 +19,12 @@ use rex_sql;
  *
  * @author akrys
  */
-class Actions
-	extends BaseModule
+class Actions extends BaseModule
 {
-	const TYPE = 'actions';
+	/**
+	 * @var ModuleType
+	 */
+	const TYPE = ModuleType::ACTIONS;
 
 	/**
 	 * Nicht genutze Module holen
@@ -30,10 +34,10 @@ class Actions
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
-	public function get()
+	public function get(): array
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
-			return false;
+		if (!Permission::getInstance()->check(Perm::PERM_MODUL)) {
+			return [];
 		}
 
 		$rexSQL = $this->getRexSql();
@@ -46,9 +50,9 @@ class Actions
 	 * @param int $item_id
 	 * @return array
 	 */
-	public function getDetails($item_id)
+	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Permission::PERM_MODUL)) {
+		if (!Permission::getInstance()->check(Perm::PERM_MODUL)) {
 			return false;
 		}
 		$result = [];
@@ -74,7 +78,7 @@ class Actions
 	 * @param int $detail_id
 	 * @return string
 	 */
-	protected function getSQL(/* int */$detail_id = null)
+	protected function getSQL(int $detail_id = null): string
 	{
 		$rexSQL = rex_sql::factory();
 		$additionalFields = '';
@@ -122,6 +126,7 @@ $where
 $groupBy
 
 SQL;
+
 		return $sql;
 	}
 }

@@ -29,7 +29,7 @@ class Medium
 	 * @throws FunctionNotCallableException
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public static function get($item)
+	public static function get(array $item): rex_media
 	{
 		$user = rex::getUser();
 		$complexPerm = $user->getComplexPerm('media');
@@ -54,7 +54,7 @@ class Medium
 	 * @return boolean
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	public static function exists($item)
+	public static function exists(array $item)
 	{
 		return file_exists(rex_path::media().DIRECTORY_SEPARATOR.$item['filename']);
 	}

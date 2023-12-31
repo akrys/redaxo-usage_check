@@ -1,17 +1,17 @@
 <?php
-$user = \rex::getUser();
+$user = rex::getUser();
 $structurePerm = $user->getComplexPerm('structure');
 ?>
 
 <div class="basis template">
-	<strong><?= \rex_i18n::rawMsg('akrys_usagecheck_templates'); ?> "<?= $this->data['first']['name'] ?>"</strong><br />
+	<strong><?= rex_i18n::rawMsg('akrys_usagecheck_templates'); ?> "<?= $this->data['first']['name'] ?>"</strong><br />
 
 	<?php
 	if ($this->data['first']['article_id'] === null && $this->data['first']['usagecheck_template_t2_id'] === null) {
-		$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_template_msg_not_used')]]);
+		$fragment = new rex_fragment(['msg' => [rex_i18n::rawMsg('akrys_usagecheck_template_msg_not_used')]]);
 		echo $fragment->parse('msg/error_box.php');
 	} else {
-		$fragment = new rex_fragment(['msg' => [\rex_i18n::rawMsg('akrys_usagecheck_template_msg_used')]]);
+		$fragment = new rex_fragment(['msg' => [rex_i18n::rawMsg('akrys_usagecheck_template_msg_used')]]);
 		echo $fragment->parse('msg/info_box.php');
 	}
 	?>
@@ -19,7 +19,7 @@ $structurePerm = $user->getComplexPerm('structure');
 		<?php
 		if (isset($this->data['result']['articles'])) {
 			$index = 'akrys_usagecheck_template_linktext_edit_article';
-			$linkTextRaw = \rex_i18n::rawMsg($index);
+			$linkTextRaw = rex_i18n::rawMsg($index);
 			foreach ($this->data['result']['articles'] as $item) {
 				$articleID = $item['usagecheck_article_a_id'];
 				$articleReID = $item['usagecheck_article_a_parent_id'];
@@ -54,7 +54,7 @@ $structurePerm = $user->getComplexPerm('structure');
 		if ($hasPerm) {
 			if (isset($this->data['result']['templates'])) {
 				$index = 'akrys_usagecheck_template_linktext_edit_template';
-				$linkTextRaw = \rex_i18n::rawMsg($index);
+				$linkTextRaw = rex_i18n::rawMsg($index);
 
 				foreach ($this->data['result']['templates'] as $item) {
 					$id = $item['usagecheck_template_t2_id'];
