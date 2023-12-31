@@ -1,9 +1,14 @@
 <?php
 
+use FriendsOfRedaxo\addon\UsageCheck\Lib\FileSize;
+use FriendsOfRedaxo\addon\UsageCheck\Medium;
+use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
+
 $user = rex::getUser();
 $mediaPerm = $user->getComplexPerm('media');
 $structurePerm = $user->getComplexPerm('structure');
 ?>
+
 
 Kategoriefilter:<br />
 
@@ -32,8 +37,8 @@ Kategoriefilter:<br />
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th class="name"><?= \rex_i18n::rawMsg('akrys_usagecheck_images_table_heading_name'); ?></th>
-			<th class="function"><?= \rex_i18n::rawMsg('akrys_usagecheck_images_table_heading_functions'); ?></th>
+			<th class="name"><?= rex_i18n::rawMsg('akrys_usagecheck_images_table_heading_name'); ?></th>
+			<th class="function"><?= rex_i18n::rawMsg('akrys_usagecheck_images_table_heading_functions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -42,14 +47,14 @@ Kategoriefilter:<br />
 		foreach ($this->items['result'] as $item) {
 			$continue = false;
 			try {
-				$medium = FriendsOfRedaxo\addon\UsageCheck\Medium::get($item);
-			} catch (\Exception $e) {
+				$medium = Medium::get($item);
+			} catch (Exception $e) {
 				continue;
 			}
 
 			$initCat = null;
 
-			$fileSize = new \FriendsOfRedaxo\addon\UsageCheck\Lib\FileSize($item['filesize']);
+			$fileSize = new FileSize($item['filesize']);
 			?>
 
 			<tr>
@@ -59,7 +64,7 @@ Kategoriefilter:<br />
 					if (stristr($item['filetype'], 'image/')) {
 						$url = 'index.php?rex_media_type=rex_mediapool_preview&rex_media_file='.$item['filename'];
 
-						$fragment = new \rex_fragment([
+						$fragment = new rex_fragment([
 							'src' => $url,
 							'alt' => '',
 						]);
@@ -79,22 +84,22 @@ Kategoriefilter:<br />
 				</td>
 				<td class="function">
 					<?php
-					echo \FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::showUsedInfo($item, $this->items['fields']);
+					echo Pictures::showUsedInfo($item, $this->items['fields']);
 					?>
 
 					<div class="rex-message list">
 						<span>
 							<ol>
 								<?php
-								$type = FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures::TYPE;
-								$url = "index.php?page=usage_check/details&type=".$type."&id=".$item['id'];
+								$type = Pictures::TYPE;
+								$url = "index.php?page=usage_check/details&type=".$type->value."&id=".$item['id'];
 								?>
 
-								<li><a href="<?= $url; ?>"><?= \rex_i18n::rawMsg('akrys_usagecheck_linktext_detail_page') ?></a></li>
+								<li><a href="<?= $url; ?>"><?= rex_i18n::rawMsg('akrys_usagecheck_linktext_detail_page') ?></a></li>
 
 								<?php
 								$url = 'index.php?page=mediapool&subpage=detail&file_name='.$item['filename'];
-								$linkText = \rex_i18n::rawMsg('akrys_usagecheck_images_linktext_edit');
+								$linkText = rex_i18n::rawMsg('akrys_usagecheck_images_linktext_edit');
 								?>
 
 								<li><a href="<?= $url ?>" target="_blank"><?= $linkText; ?></a><br /></li>
@@ -112,7 +117,7 @@ Kategoriefilter:<br />
 							$initCat = $medium->getCategory();
 
 							if (isset($initCat)) {
-								$title = \rex_i18n::rawMsg('akrys_usagecheck_images_category_header');
+								$title = rex_i18n::rawMsg('akrys_usagecheck_images_category_header');
 								?>
 
 								<small>

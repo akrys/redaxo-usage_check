@@ -1,21 +1,24 @@
+<?php
+
+use FriendsOfRedaxo\addon\UsageCheck\Error;
+?>
+
 <div class="usage_check base">
 	<?php
-
 	/**
 	 * Grundlegendes Frontend
 	 */
-
 	$locale = null;
-	$language = \rex::getUser()->getLanguage();
+	$language = rex::getUser()->getLanguage();
 	if ($language == '') {
-		$language = \rex::getProperty('lang');
+		$language = rex::getProperty('lang');
 	}
 	if (!stristr($language, 'de_') && !stristr($language, 'en_')) {
 		$locale = rex_i18n::getLocale();
 		rex_i18n::setLocale('en_gb');
 	}
 	//Fehlerausgabe
-	$fragment = new rex_fragment(['msg' => FriendsOfRedaxo\addon\UsageCheck\Error::getInstance()]);
+	$fragment = new rex_fragment(['msg' => Error::getInstance()]);
 	echo $fragment->parse('msg/error_box.php');
 
 	$subpage = rex_be_controller::getCurrentPagePart(2, 'overview');
@@ -28,15 +31,15 @@
 
 	if (file_exists($contentFile)) {
 		?>
-			<div class="module <?= $subpage ?>">
+		<div class="module <?= $subpage ?>">
 			<?php
 			include $contentFile;
 			?>
-			</div>
+		</div>
 		<?php
 	} else {
-		$msg = \rex_i18n::rawMsg('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile;
-		$fragment = new \rex_fragment([
+		$msg = rex_i18n::rawMsg('akrys_usagecheck_error_content_file_not_found').':<br />'.$contentFile;
+		$fragment = new rex_fragment([
 			'text' => $msg,
 		]);
 		echo $fragment->parse('fragments/msg/error.php');
@@ -44,7 +47,7 @@
 
 	//restore
 	if (isset($locale)) {
-		\rex_i18n::setLocale($locale);
+		rex_i18n::setLocale($locale);
 	}
 	?>
 </div>

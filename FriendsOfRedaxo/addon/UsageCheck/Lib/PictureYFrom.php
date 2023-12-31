@@ -27,20 +27,20 @@ class PictureYFrom extends RexBase
 	 * @param int $detail_id
 	 * @return array
 	 */
-	public function getYFormTableSQLParts(/* int */ $detail_id = null)
+	public function getYFormTableSQLParts(int $detail_id = null): array
 	{
-		$return = array(
+		$return = [
 			'additionalSelect' => '',
 			'additionalJoins' => '',
-			'tableFields' => array(),
-			'havingClauses' => array(),
-		);
+			'tableFields' => [],
+			'havingClauses' => [],
+		];
 
 		$tables = $this->getYFormSQL();
 
-		$xTables = array();
+		$xTables = [];
 		foreach ($tables as $table) {
-			$xTables[$table['table_name']][] = array(
+			$xTables[$table['table_name']][] = [
 				'name' => $table['f1'],
 				'name_out' => $table['f2'],
 				'table_out' => $table['table_out'],
@@ -48,7 +48,7 @@ class PictureYFrom extends RexBase
 				//in YForm 2, muss man prüfen, ob be_media einen multiple modifier hat.
 				//siehe Kommentare in \FriendsOfRedaxo\addon\UsageCheck\RexV5\Modules\Pictures::getYFormSQL
 				'multiple' => (isset($table['multiple']) && $table['multiple'] == '1'),
-			);
+			];
 		}
 
 		foreach ($xTables as $tableName => $fields) {
@@ -81,9 +81,9 @@ class PictureYFrom extends RexBase
 	 * @return array
 	 * @param array &$return
 	 */
-	public function getYFormSQL()
+	public function getYFormSQL(): array
 	{
-		$tabels = array();
+		$tabels = [];
 
 		$rexSQL = $this->getRexSql();
 
@@ -143,7 +143,7 @@ SQL;
 	 * @returns boolean
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
-	private function hasMultiple($yformFieldTable, $dbs = null)
+	private function hasMultiple(string $yformFieldTable, ?array $dbs = null): bool
 	{
 		$rexSQL = $this->getRexSql();
 
@@ -151,7 +151,7 @@ SQL;
 			$dbs = rex::getProperty('db');
 		}
 
-		$where = array();
+		$where = [];
 		foreach ($dbs as $db) {
 			if (isset($db['name']) && $db['name'] != '') {
 				$where[] .= "(TABLE_NAME=? and TABLE_SCHEMA=? and COLUMN_NAME='multiple')";
@@ -184,7 +184,7 @@ SQL;
 	 * @param string $tableName
 	 * @return string
 	 */
-	private function getJoinCondition($field, $tableName)
+	private function getJoinCondition(array $field, string $tableName): string
 	{
 		$joinCondition = '';
 		switch ($field['type']) {

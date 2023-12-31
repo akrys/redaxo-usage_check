@@ -28,7 +28,7 @@ final class Addon
 	 * Version holen, besser direkt über die yml-Datei
 	 * @return string
 	 */
-	public function getVersion()
+	public function getVersion(): string
 	{
 		return $this->addon->getVersion();
 	}
@@ -37,7 +37,7 @@ final class Addon
 	 * Name holen, besser direkt über die yml-Datei
 	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		$page = $this->addon->getProperty('page');
 		return $page['title'];
@@ -45,15 +45,15 @@ final class Addon
 	// <editor-fold defaultstate="collapsed" desc="Singleton">
 	/**
 	 * Instance
-	 * @var Error
+	 * @var self
 	 */
 	private static $instance = null;
 
 	/**
 	 * create Singleton Instance
-	 * @return Error
+	 * @return self
 	 */
-	public static function getInstance()
+	public static function getInstance(): self
 	{
 		if (self::$instance == null) {
 			self::$instance = new self();

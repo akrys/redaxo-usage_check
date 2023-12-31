@@ -19,14 +19,14 @@ class FileSize
 	 * Dateigröße, die analysiert werden soll.
 	 * @var int
 	 */
-	private $size;
+	private int $size;
 
 	/**
 	 * Konstruktor
 	 *
 	 * @param int $size
 	 */
-	public function __construct($size)
+	public function __construct(int $size)
 	{
 		$this->size = $size;
 	}
@@ -39,7 +39,7 @@ class FileSize
 	 *
 	 * @return string
 	 */
-	public function getSizeOut()
+	public function getSizeOut(): string
 	{
 		$value = $this->getSizeReadable($this->size);
 
@@ -82,17 +82,17 @@ class FileSize
 	 * @param int $size
 	 * @return array Indezes: index, size
 	 */
-	private function getSizeReadable($size)
+	private function getSizeReadable(int $size): array
 	{
-		$return = array(
+		$return = [
 			'index' => 0,
 			'size' => $size,
-		);
+		];
 
 		$return['index'] = 0;
 
 		while ($return['size'] > 1024 && $return['index'] <= 6) {
-			$return['index'] ++;
+			$return['index']++;
 			$return['size'] /= 1024;
 		}
 		return $return;

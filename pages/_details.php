@@ -1,6 +1,7 @@
 <?php
 
 use FriendsOfRedaxo\addon\UsageCheck\Addon;
+use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
 use FriendsOfRedaxo\addon\UsageCheck\Modules\Actions;
 use FriendsOfRedaxo\addon\UsageCheck\Modules\Modules;
 use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
@@ -10,10 +11,10 @@ $errors = [];
 
 $type = rex_get('type', 'string', "");
 switch ($type) {
-	case Actions::TYPE:
-	case Modules::TYPE:
-	case Templates::TYPE:
-	case Pictures::TYPE:
+	case Actions::TYPE->value:
+	case Modules::TYPE->value:
+	case Templates::TYPE->value:
+	case Pictures::TYPE->value:
 		//;
 		break;
 	default:
@@ -22,40 +23,19 @@ switch ($type) {
 }
 $id = rex_get('id', 'string', "");
 
-
-
-
 $type = rex_get('type', 'string');
 $id = rex_get('id', 'int');
 
 //var_dump($type, $id);
 
+$enumType = ModuleType::tryFrom($type);
 
-switch ($type) {
-	case Pictures::TYPE:
-		$object = new Pictures();
-		$template = 'modules/details/picture.php';
-		$subpageTitle = rex_i18n::rawMsg('akrys_usagecheck_images_subpagetitle');
-		break;
-	case Modules::TYPE:
-		$object = new Modules();
-		$template = 'modules/details/module.php';
-		$subpageTitle = rex_i18n::rawMsg('akrys_usagecheck_module_subpagetitle');
-		break;
-	case Actions::TYPE:
-		$object = new Actions();
-		$template = 'modules/details/action.php';
-		$subpageTitle = rex_i18n::rawMsg('akrys_usagecheck_action_subpagetitle');
-		break;
-	case Templates::TYPE:
-		$object = new Templates();
-		$template = 'modules/details/template.php';
-		$subpageTitle = rex_i18n::rawMsg('akrys_usagecheck_template_subpagetitle');
-		break;
-	default:
-		throw new Exception('not a valid Type: '.$type);
-		break;
+if (!$enumType) {
+	throw new Exception('not a valid Type: '.$type);
 }
+$object = $enumType->getObject();
+$template = $enumType->getTemplate();
+$subpageTitle = $enumType->getSubpageTitle();
 
 $title = new rex_fragment();
 $title->setVar('name', Addon::getInstance()->getName());

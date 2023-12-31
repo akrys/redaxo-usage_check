@@ -20,7 +20,7 @@ try {
 	die();
 }
 
-spl_autoload_register(array('FriendsOfRedaxo\\addon\\UsageCheck\\Config', 'autoload'), true, true);
+spl_autoload_register(['FriendsOfRedaxo\\addon\\UsageCheck\\Config', 'autoload'], true, true);
 
 rex_fragment::addDirectory(realpath(__DIR__));
 
