@@ -10,7 +10,7 @@ $structurePerm = $user->getComplexPerm('structure');
 ?>
 
 
-Kategoriefilter:<br />
+<?= rex_i18n::rawMsg('akrys_usagecheck_images_heading_category_filter'); ?>:<br />
 
 <form action="index.php" method="get">
 	<input type="hidden" name="page" value="usage_check/picture" />

@@ -23,6 +23,7 @@ akrys_usagecheck_overview_atcion_body = <p>Es wird nachgesehen, ob alle Actions 
 
 
 akrys_usagecheck_images_subpagetitle = Bilder
+akrys_usagecheck_images_heading_category_filter = Kategoriefilter
 akrys_usagecheck_images_link_show_all = Zeige alle Dateien
 akrys_usagecheck_images_link_show_unused = Zeige nur ungenutzte Dateien
 akrys_usagecheck_images_intro_text = Im Medienpool können neben Bildern auch andere Dateien hochgeladen werden. Nur Für Bilder gibt es eine Vorschau.
