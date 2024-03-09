@@ -23,6 +23,7 @@ akrys_usagecheck_overview_atcion_body = <p>This module searches for used actions
 
 
 akrys_usagecheck_images_subpagetitle = Images
+akrys_usagecheck_images_heading_category_filter = Category Filter
 akrys_usagecheck_images_link_show_all = Show all files
 akrys_usagecheck_images_link_show_unused = Show unused files only
 akrys_usagecheck_images_intro_text = In Mediapool there are sometimes files other than images. These files aren't able to have a preview.
