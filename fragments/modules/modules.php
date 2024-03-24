@@ -1,6 +1,7 @@
 <?php
 
 use FriendsOfRedaxo\addon\UsageCheck\Modules\Modules;
+
 $user = rex::getUser();
 ?>
 
@@ -15,7 +16,11 @@ $user = rex::getUser();
 
 		<?php
 		foreach ($this->items as $item) {
-			if (!$user->isAdmin() && !$user->getComplexPerm('modules')->hasPerm($item['id'])) {
+			/**
+			 * @var rex_module_perm $perm
+			 */
+			$perm = $user?->getComplexPerm('modules');
+			if (!$user?->isAdmin() && !$perm->hasPerm($item['id'])) {
 				continue;
 			}
 			?>
@@ -46,7 +51,7 @@ $user = rex::getUser();
 
 								<?php
 								$user = rex::getUser();
-								if ($user->isAdmin()) {
+								if ($user?->isAdmin()) {
 									$url = 'index.php?page=modules/modules&function=edit&module_id='.$item['id'];
 									$index = 'akrys_usagecheck_module_linktext_edit_code';
 									$linkText = rex_i18n::rawMsg($index);

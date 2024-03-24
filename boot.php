@@ -8,7 +8,10 @@ require_once __DIR__.'/FriendsOfRedaxo/addon/UsageCheck/Config.php';
 /** @phpstan-ignore-next-line */
 spl_autoload_register(['FriendsOfRedaxo\\addon\\UsageCheck\\Config', 'autoload'], true, true);
 
-rex_fragment::addDirectory(realpath(__DIR__));
+$dir = realpath(__DIR__);
+if ($dir !== false) {
+	rex_fragment::addDirectory($dir);
+}
 
 if (rex::isBackend()) {
 	/** @var \rex_addon $this */

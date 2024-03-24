@@ -1,6 +1,6 @@
 <?php
 $user = rex::getUser();
-$structurePerm = $user->getComplexPerm('structure');
+$structurePerm = $user?->getComplexPerm('structure');
 ?>
 
 <div class="basis template">
@@ -27,11 +27,13 @@ $structurePerm = $user->getComplexPerm('structure');
 				$articleName = $item['usagecheck_article_a_name'];
 				$clang = $item['usagecheck_article_a_clang_id'];
 
-
 				if ($startpage == 1) {
 					$articleReID = $articleID;
 				}
 
+				/**
+				 * @var rex_structure_perm $structurePerm
+				 */
 				$hasPerm = $structurePerm->hasCategoryPerm($articleID);
 				if ($hasPerm) {
 					$href = 'index.php?page=structure&article_id='.$articleID.
@@ -50,7 +52,7 @@ $structurePerm = $user->getComplexPerm('structure');
 
 		//Templates, die in Templates verwendert werden, betrifft
 		//nur die Coder, und das wären Admins
-		$hasPerm = $user->isAdmin();
+		$hasPerm = $user?->isAdmin();
 		if ($hasPerm) {
 			if (isset($this->data['result']['templates'])) {
 				$index = 'akrys_usagecheck_template_linktext_edit_template';

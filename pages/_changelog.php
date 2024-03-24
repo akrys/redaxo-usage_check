@@ -18,18 +18,20 @@ if (!function_exists('\\glob')) {
 	die();
 }
 
-$language = rex::getUser()->getLanguage();
+$language = rex::getUser()?->getLanguage();
 if ($language == '') {
 	$language = rex::getProperty('lang');
 }
 
-if (stristr($language, 'de_')) {
+if (stristr((string) $language, 'de_')) {
 	$dir = glob(__DIR__.'/release_notes/de/*_*.php');
 } else {
 	$dir = glob(__DIR__.'/release_notes/en/*_*.php');
 }
+if (!$dir) {
+	$dir = [];
+}
 rsort($dir);
-
 
 $fragment = new rex_fragment([
 	'dir' => $dir,

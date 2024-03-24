@@ -24,7 +24,7 @@ class Config
 	 */
 	public static function getBaseDir()
 	{
-		return realpath(__DIR__.'/../../../');
+		return (string) realpath(__DIR__.'/../../../');
 	}
 
 	/**

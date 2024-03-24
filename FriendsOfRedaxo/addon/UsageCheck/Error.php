@@ -21,6 +21,7 @@ use rex_fragment;
  * einem einfachen foreach durlaufen werden können.
  *
  * @author akrys
+ * @implements Iterator<string>
  */
 class Error implements Iterator
 {
@@ -162,7 +163,7 @@ class Error implements Iterator
 
 	/**
 	 * Fehlerausgabe
-	 * @param array $messages
+	 * @param array<string, mixed> $messages
 	 */
 	public static function getMessageOutputFragment(array $messages): rex_fragment
 	{

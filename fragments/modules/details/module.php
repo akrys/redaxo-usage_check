@@ -5,7 +5,7 @@ if (count($this->errors) > 0) {
 	return;
 }
 $user = rex::getUser();
-$structurePerm = $user->getComplexPerm('structure');
+$structurePerm = $user?->getComplexPerm('structure');
 ?>
 
 <div class="basis module">
@@ -23,7 +23,7 @@ $structurePerm = $user->getComplexPerm('structure');
 	<ol>
 
 		<?php
-		if ($user->isAdmin()) {
+		if ($user?->isAdmin()) {
 			$url = 'index.php?page=modules/modules&function=edit&module_id='.$this->data['first']['id'];
 			$index = 'akrys_usagecheck_module_linktext_edit_code';
 			$linkText = rex_i18n::rawMsg($index);
@@ -48,7 +48,9 @@ $structurePerm = $user->getComplexPerm('structure');
 				$categoryID = $item['usagecheck_a_parent_id'];
 				$articleName = $item['usagecheck_a_name'];
 
-
+				/**
+				 * @var rex_structure_perm $structurePerm
+				 */
 				$hasPerm = $structurePerm->hasCategoryPerm($articleID);
 
 				if ($hasPerm) {

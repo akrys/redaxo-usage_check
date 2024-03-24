@@ -34,27 +34,32 @@ class Permission
 	public function check(Perm $perm): bool
 	{
 		$user = rex::getUser();
-		$complexPerm = $user->getComplexPerm($perm->value);
+		$complexPerm = $user?->getComplexPerm($perm->value);
+
+		$class = '';
+		if ($complexPerm !== null) {
+			$class = get_class($complexPerm);
+		}
 
 		$hasSpecialPerm = true;
-		switch (get_class($complexPerm)) {
+		switch ($class) {
 			case 'rex_media_perm':
-				/* @var $complexPerm rex_media_perm */
+				/** @var rex_media_perm $complexPerm  */
 				$hasSpecialPerm = $complexPerm->hasMediaPerm();
 				break;
 			case 'rex_structure_perm':
-				/* @var $complexPerm rex_structure_perm */
+				/** @var rex_structure_perm $complexPerm  */
 				$hasSpecialPerm = $complexPerm->hasStructurePerm();
 				break;
 			case 'rex_module_perm':
-				/* @var $complexPerm rex_module_perm */
+				/** @var rex_module_perm $complexPerm  */
 				$hasSpecialPerm = $complexPerm->hasAll();
 				break;
 			default:
-				throw new Exception('"'.get_class($complexPerm).'": unknown permission class');
+				throw new Exception('"'.$class.'": unknown permission class');
 		}
 
-		return $user->isAdmin() || $user->hasPerm($perm->value) || $hasSpecialPerm;
+		return $user?->isAdmin() || $user?->hasPerm($perm->value) || $hasSpecialPerm;
 		/* || (isset($complexPerm) && $complexPerm->hasAll()) */
 	}
 // <editor-fold defaultstate="collapsed" desc="Singleton">

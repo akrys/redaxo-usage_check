@@ -52,7 +52,7 @@ class Pictures extends BaseModule
 	 *
 	 * @param int $id
 	 */
-	public function setCategory(int $id)
+	public function setCategory(int $id): void
 	{
 		$this->catId = $id;
 	}
@@ -60,7 +60,7 @@ class Pictures extends BaseModule
 	/**
 	 * Nicht genutze Bilder holen
 	 *
-	 * @return array
+	 * @retur array<int|string, mixed>
 	 *
 	 * @todo bei Instanzen mit vielen Dateien im Medienpool testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
@@ -85,7 +85,7 @@ class Pictures extends BaseModule
 	/**
 	 * Details zu einem Eintrag holen
 	 * @param int $item_id
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDetails(int $item_id): array
 	{
@@ -143,7 +143,7 @@ class Pictures extends BaseModule
 	 */
 	protected function getSQL(int $detail_id = null): string
 	{
-		$sqlPartsYForm = $this->yform->getYFormTableSQLParts($detail_id);
+		$sqlPartsYForm = $this->yform?->getYFormTableSQLParts($detail_id);
 		$sqlPartsMeta = $this->getMetaTableSQLParts($detail_id);
 
 		$havingClauses = [];
@@ -151,15 +151,15 @@ class Pictures extends BaseModule
 		$additionalJoins = '';
 		$this->tableFields = [];
 
-		$havingClauses = array_merge($havingClauses, $sqlPartsYForm['havingClauses']);
-		$additionalSelect .= $sqlPartsYForm['additionalSelect'];
-		$additionalJoins .= $sqlPartsYForm['additionalJoins'];
-		$this->tableFields = array_merge($this->tableFields, $sqlPartsYForm['tableFields']);
+		$havingClauses = array_merge($havingClauses, $sqlPartsYForm['havingClauses'] ?? []);
+		$additionalSelect .= $sqlPartsYForm['additionalSelect'] ?? '';
+		$additionalJoins .= $sqlPartsYForm['additionalJoins'] ?? '';
+		$this->tableFields = array_merge($this->tableFields, $sqlPartsYForm['tableFields'] ?? []);
 
-		$havingClauses = array_merge($havingClauses, $sqlPartsMeta['havingClauses']);
+		$havingClauses = array_merge($havingClauses, $sqlPartsMeta['havingClauses'] ?? []);
 		$additionalSelect .= $sqlPartsMeta['additionalSelect'];
 		$additionalJoins .= $sqlPartsMeta['additionalJoins'];
-		$this->tableFields = array_merge($this->tableFields, $sqlPartsMeta['tableFields']);
+		$this->tableFields = array_merge($this->tableFields, $sqlPartsMeta['tableFields'] ?? []);
 
 		$mediaTable = $this->getTable('media');
 		$articleSliceTable = $this->getTable('article_slice');
@@ -282,7 +282,7 @@ SQL;
 	 *
 	 * @param string $name
 	 *
-	 * @return array Indezes field, table
+	 * @return array<string, mixed> Indezes field, table
 	 */
 	private function getTableNames(string $name): array
 	{
@@ -307,7 +307,7 @@ SQL;
 	 * SQL Parts für die Metadaten innerhalb von Redaxo5 generieren
 	 *
 	 * @param int $detail_id
-	 * @return array
+	 * @return array<string, mixed>
 	 * @SuppressWarnings(PHPMD.ElseExpression)
 	 */
 	private function getMetaTableSQLParts(int $detail_id = null): array
@@ -362,11 +362,11 @@ SQL;
 	 *
 	 * Komplexitätsvermeidung von getMetaTableSQLParts
 	 *
-	 * @param array &$return
+	 * @param array<string, mixed> &$return
 	 * @param string $joinArtMeta
 	 * @param int $detail_id
 	 */
-	private function addArtSelectAndJoinStatements(array &$return, string $joinArtMeta, ?int $detail_id = null)
+	private function addArtSelectAndJoinStatements(array &$return, string $joinArtMeta, ?int $detail_id = null): void
 	{
 		$selectMetaNull = ',0 as usagecheck_metaArtIDs '.PHP_EOL;
 		if (!$detail_id) {
@@ -392,11 +392,11 @@ SQL;
 	 *
 	 * Komplexitätsvermeidung von getMetaTableSQLParts
 	 *
-	 * @param array &$return
+	 * @param array<string, mixed> &$return
 	 * @param string $joinCatMeta
 	 * @param int $detail_id
 	 */
-	private function addCatSelectAndJoinStatements(array &$return, string $joinCatMeta, int $detail_id = null)
+	private function addCatSelectAndJoinStatements(array &$return, string $joinCatMeta, int $detail_id = null): void
 	{
 		$selectMetaNull = ',0 as usagecheck_metaCatIDs '.PHP_EOL;
 		if (!$detail_id) {
@@ -424,11 +424,11 @@ SQL;
 	 *
 	 * Komplexitätsvermeidung von getMetaTableSQLParts
 	 *
-	 * @param array &$return
+	 * @param array<string, mixed> &$return
 	 * @param string $joinMedMeta
 	 * @param int $detail_id
 	 */
-	private function addMedSelectAndJoinStatements(array &$return, string $joinMedMeta, int $detail_id = null)
+	private function addMedSelectAndJoinStatements(array &$return, string $joinMedMeta, int $detail_id = null): void
 	{
 		$selectMetaNull = ',0 as usagecheck_metaMedIDs '.PHP_EOL;
 		if (!$detail_id) {
@@ -451,7 +451,7 @@ SQL;
 
 	/**
 	 * Meta-Bildfelder ermitteln.
-	 * @return array
+	 * @return array<int, array<string,mixed>>
 	 */
 	private function getMetaNames(): array
 	{
@@ -474,8 +474,8 @@ SQL;
 
 	/**
 	 * Anzeige Benutzt/Nicht benutzt erstellen
-	 * @param array $item
-	 * @param array $fields
+	 * @param array<string, mixed> $item
+	 * @param array<string, mixed> $fields
 	 * @return string
 	 */
 	public static function showUsedInfo(array $item, array $fields): string

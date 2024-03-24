@@ -38,7 +38,7 @@ class Templates extends BaseModule
 	 * Anzeigemodus "inaktive zeigen" umstellen
 	 * @param boolean $bln
 	 */
-	public function showInactive(bool $bln)
+	public function showInactive(bool $bln): void
 	{
 		$this->showInactive = $bln;
 	}
@@ -46,7 +46,7 @@ class Templates extends BaseModule
 	/**
 	 * Nicht genutze Module holen
 	 *
-	 * @return array
+	 * @return array<int|string, mixed>
 	 *
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
@@ -62,7 +62,7 @@ class Templates extends BaseModule
 		}
 
 		$user = rex::getUser();
-		if (!$user->isAdmin() && $showInactive === true) {
+		if (!$user?->isAdmin() && $showInactive === true) {
 			$showInactive = false;
 		}
 
@@ -86,7 +86,7 @@ class Templates extends BaseModule
 	/**
 	 * Details zu einem Eintrag holen
 	 * @param int $item_id
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDetails(int $item_id): array
 	{

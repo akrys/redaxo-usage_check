@@ -25,7 +25,7 @@ class PictureYFrom extends RexBase
 	 * SQL Partsfür YForm generieren.
 	 *
 	 * @param int $detail_id
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getYFormTableSQLParts(int $detail_id = null): array
 	{
@@ -65,7 +65,7 @@ class PictureYFrom extends RexBase
 					$return['additionalJoins'] .= ' OR ';
 				}
 
-				$return['additionalJoins'] .= $this->getJoinCondition($field, $tableName);
+				$return['additionalJoins'] .= $this->getJoinCondition($field, (string) $tableName);
 			}
 
 			$return['tableFields'][$tableName] = $fields;
@@ -78,7 +78,7 @@ class PictureYFrom extends RexBase
 	/**
 	 * YFormTables holen
 	 *
-	 * @return array
+	 * @return array<int, array<string, bool|float|int|string|null>>
 	 */
 	public function getYFormSQL(): array
 	{
@@ -138,7 +138,7 @@ SQL;
 	 * zu können.
 	 *
 	 * @param string $yformFieldTable
-	 * @param array $dbs
+	 * @param array<string, mixed> $dbs
 	 * @returns boolean
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
@@ -180,7 +180,7 @@ SQL;
 	 * Das dürfte an der Anpassung zu YForm 2 liegen, da dort in be_media nun mehrere Dateien angegeben werden dürfen.
 	 * Die Prüfung auf $field['multiple'] ist dann eine ebene zu tief.
 	 *
-	 * @param array $field
+	 * @param array<string, mixed> $field
 	 * @param string $tableName
 	 * @return string
 	 */
