@@ -2,6 +2,7 @@
 
 use FriendsOfRedaxo\addon\UsageCheck\Lib\FileSize;
 use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
+
 if (count($this->errors) > 0) {
 	$fragment = new rex_fragment(['msg' => $this->errors]);
 	echo $fragment->parse('msg/error_box.php');
@@ -125,7 +126,7 @@ $media = rex_media::get($this->data['first']['filename']);
 							$fileCatID = $item['usagecheck_med_cat_id'];
 							$filename = $item['usagecheck_med_filename'];
 
-							$hasPerm = $mediaPerm->hasMediaPerm($fileID);
+							$hasPerm = $mediaPerm->hasMediaPerm();
 							if ($hasPerm) {
 								$linkText = $linkTextRaw;
 								$linkText = str_replace('$filename$', $filename, $linkText);
@@ -160,9 +161,6 @@ $media = rex_media::get($this->data['first']['filename']);
 											'table_name='.$table.'&'.
 											'data_id='.$id.'&'.
 											'func=edit';
-										if ($href == '') {
-											continue;
-										}
 										?>
 
 										<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
@@ -263,7 +261,7 @@ $media = rex_media::get($this->data['first']['filename']);
 
 				<tr>
 					<th><?= $key ?></th>
-					<td<?= mb_strlen($value) > 100 ? ' class="longcontent"' : '' ?> data-length="<?= mb_strlen($value) ?>"><?= $value ?></td>
+					<td<?= mb_strlen($value ?? '') > 100 ? ' class="longcontent"' : '' ?> data-length="<?= mb_strlen($value ?? '') ?>"><?= $value ?></td>
 				</tr>
 
 				<?php

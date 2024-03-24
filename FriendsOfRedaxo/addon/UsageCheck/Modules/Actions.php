@@ -53,7 +53,7 @@ class Actions extends BaseModule
 	public function getDetails(int $item_id): array
 	{
 		if (!Permission::getInstance()->check(Perm::PERM_MODUL)) {
-			return false;
+			return [];
 		}
 		$result = [];
 
@@ -92,7 +92,7 @@ class Actions extends BaseModule
 ,ma.module_id as usagecheck_ma_module,
 m.name as usage_check_m_name
 SQL;
-			$whereArray[] = 'a.id='.$rexSQL->escape($detail_id);
+			$whereArray[] = 'a.id='.$rexSQL->escape((string) $detail_id);
 			$groupBy = 'group by a.id,ma.module_id';
 		} else {
 			$where = '';

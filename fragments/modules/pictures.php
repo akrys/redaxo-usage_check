@@ -76,7 +76,7 @@ $structurePerm = $user->getComplexPerm('structure');
 					<strong><?= $item['title']; ?></strong><br />
 
 					<?php
-					echo $item['filename'].' ('.$fileSize->getSizeOut($item).')';
+					echo $item['filename'].' ('.$fileSize->getSizeOut().')';
 					?>
 
 					<br />

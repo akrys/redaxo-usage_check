@@ -19,6 +19,7 @@ use rex_structure_perm;
  */
 class Permission
 {
+
 	/**
 	 * Prüft die Rechte für den aktuellen User.
 	 *
@@ -26,7 +27,7 @@ class Permission
 	 * Die Rechteverwaltung ist zu nah am RedaxoCore, um das auf die Schnelle simulieren zu können.
 	 * @codeCoverageIgnore
 	 *
-	 * @param string $perm eine der PERM-Konstanten
+	 * @param Perm $perm eine der PERM-Konstanten
 	 * @return boolean
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
@@ -51,24 +52,23 @@ class Permission
 				break;
 			default:
 				throw new Exception('"'.get_class($complexPerm).'": unknown permission class');
-				break;
 		}
 
-		return $user->isAdmin() || $user->hasPerm($perm) || $hasSpecialPerm;
+		return $user->isAdmin() || $user->hasPerm($perm->value) || $hasSpecialPerm;
 		/* || (isset($complexPerm) && $complexPerm->hasAll()) */
 	}
 // <editor-fold defaultstate="collapsed" desc="Singleton">
 	/**
 	 * Instance
-	 * @var Error
+	 * @var Permission
 	 */
 	private static $instance = null;
 
 	/**
 	 * create Singleton Instance
-	 * @return Error
+	 * @return Permission
 	 */
-	public static function getInstance()
+	public static function getInstance(): Permission
 	{
 		if (self::$instance == null) {
 			self::$instance = new self();

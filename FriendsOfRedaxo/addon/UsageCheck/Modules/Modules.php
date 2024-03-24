@@ -92,7 +92,7 @@ class Modules extends BaseModule
 
 		$rexSQL = rex_sql::factory();
 		if ($detail_id) {
-			$whereArray[] = 'm.id='.$rexSQL->escape($detail_id);
+			$whereArray[] = 'm.id='.$rexSQL->escape((string) $detail_id);
 			$groupBy = '';
 			$additionalFields = <<<SQL
 			,s.id usagecheck_s_id,
@@ -105,7 +105,7 @@ class Modules extends BaseModule
 SQL;
 		} else {
 			if (!$this->showAll) {
-				$whereArray[] .= 's.id is null';
+				$whereArray[] = 's.id is null';
 			}
 
 			$additionalFields = ', group_concat(s.id) as slice_data';

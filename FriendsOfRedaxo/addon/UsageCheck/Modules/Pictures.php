@@ -68,13 +68,13 @@ class Pictures extends BaseModule
 	public function get(): array
 	{
 		if (!Permission::getInstance()->check(Perm::PERM_MEDIA)) {
-			return false;
+			return [];
 		}
 
 		$rexSQL = $this->getRexSql();
 
 		if (!isset($this->yform)) {
-			$this->yform = new PictureYFrom($this);
+			$this->yform = new PictureYFrom();
 			$this->yform->setRexSql($rexSQL);
 		}
 
@@ -90,12 +90,12 @@ class Pictures extends BaseModule
 	public function getDetails(int $item_id): array
 	{
 		if (!Permission::getInstance()->check(Perm::PERM_MEDIA)) {
-			return false;
+			return [];
 		}
 
 		$rexSQL = $this->getRexSql();
 		if (!isset($this->yform)) {
-			$this->yform = new PictureYFrom($this);
+			$this->yform = new PictureYFrom();
 			$this->yform->setRexSql($rexSQL);
 		}
 
@@ -227,7 +227,7 @@ SQL;
 				$havingClauses[] = ' ifnull(usagecheck_metaCatIDs, 0) = 0 and ifnull(usagecheck_metaArtIDs, 0) = 0 and ifnull(usagecheck_metaMedIDs, 0) = 0';
 			}
 			if ($this->catId) {
-				$where[] = "category_id=".$this->getRexSql()->escape($this->catId)." ";
+				$where[] = "f.category_id=".$this->getRexSql()->escape((string) $this->catId)." ";
 			}
 
 			if ($where) {
@@ -235,11 +235,11 @@ SQL;
 			}
 
 			$sql .= 'group by f.filename, f.id,rex_article_art_meta.id,rex_article_cat_meta.id ';
-			if (!$this->showAll && isset($havingClauses) && count($havingClauses) > 0) {
+			if (!$this->showAll && count($havingClauses) > 0) {
 				$sql .= 'having '.implode(' and ', $havingClauses).'';
 			}
 		} else {
-			$sql .= 'where f.id = '.$this->getRexSql()->escape($detail_id);
+			$sql .= 'where f.id = '.$this->getRexSql()->escape((string) $detail_id);
 		}
 		return $sql;
 	}
@@ -489,7 +489,7 @@ SQL;
 
 		$table = '';
 		foreach ($fields as $tablename => $field) {
-			if ($item[$tablename] !== null) {
+			if (isset($item[$tablename])) {
 				$used = true;
 				$table = $tablename;
 				break;

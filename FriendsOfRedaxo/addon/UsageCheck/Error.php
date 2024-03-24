@@ -79,7 +79,7 @@ class Error implements Iterator
 	public function current(): string
 	{
 		if (!$this->valid()) {
-			return false;
+			return '';
 		}
 		return $this->errors[$this->index];
 	}

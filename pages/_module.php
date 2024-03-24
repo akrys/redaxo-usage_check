@@ -7,6 +7,10 @@ use FriendsOfRedaxo\addon\UsageCheck\Addon;
 use FriendsOfRedaxo\addon\UsageCheck\Config;
 use FriendsOfRedaxo\addon\UsageCheck\Modules\Modules;
 
+if(!isset($subpage)) {
+	throw new \Exception("this file should not be called directly.");
+}
+
 $modules = new Modules();
 $modules->setRexSql(rex_sql::factory());
 
@@ -28,12 +32,12 @@ $title->setVar('supage_title', rex_i18n::rawMsg('akrys_usagecheck_module_subpage
 $title->setVar('version', Addon::getInstance()->getVersion());
 echo rex_view::title($title->parse('fragments/title.php'));
 
-$items = $modules->get($showAll);
+$items = $modules->get();
 
-if ($items === false) {
+if (empty($items)) {
 	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
 	$fragment = new rex_fragment([
-		'text' => $index,
+		'text' => $msg,
 	]);
 	$fragment = new rex_fragment([
 		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),

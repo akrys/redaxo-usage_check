@@ -79,7 +79,6 @@ class PictureYFrom extends RexBase
 	 * YFormTables holen
 	 *
 	 * @return array
-	 * @param array &$return
 	 */
 	public function getYFormSQL(): array
 	{
@@ -152,9 +151,10 @@ SQL;
 		}
 
 		$where = [];
+		$params = [];
 		foreach ($dbs as $db) {
 			if (isset($db['name']) && $db['name'] != '') {
-				$where[] .= "(TABLE_NAME=? and TABLE_SCHEMA=? and COLUMN_NAME='multiple')";
+				$where[] = "(TABLE_NAME=? and TABLE_SCHEMA=? and COLUMN_NAME='multiple')";
 				$params[] = $yformFieldTable;
 				$params[] = $db['name'];
 			}

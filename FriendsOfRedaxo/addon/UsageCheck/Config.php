@@ -28,31 +28,6 @@ class Config
 	}
 
 	/**
-	 * Test, ob das Vendor-Verzeichnis gelöscht wurde.
-	 *
-	 * Performance-Probleme durch den rex_autoloader verhindern.
-	 * Dieser versucht alle Dateien zu analysieren.
-	 *
-	 * @throws Exception
-	 * @codeCoverageIgnore
-	 */
-	public static function checkVendorDir()
-	{
-		if (!isset($_SERVER['argv'])) {
-			$vendorDir = self::getBaseDir().'/vendor';
-			if (file_exists($vendorDir) && is_dir($vendorDir)) {
-				throw new Exception('Please delete '.realpath($vendorDir));
-			}
-
-//			$nodeDir = self::getBaseDir().'/node_modules';
-//			if(file_exists($nodeDir) && is_dir($nodeDir)){
-//				throw new \Exception('Please delete '.realpath($nodeDir));
-//			}
-		}
-		return true;
-	}
-
-	/**
 	 * Autoload Funktion
 	 * @param string $name
 	 * @return boolean

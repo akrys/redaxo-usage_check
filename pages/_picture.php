@@ -7,6 +7,10 @@ use FriendsOfRedaxo\addon\UsageCheck\Addon;
 use FriendsOfRedaxo\addon\UsageCheck\Config;
 use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
 
+if(!isset($subpage)) {
+	throw new \Exception("this file should not be called directly.");
+}
+
 $pictures = new Pictures();
 $pictures->setRexSql(rex_sql::factory());
 
@@ -36,10 +40,10 @@ if ($fileCat) {
 
 $items = $pictures->get();
 
-if ($items === false) {
+if (empty($items)) {
 	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
 	$fragment = new rex_fragment([
-		'text' => $index,
+		'text' => $msg,
 	]);
 	$fragment = new rex_fragment([
 		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),

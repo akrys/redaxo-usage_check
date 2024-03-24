@@ -21,9 +21,9 @@ class RexBase
 {
 	/**
 	 * rexSQL instanz
-	 * @var rex_sql
+	 * @var ?rex_sql
 	 */
-	private rex_sql $rexSql;
+	private ?rex_sql $rexSql;
 
 	/**
 	 * rex Instanz

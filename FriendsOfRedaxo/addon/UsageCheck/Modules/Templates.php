@@ -58,7 +58,7 @@ class Templates extends BaseModule
 
 		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
 			//Permission::PERM_TEMPLATE
-			return false;
+			return [];
 		}
 
 		$user = rex::getUser();
@@ -92,9 +92,10 @@ class Templates extends BaseModule
 	{
 		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
 			//Permission::PERM_TEMPLATE
-			return false;
+			return [];
 		}
 
+		$result = [];
 		$rexSQL = $this->getRexSql();
 		$sql = $this->getSQL($item_id);
 		$res = $rexSQL->getArray($sql);
@@ -186,7 +187,7 @@ class Templates extends BaseModule
 		t2.name as usagecheck_template_t2_name
 SQL;
 			$groupBy = 'group by a.template_id,t.id,a.id';
-			$where .= 'where t.id='.$rexSQL->escape($detail_id);
+			$where .= 'where t.id='.$rexSQL->escape((string) $detail_id);
 			$groupBy = 'group by a.template_id,t.id,a.id';
 		} else {
 			$additionalFields = <<<SQL
