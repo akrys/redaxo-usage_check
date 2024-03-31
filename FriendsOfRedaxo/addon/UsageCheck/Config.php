@@ -21,6 +21,7 @@ class Config
 	/**
 	 * (Absolutes) Basis Verzeichnis holen
 	 * @return string
+	 * @codeCoverageIgnore
 	 */
 	public static function getBaseDir()
 	{
