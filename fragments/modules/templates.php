@@ -55,7 +55,7 @@ $user = rex::getUser();
 
 
 								<?php
-								if ($user->isAdmin()) {
+								if ($user?->isAdmin()) {
 									$url = 'index.php?page=templates&function=edit&template_id='.$item['id'];
 
 									$fragmet = new rex_fragment([

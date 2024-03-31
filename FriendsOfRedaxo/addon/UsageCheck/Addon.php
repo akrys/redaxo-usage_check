@@ -10,6 +10,7 @@ namespace FriendsOfRedaxo\addon\UsageCheck;
 
 use FriendsOfRedaxo\addon\UsageCheck\Exception\CloneException;
 use rex_addon;
+use rex_addon_interface;
 
 /**
  * Description of Addon
@@ -20,7 +21,7 @@ final class Addon
 {
 	/**
 	 * Addon
-	 * @var \rex_addon
+	 * @var rex_addon_interface
 	 */
 	private $addon;
 

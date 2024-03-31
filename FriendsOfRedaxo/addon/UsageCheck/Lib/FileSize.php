@@ -80,7 +80,7 @@ class FileSize
 	 * Dabei zählen, wie oft man sie verkleinern konnte. Daraus ergibt sich die Einheit.
 	 *
 	 * @param int $size
-	 * @return array Indezes: index, size
+	 * @return array<string, mixed> Indezes: index, size
 	 */
 	private function getSizeReadable(int $size): array
 	{

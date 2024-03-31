@@ -29,7 +29,7 @@ class Actions extends BaseModule
 	/**
 	 * Nicht genutze Module holen
 	 *
-	 * @return array
+	 * @return array<int|string, mixed>
 	 *
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
@@ -48,12 +48,12 @@ class Actions extends BaseModule
 	/**
 	 * Details zu einem Eintrag holen
 	 * @param int $item_id
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDetails(int $item_id): array
 	{
 		if (!Permission::getInstance()->check(Perm::PERM_MODUL)) {
-			return false;
+			return [];
 		}
 		$result = [];
 
@@ -92,7 +92,7 @@ class Actions extends BaseModule
 ,ma.module_id as usagecheck_ma_module,
 m.name as usage_check_m_name
 SQL;
-			$whereArray[] = 'a.id='.$rexSQL->escape($detail_id);
+			$whereArray[] = 'a.id='.$rexSQL->escape((string) $detail_id);
 			$groupBy = 'group by a.id,ma.module_id';
 		} else {
 			$where = '';

@@ -2,6 +2,7 @@
 
 use FriendsOfRedaxo\addon\UsageCheck\Lib\FileSize;
 use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
+
 if (count($this->errors) > 0) {
 	$fragment = new rex_fragment(['msg' => $this->errors]);
 	echo $fragment->parse('msg/error_box.php');
@@ -9,8 +10,8 @@ if (count($this->errors) > 0) {
 }
 
 $user = rex::getUser();
-$mediaPerm = $user->getComplexPerm('media');
-$structurePerm = $user->getComplexPerm('structure');
+$mediaPerm = $user?->getComplexPerm('media');
+$structurePerm = $user?->getComplexPerm('structure');
 
 $media = rex_media::get($this->data['first']['filename']);
 ?>
@@ -44,6 +45,9 @@ $media = rex_media::get($this->data['first']['filename']);
 							$clang = $item['usagecheck_s_clang_id'];
 							$ctype = $item['usagecheck_s_ctype_id'];
 
+							/**
+							 * @var rex_structure_perm $structurePerm
+							 */
 							$hasPerm = $structurePerm->hasCategoryPerm($articleID);
 							if ($hasPerm) {
 								$linkText = $linkTextRaw;
@@ -69,6 +73,9 @@ $media = rex_media::get($this->data['first']['filename']);
 							$articleName = $item['usagecheck_art_name'];
 							$clang = $item['usagecheck_art_clang'];
 
+							/**
+							 * @var rex_structure_perm $structurePerm
+							 */
 							$hasPerm = $structurePerm->hasCategoryPerm($articleID);
 							$href = 'index.php?'.
 								'page=content/metainfo&'.
@@ -99,8 +106,10 @@ $media = rex_media::get($this->data['first']['filename']);
 							$clang = $item['usagecheck_cat_clang'];
 							$parentID = $item['usagecheck_cat_parent_id'];
 
+							/**
+							 * @var rex_structure_perm $structurePerm
+							 */
 							$hasPerm = $structurePerm->hasCategoryPerm($articleID);
-
 							if ($hasPerm) {
 								$linkText = $linkTextRaw;
 								$linkText = str_replace('$articleID$', $articleID, $linkText);
@@ -125,7 +134,10 @@ $media = rex_media::get($this->data['first']['filename']);
 							$fileCatID = $item['usagecheck_med_cat_id'];
 							$filename = $item['usagecheck_med_filename'];
 
-							$hasPerm = $mediaPerm->hasMediaPerm($fileID);
+							/**
+							 * @var rex_media_perm $mediaPerm
+							 */
+							$hasPerm = $mediaPerm->hasMediaPerm();
 							if ($hasPerm) {
 								$linkText = $linkTextRaw;
 								$linkText = str_replace('$filename$', $filename, $linkText);
@@ -146,8 +158,8 @@ $media = rex_media::get($this->data['first']['filename']);
 								foreach ($entries as $id => $item) {
 
 									$id = $item['usagecheck_'.$table.'_id'];
-									$hasPerm = rex::getUser()->isAdmin() || (
-										rex::getUser()->hasPerm('yform[]') &&
+									$hasPerm = rex::getUser()?->isAdmin() || (
+										rex::getUser()?->hasPerm('yform[]') &&
 										rex::getUser()->hasPerm('yform[table:'.$table.']')
 										);
 
@@ -160,9 +172,6 @@ $media = rex_media::get($this->data['first']['filename']);
 											'table_name='.$table.'&'.
 											'data_id='.$id.'&'.
 											'func=edit';
-										if ($href == '') {
-											continue;
-										}
 										?>
 
 										<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
@@ -263,7 +272,7 @@ $media = rex_media::get($this->data['first']['filename']);
 
 				<tr>
 					<th><?= $key ?></th>
-					<td<?= mb_strlen($value) > 100 ? ' class="longcontent"' : '' ?> data-length="<?= mb_strlen($value) ?>"><?= $value ?></td>
+					<td<?= mb_strlen($value ?? '') > 100 ? ' class="longcontent"' : '' ?> data-length="<?= mb_strlen($value ?? '') ?>"><?= $value ?></td>
 				</tr>
 
 				<?php

@@ -29,7 +29,7 @@ class Modules extends BaseModule
 	/**
 	 * Nicht genutze Module holen
 	 *
-	 * @return array
+	 * @return array<int|string, mixed>
 	 *
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
@@ -50,7 +50,7 @@ class Modules extends BaseModule
 	/**
 	 * Details zu einem Eintrag holen
 	 * @param int $item_id
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDetails(int $item_id): array
 	{
@@ -92,7 +92,7 @@ class Modules extends BaseModule
 
 		$rexSQL = rex_sql::factory();
 		if ($detail_id) {
-			$whereArray[] = 'm.id='.$rexSQL->escape($detail_id);
+			$whereArray[] = 'm.id='.$rexSQL->escape((string) $detail_id);
 			$groupBy = '';
 			$additionalFields = <<<SQL
 			,s.id usagecheck_s_id,
@@ -105,7 +105,7 @@ class Modules extends BaseModule
 SQL;
 		} else {
 			if (!$this->showAll) {
-				$whereArray[] .= 's.id is null';
+				$whereArray[] = 's.id is null';
 			}
 
 			$additionalFields = ', group_concat(s.id) as slice_data';

@@ -9,6 +9,7 @@
 namespace FriendsOfRedaxo\addon\UsageCheck\Lib;
 
 use Exception;
+use FriendsOfRedaxo\addon\UsageCheck\Exception\InvalidParameterException;
 use rex;
 use rex_sql;
 
@@ -21,9 +22,9 @@ class RexBase
 {
 	/**
 	 * rexSQL instanz
-	 * @var rex_sql
+	 * @var ?rex_sql
 	 */
-	private rex_sql $rexSql;
+	private ?rex_sql $rexSql;
 
 	/**
 	 * rex Instanz
@@ -69,9 +70,13 @@ class RexBase
 	 * lt. phpmd sollte man nicht statisch drauf zugreifen
 	 * @param string $table
 	 * @return string
+	 * @throws InvalidParameterException
 	 */
 	protected function getTable(string $table): string
 	{
+		if ($table === '') {
+			throw new InvalidParameterException('Paramer $table should not be empty');
+		}
 		if (!$this->rex) {
 			$this->rex = new rex;
 		}

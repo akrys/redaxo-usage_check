@@ -5,8 +5,8 @@ use FriendsOfRedaxo\addon\UsageCheck\Medium;
 use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
 
 $user = rex::getUser();
-$mediaPerm = $user->getComplexPerm('media');
-$structurePerm = $user->getComplexPerm('structure');
+$mediaPerm = $user?->getComplexPerm('media');
+$structurePerm = $user?->getComplexPerm('structure');
 ?>
 
 
@@ -76,7 +76,7 @@ $structurePerm = $user->getComplexPerm('structure');
 					<strong><?= $item['title']; ?></strong><br />
 
 					<?php
-					echo $item['filename'].' ('.$fileSize->getSizeOut($item).')';
+					echo $item['filename'].' ('.$fileSize->getSizeOut().')';
 					?>
 
 					<br />
