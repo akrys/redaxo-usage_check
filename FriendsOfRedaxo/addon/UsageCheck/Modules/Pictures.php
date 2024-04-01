@@ -26,6 +26,7 @@ use function rex_mediapool_mediaIsInUse;
  * Description of Pictures
  *
  * @author akrys
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Pictures extends BaseModule
 {
@@ -86,6 +87,8 @@ class Pictures extends BaseModule
 	 * Details zu einem Eintrag holen
 	 * @param int $item_id
 	 * @return array<string, mixed>
+	 * @SuppressWarnings(CyclomaticComplexity)
+	 * @SuppressWarnings(NPathComplexity)
 	 */
 	public function getDetails(int $item_id): array
 	{
@@ -108,11 +111,13 @@ class Pictures extends BaseModule
 			}
 
 			if (isset($articleData['usagecheck_metaArtIDs']) && (int) $articleData['usagecheck_metaArtIDs'] > 0) {
-				$result['art_meta'][$articleData['usagecheck_art_id'].'_'.$articleData['usagecheck_art_clang']] = $articleData;
+				$index = $articleData['usagecheck_art_id'].'_'.$articleData['usagecheck_art_clang'];
+				$result['art_meta'][$index] = $articleData;
 			}
 
 			if (isset($articleData['usagecheck_metaCatIDs']) && (int) $articleData['usagecheck_metaCatIDs'] > 0) {
-				$result['cat_meta'][$articleData['usagecheck_cat_id'].'_'.$articleData['usagecheck_cat_clang']] = $articleData;
+				$index = $articleData['usagecheck_cat_id'].'_'.$articleData['usagecheck_cat_clang'];
+				$result['cat_meta'][$index] = $articleData;
 			}
 
 			if (isset($articleData['usagecheck_metaMedIDs']) && (int) $articleData['usagecheck_metaMedIDs'] > 0) {
@@ -123,7 +128,8 @@ class Pictures extends BaseModule
 				if (!isset($articleData['usagecheck_'.$table.'_id'])) {
 					continue;
 				}
-				$result['yform'][$table][$field[0]['table_out']][$articleData['usagecheck_'.$table.'_id']] = $articleData;
+				$index = $articleData['usagecheck_'.$table.'_id'];
+				$result['yform'][$table][$field[0]['table_out']][$index] = $articleData;
 			}
 		}
 		return [
@@ -140,6 +146,9 @@ class Pictures extends BaseModule
 	 * Spezifisches SQL für redaxo 5
 	 * @param int $detail_id
 	 * @return string
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
+	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 */
 	protected function getSQL(int $detail_id = null): string
 	{
@@ -224,7 +233,9 @@ SQL;
 		if (!isset($detail_id)) {
 			if (!$this->showAll) {
 				$where[] = 's.id is null ';
-				$havingClauses[] = ' ifnull(usagecheck_metaCatIDs, 0) = 0 and ifnull(usagecheck_metaArtIDs, 0) = 0 and ifnull(usagecheck_metaMedIDs, 0) = 0';
+				$havingClauses[] = ' ifnull(usagecheck_metaCatIDs, 0) = 0 and '.
+					'ifnull(usagecheck_metaArtIDs, 0) = 0 and '.
+					'ifnull(usagecheck_metaMedIDs, 0) = 0';
 			}
 			if ($this->catId) {
 				$where[] = "f.category_id=".$this->getRexSql()->escape((string) $this->catId)." ";
@@ -365,6 +376,8 @@ SQL;
 	 * @param array<string, mixed> &$return
 	 * @param string $joinArtMeta
 	 * @param int $detail_id
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	private function addArtSelectAndJoinStatements(array &$return, string $joinArtMeta, ?int $detail_id = null): void
 	{
@@ -395,6 +408,8 @@ SQL;
 	 * @param array<string, mixed> &$return
 	 * @param string $joinCatMeta
 	 * @param int $detail_id
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	private function addCatSelectAndJoinStatements(array &$return, string $joinCatMeta, int $detail_id = null): void
 	{
@@ -427,6 +442,8 @@ SQL;
 	 * @param array<string, mixed> &$return
 	 * @param string $joinMedMeta
 	 * @param int $detail_id
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	private function addMedSelectAndJoinStatements(array &$return, string $joinMedMeta, int $detail_id = null): void
 	{
@@ -477,6 +494,10 @@ SQL;
 	 * @param array<string, mixed> $item
 	 * @param array<string, mixed> $fields
 	 * @return string
+	 * @SuppressWarnings(CyclomaticComplexity)
+	 * @SuppressWarnings(NPathComplexity)
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	public static function showUsedInfo(array $item, array $fields): string
 	{
@@ -487,11 +508,10 @@ SQL;
 			$used = true;
 		}
 
-		$table = '';
 		foreach ($fields as $tablename => $field) {
+			unset($field);//phpmd: unused variable $field
 			if (isset($item[$tablename])) {
 				$used = true;
-				$table = $tablename;
 				break;
 			}
 

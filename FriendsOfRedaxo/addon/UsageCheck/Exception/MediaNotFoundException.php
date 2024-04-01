@@ -25,11 +25,13 @@ class MediaNotFoundException extends \Exception
 		private string $filename,
 		string $message = "",
 		int $code = 0,
-		?\Throwable $previous = null) {
+		?\Throwable $previous = null
+	) {
 		parent::__construct($message, $code, $previous);
 	}
 
-	public function getFilename(): string  {
+	public function getFilename(): string
+	{
 		return $this->filename;
 	}
 }

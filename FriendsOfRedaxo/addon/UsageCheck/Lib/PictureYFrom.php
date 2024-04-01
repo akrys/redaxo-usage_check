@@ -26,6 +26,8 @@ class PictureYFrom extends RexBase
 	 *
 	 * @param int $detail_id
 	 * @return array<string, mixed>
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	public function getYFormTableSQLParts(int $detail_id = null): array
 	{
