@@ -77,6 +77,8 @@ class Actions extends BaseModule
 	 * SQL generieren
 	 * @param int $detail_id
 	 * @return string
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	protected function getSQL(int $detail_id = null): string
 	{

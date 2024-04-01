@@ -103,9 +103,11 @@ class Templates extends BaseModule
 
 		foreach ($res as $articleData) {
 			if (isset($articleData['usagecheck_article_a_id']) && (int) $articleData['usagecheck_article_a_id'] > 0) {
-				$result['articles'][$articleData['usagecheck_article_a_id'].'_'.$articleData['usagecheck_article_a_clang_id']] = $articleData;
+				$index = $articleData['usagecheck_article_a_id'].'_'.$articleData['usagecheck_article_a_clang_id'];
+				$result['articles'][$index] = $articleData;
 			}
-			if (isset($articleData['usagecheck_template_t2_id']) && (int) $articleData['usagecheck_template_t2_id'] > 0) {
+			if (isset($articleData['usagecheck_template_t2_id']) &&
+				(int) $articleData['usagecheck_template_t2_id'] > 0) {
 				$result['templates'][$articleData['usagecheck_template_t2_id']] = $articleData;
 			}
 		}
@@ -157,6 +159,8 @@ class Templates extends BaseModule
 	 * SQL für Redaxo 5
 	 * @param int $detail_id
 	 * @return string
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	protected function getSQL(int $detail_id = null): string
 	{
