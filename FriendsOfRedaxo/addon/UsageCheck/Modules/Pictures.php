@@ -149,6 +149,7 @@ class Pictures extends BaseModule
 		$havingClauses = [];
 		$additionalSelect = '';
 		$additionalJoins = '';
+		$additionalGroupBy = '';
 		$this->tableFields = [];
 
 		$havingClauses = array_merge($havingClauses, $sqlPartsYForm['havingClauses']);
@@ -160,6 +161,8 @@ class Pictures extends BaseModule
 		$additionalSelect .= $sqlPartsMeta['additionalSelect'];
 		$additionalJoins .= $sqlPartsMeta['additionalJoins'];
 		$this->tableFields = array_merge($this->tableFields, $sqlPartsMeta['tableFields']);
+
+		$additionalGroupBy .= $sqlPartsMeta['groupBy'];
 
 		$mediaTable = $this->getTable('media');
 		$articleSliceTable = $this->getTable('article_slice');
@@ -234,8 +237,12 @@ SQL;
 				$sql .= 'where '.implode(' and ', $where);
 			}
 
-			$sql .= 'group by f.filename, f.id,rex_article_art_meta.id,rex_article_cat_meta.id ';
-			if (!$this->showAll && isset($havingClauses) && count($havingClauses) > 0) {
+			$sql .= 'group by f.filename, f.id ';
+			if ($additionalGroupBy) {
+				$sql .= ', '.$additionalGroupBy.' ';
+			}
+
+			if (!$this->showAll && count($havingClauses) > 0) {
 				$sql .= 'having '.implode(' and ', $havingClauses).'';
 			}
 		} else {
@@ -384,6 +391,8 @@ SQL;
 		if ($joinArtMeta != '') {
 			$return['additionalJoins'] .= 'LEFT join rex_article as rex_article_art_meta on '.
 				'(rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
+
+			$return['groupBy'] .= 'rex_article_art_meta.id,rex_article_cat_meta.id';
 		}
 	}
 
