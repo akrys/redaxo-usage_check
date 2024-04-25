@@ -248,7 +248,6 @@ SQL;
 				$sql .= 'where '.implode(' and ', $where);
 			}
 
-			$sql .= 'group by f.filename, f.id,rex_article_art_meta.id,rex_article_cat_meta.id ';
 			$sql .= 'group by f.filename, f.id ';
 			if ($additionalGroupBy) {
 				$sql .= ', '.$additionalGroupBy.' ';
