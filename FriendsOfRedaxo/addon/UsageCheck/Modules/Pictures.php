@@ -237,9 +237,9 @@ SQL;
 				$sql .= 'where '.implode(' and ', $where);
 			}
 
-			$sql .= 'group by f.filename, f.id ';
+			$sql .= 'group by f.filename, f.id';
 			if ($additionalGroupBy) {
-				$sql .= ', '.$additionalGroupBy.' ';
+				$sql .= ','.$additionalGroupBy.' ';
 			}
 
 			if (!$this->showAll && count($havingClauses) > 0) {
@@ -324,6 +324,7 @@ SQL;
 			'additionalJoins' => '',
 			'tableFields' => [],
 			'havingClauses' => [],
+			'groupBy' => '',
 		];
 
 		$joinArtMeta = '';
@@ -498,7 +499,8 @@ SQL;
 
 		$table = '';
 		foreach ($fields as $tablename => $field) {
-			if ($item[$tablename] !== null) {
+			unset($field); //phpmd: unused variable $field
+			if (isset($item[$tablename])) {
 				$used = true;
 				$table = $tablename;
 				break;
