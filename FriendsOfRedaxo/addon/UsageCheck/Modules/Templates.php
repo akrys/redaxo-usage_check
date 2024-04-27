@@ -56,7 +56,7 @@ class Templates extends BaseModule
 	{
 		$showInactive = $this->showInactive;
 
-		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
+		if (!$this->hasPerm()) {
 			//Permission::PERM_TEMPLATE
 			return [];
 		}
@@ -90,7 +90,7 @@ class Templates extends BaseModule
 	 */
 	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
+		if (!$this->hasPerm()) {
 			//Permission::PERM_TEMPLATE
 			return [];
 		}
@@ -222,5 +222,14 @@ $having
 
 SQL;
 		return $sql;
+	}
+
+	/**
+	 * Rechte prüfen
+	 * @return bool
+	 */
+	public function hasPerm(): bool
+	{
+		return Permission::getInstance()->check(Perm::PERM_STRUCTURE);
 	}
 }

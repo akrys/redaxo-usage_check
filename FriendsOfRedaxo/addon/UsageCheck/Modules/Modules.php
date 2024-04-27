@@ -36,7 +36,7 @@ class Modules extends BaseModule
 	 */
 	public function get(): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
+		if (!$this->hasPerm()) {
 			//Permission::PERM_MODUL
 			return [];
 		}
@@ -53,8 +53,8 @@ class Modules extends BaseModule
 	 * @return array<string, mixed>
 	 */
 	public function getDetails(int $item_id): array
-	{
-		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
+{
+		if (!$this->hasPerm()) {
 			//Permission::PERM_MODUL
 			return [];
 		}
@@ -73,7 +73,7 @@ class Modules extends BaseModule
 			'result' => $result,
 			'fields' => $this->tableFields,
 		];
-	}
+}
 //
 ///////////////////// Tmplementation aus RexV5 /////////////////////
 //
@@ -140,5 +140,14 @@ $groupBy
 
 SQL;
 		return $sql;
+	}
+
+	/**
+	 * Rechte prüfen
+	 * @return bool
+	 */
+	public function hasPerm(): bool
+	{
+		return Permission::getInstance()->check(Perm::PERM_STRUCTURE);
 	}
 }

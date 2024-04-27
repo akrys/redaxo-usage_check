@@ -36,7 +36,7 @@ class Actions extends BaseModule
 	 */
 	public function get(): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_MODUL)) {
+		if (!$this->hasPerm()) {
 			return [];
 		}
 
@@ -52,7 +52,7 @@ class Actions extends BaseModule
 	 */
 	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_MODUL)) {
+		if (!$this->hasPerm()) {
 			return [];
 		}
 		$result = [];
@@ -130,5 +130,14 @@ $groupBy
 SQL;
 
 		return $sql;
+	}
+
+	/**
+	 * Rechte prüfen
+	 * @return bool
+	 */
+	public function hasPerm(): bool
+	{
+		return Permission::getInstance()->check(Perm::PERM_MODUL);
 	}
 }

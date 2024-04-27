@@ -68,7 +68,7 @@ class Pictures extends BaseModule
 	 */
 	public function get(): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_MEDIA)) {
+		if (!$this->hasPerm()) {
 			return [];
 		}
 
@@ -92,7 +92,7 @@ class Pictures extends BaseModule
 	 */
 	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_MEDIA)) {
+		if (!$this->hasPerm()) {
 			return [];
 		}
 
@@ -138,9 +138,6 @@ class Pictures extends BaseModule
 			'fields' => $this->tableFields,
 		];
 	}
-//
-///////////////////// Tmplementation aus RexV5 /////////////////////
-//
 
 	/**
 	 * Spezifisches SQL für redaxo 5
@@ -248,7 +245,7 @@ SQL;
 				$sql .= 'where '.implode(' and ', $where);
 			}
 
-			$sql .= 'group by f.filename, f.id';
+			$sql .= 'group by f.filename, f.id ';
 			if ($additionalGroupBy) {
 				$sql .= ','.$additionalGroupBy.' ';
 			}
@@ -583,5 +580,14 @@ SQL;
 			$return = $fragment->parse('msg/info_box.php');
 		}
 		return $return;
+	}
+
+	/**
+	 * Rechte prüfen
+	 * @return bool
+	 */
+	public function hasPerm():bool
+	{
+		return Permission::getInstance()->check(Perm::PERM_MEDIA);
 	}
 }

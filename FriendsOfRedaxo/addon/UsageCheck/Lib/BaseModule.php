@@ -37,6 +37,12 @@ abstract class BaseModule extends RexBase
 	}
 
 	/**
+	 * Rechte prüfen
+	 * @return bool
+	 */
+	abstract public function hasPerm(): bool;
+
+	/**
 	 * Daten holen
 	 * @return array<int|string, mixed>
 	 */
