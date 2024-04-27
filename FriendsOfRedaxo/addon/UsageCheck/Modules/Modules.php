@@ -53,7 +53,7 @@ class Modules extends BaseModule
 	 * @return array<string, mixed>
 	 */
 	public function getDetails(int $item_id): array
-{
+	{
 		if (!$this->hasPerm()) {
 			//Permission::PERM_MODUL
 			return [];
@@ -73,10 +73,7 @@ class Modules extends BaseModule
 			'result' => $result,
 			'fields' => $this->tableFields,
 		];
-}
-//
-///////////////////// Tmplementation aus RexV5 /////////////////////
-//
+	}
 
 	/**
 	 * SQL generieren
