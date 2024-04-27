@@ -23,7 +23,7 @@ abstract class BaseModule extends RexBase
 
 	/**
 	 * Tabellenfelder
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected array $tableFields = [];
 
@@ -31,14 +31,20 @@ abstract class BaseModule extends RexBase
 	 * Anzeigemodus umstellen
 	 * @param boolean $bln
 	 */
-	public function showAll(bool $bln)
+	public function showAll(bool $bln): void
 	{
 		$this->showAll = $bln;
 	}
 
 	/**
+	 * Rechte prüfen
+	 * @return bool
+	 */
+	abstract public function hasPerm(): bool;
+
+	/**
 	 * Daten holen
-	 * @return array
+	 * @return array<int|string, mixed>
 	 */
 	abstract public function get(): array;
 
@@ -52,7 +58,7 @@ abstract class BaseModule extends RexBase
 	/**
 	 * Details holen
 	 * @param int $item_id
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	abstract public function getDetails(int $item_id): array;
 }

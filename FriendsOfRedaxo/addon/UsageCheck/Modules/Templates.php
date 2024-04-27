@@ -38,7 +38,7 @@ class Templates extends BaseModule
 	 * Anzeigemodus "inaktive zeigen" umstellen
 	 * @param boolean $bln
 	 */
-	public function showInactive(bool $bln)
+	public function showInactive(bool $bln): void
 	{
 		$this->showInactive = $bln;
 	}
@@ -46,7 +46,7 @@ class Templates extends BaseModule
 	/**
 	 * Nicht genutze Module holen
 	 *
-	 * @return array
+	 * @return array<int|string, mixed>
 	 *
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
@@ -56,13 +56,13 @@ class Templates extends BaseModule
 	{
 		$showInactive = $this->showInactive;
 
-		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
+		if (!$this->hasPerm()) {
 			//Permission::PERM_TEMPLATE
-			return false;
+			return [];
 		}
 
 		$user = rex::getUser();
-		if (!$user->isAdmin() && $showInactive === true) {
+		if (!$user?->isAdmin() && $showInactive === true) {
 			$showInactive = false;
 		}
 
@@ -86,24 +86,28 @@ class Templates extends BaseModule
 	/**
 	 * Details zu einem Eintrag holen
 	 * @param int $item_id
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
+		if (!$this->hasPerm()) {
 			//Permission::PERM_TEMPLATE
-			return false;
+			return [];
 		}
+		$result = [];
 
+		$result = [];
 		$rexSQL = $this->getRexSql();
 		$sql = $this->getSQL($item_id);
 		$res = $rexSQL->getArray($sql);
 
 		foreach ($res as $articleData) {
 			if (isset($articleData['usagecheck_article_a_id']) && (int) $articleData['usagecheck_article_a_id'] > 0) {
-				$result['articles'][$articleData['usagecheck_article_a_id'].'_'.$articleData['usagecheck_article_a_clang_id']] = $articleData;
+				$index = $articleData['usagecheck_article_a_id'].'_'.$articleData['usagecheck_article_a_clang_id'];
+				$result['articles'][$index] = $articleData;
 			}
-			if (isset($articleData['usagecheck_template_t2_id']) && (int) $articleData['usagecheck_template_t2_id'] > 0) {
+			if (isset($articleData['usagecheck_template_t2_id']) &&
+				(int) $articleData['usagecheck_template_t2_id'] > 0) {
 				$result['templates'][$articleData['usagecheck_template_t2_id']] = $articleData;
 			}
 		}
@@ -155,6 +159,8 @@ class Templates extends BaseModule
 	 * SQL für Redaxo 5
 	 * @param int $detail_id
 	 * @return string
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	protected function getSQL(int $detail_id = null): string
 	{
@@ -186,7 +192,7 @@ class Templates extends BaseModule
 		t2.name as usagecheck_template_t2_name
 SQL;
 			$groupBy = 'group by a.template_id,t.id,a.id';
-			$where .= 'where t.id='.$rexSQL->escape($detail_id);
+			$where .= 'where t.id='.$rexSQL->escape((string) $detail_id);
 			$groupBy = 'group by a.template_id,t.id,a.id';
 		} else {
 			$additionalFields = <<<SQL
@@ -216,5 +222,14 @@ $having
 
 SQL;
 		return $sql;
+	}
+
+	/**
+	 * Rechte prüfen
+	 * @return bool
+	 */
+	public function hasPerm(): bool
+	{
+		return Permission::getInstance()->check(Perm::PERM_STRUCTURE);
 	}
 }

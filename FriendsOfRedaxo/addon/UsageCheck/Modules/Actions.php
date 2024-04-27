@@ -29,14 +29,14 @@ class Actions extends BaseModule
 	/**
 	 * Nicht genutze Module holen
 	 *
-	 * @return array
+	 * @return array<int|string, mixed>
 	 *
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
 	public function get(): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_MODUL)) {
+		if (!$this->hasPerm()) {
 			return [];
 		}
 
@@ -48,12 +48,12 @@ class Actions extends BaseModule
 	/**
 	 * Details zu einem Eintrag holen
 	 * @param int $item_id
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_MODUL)) {
-			return false;
+		if (!$this->hasPerm()) {
+			return [];
 		}
 		$result = [];
 
@@ -77,6 +77,8 @@ class Actions extends BaseModule
 	 * SQL generieren
 	 * @param int $detail_id
 	 * @return string
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	protected function getSQL(int $detail_id = null): string
 	{
@@ -92,7 +94,7 @@ class Actions extends BaseModule
 ,ma.module_id as usagecheck_ma_module,
 m.name as usage_check_m_name
 SQL;
-			$whereArray[] = 'a.id='.$rexSQL->escape($detail_id);
+			$whereArray[] = 'a.id='.$rexSQL->escape((string) $detail_id);
 			$groupBy = 'group by a.id,ma.module_id';
 		} else {
 			$where = '';
@@ -128,5 +130,14 @@ $groupBy
 SQL;
 
 		return $sql;
+	}
+
+	/**
+	 * Rechte prüfen
+	 * @return bool
+	 */
+	public function hasPerm(): bool
+	{
+		return Permission::getInstance()->check(Perm::PERM_MODUL);
 	}
 }

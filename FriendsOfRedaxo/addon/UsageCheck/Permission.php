@@ -19,6 +19,7 @@ use rex_structure_perm;
  */
 class Permission
 {
+
 	/**
 	 * Prüft die Rechte für den aktuellen User.
 	 *
@@ -26,49 +27,53 @@ class Permission
 	 * Die Rechteverwaltung ist zu nah am RedaxoCore, um das auf die Schnelle simulieren zu können.
 	 * @codeCoverageIgnore
 	 *
-	 * @param string $perm eine der PERM-Konstanten
+	 * @param Perm $perm eine der PERM-Konstanten
 	 * @return boolean
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function check(Perm $perm): bool
 	{
 		$user = rex::getUser();
-		$complexPerm = $user->getComplexPerm($perm->value);
+		$complexPerm = $user?->getComplexPerm($perm->value);
+
+		$class = '';
+		if ($complexPerm !== null) {
+			$class = get_class($complexPerm);
+		}
 
 		$hasSpecialPerm = true;
-		switch (get_class($complexPerm)) {
+		switch ($class) {
 			case 'rex_media_perm':
-				/* @var $complexPerm rex_media_perm */
+				/** @var rex_media_perm $complexPerm  */
 				$hasSpecialPerm = $complexPerm->hasMediaPerm();
 				break;
 			case 'rex_structure_perm':
-				/* @var $complexPerm rex_structure_perm */
+				/** @var rex_structure_perm $complexPerm  */
 				$hasSpecialPerm = $complexPerm->hasStructurePerm();
 				break;
 			case 'rex_module_perm':
-				/* @var $complexPerm rex_module_perm */
+				/** @var rex_module_perm $complexPerm  */
 				$hasSpecialPerm = $complexPerm->hasAll();
 				break;
 			default:
-				throw new Exception('"'.get_class($complexPerm).'": unknown permission class');
-				break;
+				throw new Exception('"'.$class.'": unknown permission class');
 		}
 
-		return $user->isAdmin() || $user->hasPerm($perm) || $hasSpecialPerm;
+		return $user?->isAdmin() || $user?->hasPerm($perm->value) || $hasSpecialPerm;
 		/* || (isset($complexPerm) && $complexPerm->hasAll()) */
 	}
 // <editor-fold defaultstate="collapsed" desc="Singleton">
 	/**
 	 * Instance
-	 * @var Error
+	 * @var Permission
 	 */
 	private static $instance = null;
 
 	/**
 	 * create Singleton Instance
-	 * @return Error
+	 * @return Permission
 	 */
-	public static function getInstance()
+	public static function getInstance(): Permission
 	{
 		if (self::$instance == null) {
 			self::$instance = new self();

@@ -29,14 +29,14 @@ class Modules extends BaseModule
 	/**
 	 * Nicht genutze Module holen
 	 *
-	 * @return array
+	 * @return array<int|string, mixed>
 	 *
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
 	public function get(): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
+		if (!$this->hasPerm()) {
 			//Permission::PERM_MODUL
 			return [];
 		}
@@ -50,11 +50,11 @@ class Modules extends BaseModule
 	/**
 	 * Details zu einem Eintrag holen
 	 * @param int $item_id
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_STRUCTURE)) {
+		if (!$this->hasPerm()) {
 			//Permission::PERM_MODUL
 			return [];
 		}
@@ -74,14 +74,13 @@ class Modules extends BaseModule
 			'fields' => $this->tableFields,
 		];
 	}
-//
-///////////////////// Tmplementation aus RexV5 /////////////////////
-//
 
 	/**
 	 * SQL generieren
 	 * @param int $detail_id
 	 * @return string
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	protected function getSQL(int $detail_id = null): string
 	{
@@ -92,7 +91,7 @@ class Modules extends BaseModule
 
 		$rexSQL = rex_sql::factory();
 		if ($detail_id) {
-			$whereArray[] = 'm.id='.$rexSQL->escape($detail_id);
+			$whereArray[] = 'm.id='.$rexSQL->escape((string) $detail_id);
 			$groupBy = '';
 			$additionalFields = <<<SQL
 			,s.id usagecheck_s_id,
@@ -105,7 +104,7 @@ class Modules extends BaseModule
 SQL;
 		} else {
 			if (!$this->showAll) {
-				$whereArray[] .= 's.id is null';
+				$whereArray[] = 's.id is null';
 			}
 
 			$additionalFields = ', group_concat(s.id) as slice_data';
@@ -138,5 +137,14 @@ $groupBy
 
 SQL;
 		return $sql;
+	}
+
+	/**
+	 * Rechte prüfen
+	 * @return bool
+	 */
+	public function hasPerm(): bool
+	{
+		return Permission::getInstance()->check(Perm::PERM_STRUCTURE);
 	}
 }

@@ -9,11 +9,11 @@ use FriendsOfRedaxo\addon\UsageCheck\Error;
 	 * Grundlegendes Frontend
 	 */
 	$locale = null;
-	$language = rex::getUser()->getLanguage();
+	$language = rex::getUser()?->getLanguage();
 	if ($language == '') {
 		$language = rex::getProperty('lang');
 	}
-	if (!stristr($language, 'de_') && !stristr($language, 'en_')) {
+	if (!stristr((string) $language, 'de_') && !stristr((string) $language, 'en_')) {
 		$locale = rex_i18n::getLocale();
 		rex_i18n::setLocale('en_gb');
 	}

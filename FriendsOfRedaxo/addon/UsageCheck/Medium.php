@@ -24,7 +24,7 @@ class Medium
 	/**
 	 * Holt ein Medium-Objekt mit Prüfung der Rechte
 	 *
-	 * @param array $item Idezes: category_id, filename
+	 * @param array<string, mixed> $item Idezes: category_id, filename
 	 * @return rex_media
 	 * @throws FunctionNotCallableException
 	 * @SuppressWarnings(PHPMD.StaticAccess)
@@ -32,8 +32,11 @@ class Medium
 	public static function get(array $item): rex_media
 	{
 		$user = rex::getUser();
-		$complexPerm = $user->getComplexPerm('media');
-		if (!$user->isAdmin() &&
+		/**
+		 * @var \rex_media_perm $complexPerm
+		 */
+		$complexPerm = $user?->getComplexPerm('media');
+		if (!$user?->isAdmin() &&
 			!(is_object($complexPerm) &&
 			$complexPerm->hasCategoryPerm($item['category_id']))) {
 			//keine Rechte am Medium
@@ -43,6 +46,9 @@ class Medium
 		//Das Medium wird später gebraucht.
 		/* @var $medium rex_media */
 		$medium = rex_media::get($item['filename']);
+		if (!$medium) {
+			throw new Exception\MediaNotFoundException('Medium '.$item['filename'].' not found');
+		}
 		return $medium;
 	}
 
@@ -50,7 +56,7 @@ class Medium
 	 * Überprüfen, ob eine Datei existiert.
 	 *
 	 * @global type $REX
-	 * @param array $item
+	 * @param array<string, mixed> $item
 	 * @return boolean
 	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */

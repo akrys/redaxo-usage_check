@@ -17,16 +17,16 @@ class FileSize
 {
 	/**
 	 * Dateigröße, die analysiert werden soll.
-	 * @var int
+	 * @var int|float
 	 */
-	private int $size;
+	private int|float $size;
 
 	/**
 	 * Konstruktor
 	 *
-	 * @param int $size
+	 * @param int|float $size
 	 */
-	public function __construct(int $size)
+	public function __construct(int|float $size)
 	{
 		$this->size = $size;
 	}
@@ -79,10 +79,10 @@ class FileSize
 	 *
 	 * Dabei zählen, wie oft man sie verkleinern konnte. Daraus ergibt sich die Einheit.
 	 *
-	 * @param int $size
-	 * @return array Indezes: index, size
+	 * @param int|float $size
+	 * @return array<string, mixed> Indezes: index, size
 	 */
-	private function getSizeReadable(int $size): array
+	private function getSizeReadable(int|float $size): array
 	{
 		$return = [
 			'index' => 0,
@@ -91,7 +91,7 @@ class FileSize
 
 		$return['index'] = 0;
 
-		while ($return['size'] > 1024 && $return['index'] <= 6) {
+		while ($return['size'] >= 1024 && $return['index'] <= 6) {
 			$return['index']++;
 			$return['size'] /= 1024;
 		}

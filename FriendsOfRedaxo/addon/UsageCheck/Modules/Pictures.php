@@ -26,6 +26,7 @@ use function rex_mediapool_mediaIsInUse;
  * Description of Pictures
  *
  * @author akrys
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Pictures extends BaseModule
 {
@@ -52,7 +53,7 @@ class Pictures extends BaseModule
 	 *
 	 * @param int $id
 	 */
-	public function setCategory(int $id)
+	public function setCategory(int $id): void
 	{
 		$this->catId = $id;
 	}
@@ -60,21 +61,21 @@ class Pictures extends BaseModule
 	/**
 	 * Nicht genutze Bilder holen
 	 *
-	 * @return array
+	 * @retur array<int|string, mixed>
 	 *
 	 * @todo bei Instanzen mit vielen Dateien im Medienpool testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
 	 */
 	public function get(): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_MEDIA)) {
-			return false;
+		if (!$this->hasPerm()) {
+			return [];
 		}
 
 		$rexSQL = $this->getRexSql();
 
 		if (!isset($this->yform)) {
-			$this->yform = new PictureYFrom($this);
+			$this->yform = new PictureYFrom();
 			$this->yform->setRexSql($rexSQL);
 		}
 
@@ -85,17 +86,19 @@ class Pictures extends BaseModule
 	/**
 	 * Details zu einem Eintrag holen
 	 * @param int $item_id
-	 * @return array
+	 * @return array<string, mixed>
+	 * @SuppressWarnings(CyclomaticComplexity)
+	 * @SuppressWarnings(NPathComplexity)
 	 */
 	public function getDetails(int $item_id): array
 	{
-		if (!Permission::getInstance()->check(Perm::PERM_MEDIA)) {
-			return false;
+		if (!$this->hasPerm()) {
+			return [];
 		}
 
 		$rexSQL = $this->getRexSql();
 		if (!isset($this->yform)) {
-			$this->yform = new PictureYFrom($this);
+			$this->yform = new PictureYFrom();
 			$this->yform->setRexSql($rexSQL);
 		}
 
@@ -108,11 +111,13 @@ class Pictures extends BaseModule
 			}
 
 			if (isset($articleData['usagecheck_metaArtIDs']) && (int) $articleData['usagecheck_metaArtIDs'] > 0) {
-				$result['art_meta'][$articleData['usagecheck_art_id'].'_'.$articleData['usagecheck_art_clang']] = $articleData;
+				$index = $articleData['usagecheck_art_id'].'_'.$articleData['usagecheck_art_clang'];
+				$result['art_meta'][$index] = $articleData;
 			}
 
 			if (isset($articleData['usagecheck_metaCatIDs']) && (int) $articleData['usagecheck_metaCatIDs'] > 0) {
-				$result['cat_meta'][$articleData['usagecheck_cat_id'].'_'.$articleData['usagecheck_cat_clang']] = $articleData;
+				$index = $articleData['usagecheck_cat_id'].'_'.$articleData['usagecheck_cat_clang'];
+				$result['cat_meta'][$index] = $articleData;
 			}
 
 			if (isset($articleData['usagecheck_metaMedIDs']) && (int) $articleData['usagecheck_metaMedIDs'] > 0) {
@@ -123,7 +128,8 @@ class Pictures extends BaseModule
 				if (!isset($articleData['usagecheck_'.$table.'_id'])) {
 					continue;
 				}
-				$result['yform'][$table][$field[0]['table_out']][$articleData['usagecheck_'.$table.'_id']] = $articleData;
+				$index = $articleData['usagecheck_'.$table.'_id'];
+				$result['yform'][$table][$field[0]['table_out']][$index] = $articleData;
 			}
 		}
 		return [
@@ -132,34 +138,37 @@ class Pictures extends BaseModule
 			'fields' => $this->tableFields,
 		];
 	}
-//
-///////////////////// Tmplementation aus RexV5 /////////////////////
-//
 
 	/**
 	 * Spezifisches SQL für redaxo 5
 	 * @param int $detail_id
 	 * @return string
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
+	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 */
 	protected function getSQL(int $detail_id = null): string
 	{
-		$sqlPartsYForm = $this->yform->getYFormTableSQLParts($detail_id);
+		$sqlPartsYForm = $this->yform?->getYFormTableSQLParts($detail_id);
 		$sqlPartsMeta = $this->getMetaTableSQLParts($detail_id);
 
 		$havingClauses = [];
 		$additionalSelect = '';
 		$additionalJoins = '';
+		$additionalGroupBy = '';
 		$this->tableFields = [];
 
-		$havingClauses = array_merge($havingClauses, $sqlPartsYForm['havingClauses']);
-		$additionalSelect .= $sqlPartsYForm['additionalSelect'];
-		$additionalJoins .= $sqlPartsYForm['additionalJoins'];
-		$this->tableFields = array_merge($this->tableFields, $sqlPartsYForm['tableFields']);
+		$havingClauses = array_merge($havingClauses, $sqlPartsYForm['havingClauses'] ?? []);
+		$additionalSelect .= $sqlPartsYForm['additionalSelect'] ?? '';
+		$additionalJoins .= $sqlPartsYForm['additionalJoins'] ?? '';
+		$this->tableFields = array_merge($this->tableFields, $sqlPartsYForm['tableFields'] ?? []);
 
-		$havingClauses = array_merge($havingClauses, $sqlPartsMeta['havingClauses']);
+		$havingClauses = array_merge($havingClauses, $sqlPartsMeta['havingClauses'] ?? []);
 		$additionalSelect .= $sqlPartsMeta['additionalSelect'];
 		$additionalJoins .= $sqlPartsMeta['additionalJoins'];
-		$this->tableFields = array_merge($this->tableFields, $sqlPartsMeta['tableFields']);
+		$this->tableFields = array_merge($this->tableFields, $sqlPartsMeta['tableFields'] ?? []);
+
+		$additionalGroupBy .= $sqlPartsMeta['groupBy'];
 
 		$mediaTable = $this->getTable('media');
 		$articleSliceTable = $this->getTable('article_slice');
@@ -224,22 +233,28 @@ SQL;
 		if (!isset($detail_id)) {
 			if (!$this->showAll) {
 				$where[] = 's.id is null ';
-				$havingClauses[] = ' ifnull(usagecheck_metaCatIDs, 0) = 0 and ifnull(usagecheck_metaArtIDs, 0) = 0 and ifnull(usagecheck_metaMedIDs, 0) = 0';
+				$havingClauses[] = ' ifnull(usagecheck_metaCatIDs, 0) = 0 and '.
+					'ifnull(usagecheck_metaArtIDs, 0) = 0 and '.
+					'ifnull(usagecheck_metaMedIDs, 0) = 0';
 			}
 			if ($this->catId) {
-				$where[] = "category_id=".$this->getRexSql()->escape($this->catId)." ";
+				$where[] = "f.category_id=".$this->getRexSql()->escape((string) $this->catId)." ";
 			}
 
 			if ($where) {
 				$sql .= 'where '.implode(' and ', $where);
 			}
 
-			$sql .= 'group by f.filename, f.id,rex_article_art_meta.id,rex_article_cat_meta.id ';
-			if (!$this->showAll && isset($havingClauses) && count($havingClauses) > 0) {
+			$sql .= 'group by f.filename, f.id ';
+			if ($additionalGroupBy) {
+				$sql .= ','.$additionalGroupBy.' ';
+			}
+
+			if (!$this->showAll && count($havingClauses) > 0) {
 				$sql .= 'having '.implode(' and ', $havingClauses).'';
 			}
 		} else {
-			$sql .= 'where f.id = '.$this->getRexSql()->escape($detail_id);
+			$sql .= 'where f.id = '.$this->getRexSql()->escape((string) $detail_id);
 		}
 		return $sql;
 	}
@@ -282,7 +297,7 @@ SQL;
 	 *
 	 * @param string $name
 	 *
-	 * @return array Indezes field, table
+	 * @return array<string, mixed> Indezes field, table
 	 */
 	private function getTableNames(string $name): array
 	{
@@ -307,7 +322,7 @@ SQL;
 	 * SQL Parts für die Metadaten innerhalb von Redaxo5 generieren
 	 *
 	 * @param int $detail_id
-	 * @return array
+	 * @return array<string, mixed>
 	 * @SuppressWarnings(PHPMD.ElseExpression)
 	 */
 	private function getMetaTableSQLParts(int $detail_id = null): array
@@ -317,6 +332,7 @@ SQL;
 			'additionalJoins' => '',
 			'tableFields' => [],
 			'havingClauses' => [],
+			'groupBy' => '',
 		];
 
 		$joinArtMeta = '';
@@ -362,11 +378,13 @@ SQL;
 	 *
 	 * Komplexitätsvermeidung von getMetaTableSQLParts
 	 *
-	 * @param array &$return
+	 * @param array<string, mixed> &$return
 	 * @param string $joinArtMeta
 	 * @param int $detail_id
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
-	private function addArtSelectAndJoinStatements(array &$return, string $joinArtMeta, ?int $detail_id = null)
+	private function addArtSelectAndJoinStatements(array &$return, string $joinArtMeta, ?int $detail_id = null): void
 	{
 		$selectMetaNull = ',0 as usagecheck_metaArtIDs '.PHP_EOL;
 		if (!$detail_id) {
@@ -384,6 +402,8 @@ SQL;
 		if ($joinArtMeta != '') {
 			$return['additionalJoins'] .= 'LEFT join rex_article as rex_article_art_meta on '.
 				'(rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
+
+			$return['groupBy'] .= 'rex_article_art_meta.id,rex_article_cat_meta.id';
 		}
 	}
 
@@ -392,11 +412,13 @@ SQL;
 	 *
 	 * Komplexitätsvermeidung von getMetaTableSQLParts
 	 *
-	 * @param array &$return
+	 * @param array<string, mixed> &$return
 	 * @param string $joinCatMeta
 	 * @param int $detail_id
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
-	private function addCatSelectAndJoinStatements(array &$return, string $joinCatMeta, int $detail_id = null)
+	private function addCatSelectAndJoinStatements(array &$return, string $joinCatMeta, int $detail_id = null): void
 	{
 		$selectMetaNull = ',0 as usagecheck_metaCatIDs '.PHP_EOL;
 		if (!$detail_id) {
@@ -424,11 +446,13 @@ SQL;
 	 *
 	 * Komplexitätsvermeidung von getMetaTableSQLParts
 	 *
-	 * @param array &$return
+	 * @param array<string, mixed> &$return
 	 * @param string $joinMedMeta
 	 * @param int $detail_id
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
-	private function addMedSelectAndJoinStatements(array &$return, string $joinMedMeta, int $detail_id = null)
+	private function addMedSelectAndJoinStatements(array &$return, string $joinMedMeta, int $detail_id = null): void
 	{
 		$selectMetaNull = ',0 as usagecheck_metaMedIDs '.PHP_EOL;
 		if (!$detail_id) {
@@ -451,7 +475,7 @@ SQL;
 
 	/**
 	 * Meta-Bildfelder ermitteln.
-	 * @return array
+	 * @return array<int, array<string,mixed>>
 	 */
 	private function getMetaNames(): array
 	{
@@ -474,9 +498,13 @@ SQL;
 
 	/**
 	 * Anzeige Benutzt/Nicht benutzt erstellen
-	 * @param array $item
-	 * @param array $fields
+	 * @param array<string, mixed> $item
+	 * @param array<string, mixed> $fields
 	 * @return string
+	 * @SuppressWarnings(CyclomaticComplexity)
+	 * @SuppressWarnings(NPathComplexity)
+	 * @SuppressWarnings(PHPMD.ElseExpression)
+	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	public static function showUsedInfo(array $item, array $fields): string
 	{
@@ -487,11 +515,10 @@ SQL;
 			$used = true;
 		}
 
-		$table = '';
 		foreach ($fields as $tablename => $field) {
-			if ($item[$tablename] !== null) {
+			unset($field); //phpmd: unused variable $field
+			if (isset($item[$tablename])) {
 				$used = true;
-				$table = $tablename;
 				break;
 			}
 
@@ -553,5 +580,14 @@ SQL;
 			$return = $fragment->parse('msg/info_box.php');
 		}
 		return $return;
+	}
+
+	/**
+	 * Rechte prüfen
+	 * @return bool
+	 */
+	public function hasPerm():bool
+	{
+		return Permission::getInstance()->check(Perm::PERM_MEDIA);
 	}
 }
