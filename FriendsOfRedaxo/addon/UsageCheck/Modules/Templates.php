@@ -94,7 +94,6 @@ class Templates extends BaseModule
 			//Permission::PERM_TEMPLATE
 			return [];
 		}
-		$result = [];
 
 		$result = [];
 		$rexSQL = $this->getRexSql();
