@@ -19,12 +19,6 @@ class Config
 	const NAME = 'usage_check';
 
 	/**
-	 * Namespace-Prefix
-	 * @var string
-	 */
-	const NAMESPACE_PREFIX = 'FriendsOfRedaxo\\UsageCheck\\';
-
-	/**
 	 * (Absolutes) Basis Verzeichnis holen
 	 * @return string
 	 * @deprecated wird nicht mehr benötigt, sobald alte Klassen mit 'addon' im Namespace nicht mehr unterstützt werden
@@ -60,12 +54,12 @@ class Config
 		}
 
 
-		if (!stristr(self::NAMESPACE_PREFIX, $name)) {
+		if (!stristr($name, __NAMESPACE__)) {
 			return false; // not a UsageCheck class
 		}
 
 		//namespace parts not in directory structure.
-		$name = str_replace(self::NAMESPACE_PREFIX, '', $name);
+		$name = str_replace(__NAMESPACE__, '', $name);
 
 		$filename = self::getBaseDir().'/'.str_replace('\\', '/', $name).'.php';
 		if (file_exists($filename)) {
