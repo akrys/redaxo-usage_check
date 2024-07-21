@@ -58,6 +58,10 @@ class Config
 			return false; // not a UsageCheck class
 		}
 
+		if (class_exists($name)) {
+			return false;
+		}
+
 		//namespace parts not in directory structure.
 		$name = str_replace(__NAMESPACE__, '', $name);
 
