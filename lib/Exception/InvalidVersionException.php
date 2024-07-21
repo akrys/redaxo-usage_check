@@ -6,7 +6,7 @@
  * @version       1.0 / 2016-07-15
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck\Exception;
+namespace FriendsOfRedaxo\UsageCheck\Exception;
 
 /**
  * Wird geworfen, wenn es keine passende Funktionalität für die zugrunde liegende

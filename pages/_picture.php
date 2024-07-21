@@ -3,9 +3,9 @@
 /**
  * Anzeige der nicht verwendeten Bilder.
  */
-use FriendsOfRedaxo\addon\UsageCheck\Addon;
-use FriendsOfRedaxo\addon\UsageCheck\Config;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
+use FriendsOfRedaxo\UsageCheck\Addon;
+use FriendsOfRedaxo\UsageCheck\Config;
+use FriendsOfRedaxo\UsageCheck\Modules\Pictures;
 
 if(!isset($subpage)) {
 	throw new \Exception("this file should not be called directly.");

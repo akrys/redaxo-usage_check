@@ -3,11 +3,10 @@
 /**
  * Frontend-Ausagbe für die Seite Actions
  */
-require_once __DIR__.'/../FriendsOfRedaxo/addon/UsageCheck/Config.php';
 
-use FriendsOfRedaxo\addon\UsageCheck\Addon;
-use FriendsOfRedaxo\addon\UsageCheck\Config;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Actions;
+use FriendsOfRedaxo\UsageCheck\Addon;
+use FriendsOfRedaxo\UsageCheck\Config;
+use FriendsOfRedaxo\UsageCheck\Modules\Actions;
 
 if(!isset($subpage)) {
 	throw new \Exception("this file should not be called directly.");
@@ -20,7 +19,6 @@ $title->setVar('version', Addon::getInstance()->getVersion());
 echo rex_view::title($title->parse('fragments/title.php'));
 
 
-require_once __DIR__.'/../FriendsOfRedaxo/addon/UsageCheck/Modules/Actions.php';
 $actions = new Actions();
 $actions->setRexSql(rex_sql::factory());
 

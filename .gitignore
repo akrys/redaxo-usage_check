@@ -9,5 +9,4 @@ node_modules
 /gulpfile.js
 /composer.lock
 /composer.json
-/FriendsOfRedaxo/addon/UsageCheck/Tests
-
+/lib/Tests

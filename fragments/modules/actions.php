@@ -1,6 +1,6 @@
 <?php
 
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Actions;
+use FriendsOfRedaxo\UsageCheck\Modules\Actions;
 ?>
 
 <table class="table table-striped">

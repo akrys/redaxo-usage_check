@@ -6,9 +6,9 @@
  * @version       1.0 / 2018-05-13
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck\Lib;
+namespace FriendsOfRedaxo\UsageCheck\Lib;
 
-use FriendsOfRedaxo\addon\UsageCheck\Lib\RexBase;
+use FriendsOfRedaxo\UsageCheck\Lib\RexBase;
 use rex;
 use rex_addon;
 use rex_plugin;

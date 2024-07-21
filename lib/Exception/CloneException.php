@@ -8,7 +8,7 @@
  * @version       1.0 / 2015-10-27
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck\Exception;
+namespace FriendsOfRedaxo\UsageCheck\Exception;
 
 /**
  * Description of CloneException

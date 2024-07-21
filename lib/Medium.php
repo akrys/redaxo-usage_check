@@ -6,9 +6,9 @@
  * @version       1.0 / 2018-05-13
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck;
+namespace FriendsOfRedaxo\UsageCheck;
 
-use FriendsOfRedaxo\addon\UsageCheck\Exception\FunctionNotCallableException;
+use FriendsOfRedaxo\UsageCheck\Exception\FunctionNotCallableException;
 use rex;
 use rex_media;
 use rex_path;

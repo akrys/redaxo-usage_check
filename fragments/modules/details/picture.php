@@ -1,7 +1,7 @@
 <?php
 
-use FriendsOfRedaxo\addon\UsageCheck\Lib\FileSize;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
+use FriendsOfRedaxo\UsageCheck\Lib\FileSize;
+use FriendsOfRedaxo\UsageCheck\Modules\Pictures;
 
 if (count($this->errors) > 0) {
 	$fragment = new rex_fragment(['msg' => $this->errors]);

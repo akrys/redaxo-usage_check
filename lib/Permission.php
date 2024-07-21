@@ -3,11 +3,11 @@
 /**
  * User-Rechte
  */
-namespace FriendsOfRedaxo\addon\UsageCheck;
+namespace FriendsOfRedaxo\UsageCheck;
 
 use Exception;
-use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
-use FriendsOfRedaxo\addon\UsageCheck\Exception\CloneException;
+use FriendsOfRedaxo\UsageCheck\Enum\Perm;
+use FriendsOfRedaxo\UsageCheck\Exception\CloneException;
 use rex;
 use rex_media_perm;
 use rex_module_perm;

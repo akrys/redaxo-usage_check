@@ -6,12 +6,12 @@
  * @version       1.0 / 2015-08-09
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
+namespace FriendsOfRedaxo\UsageCheck\Modules;
 
-use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
-use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
-use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
-use FriendsOfRedaxo\addon\UsageCheck\Permission;
+use FriendsOfRedaxo\UsageCheck\Enum\ModuleType;
+use FriendsOfRedaxo\UsageCheck\Enum\Perm;
+use FriendsOfRedaxo\UsageCheck\Lib\BaseModule;
+use FriendsOfRedaxo\UsageCheck\Permission;
 use rex_sql;
 
 /**

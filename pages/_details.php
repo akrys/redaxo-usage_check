@@ -1,11 +1,11 @@
 <?php
 
-use FriendsOfRedaxo\addon\UsageCheck\Addon;
-use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Actions;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Modules;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Templates;
+use FriendsOfRedaxo\UsageCheck\Addon;
+use FriendsOfRedaxo\UsageCheck\Enum\ModuleType;
+use FriendsOfRedaxo\UsageCheck\Modules\Actions;
+use FriendsOfRedaxo\UsageCheck\Modules\Modules;
+use FriendsOfRedaxo\UsageCheck\Modules\Pictures;
+use FriendsOfRedaxo\UsageCheck\Modules\Templates;
 
 $errors = [];
 
