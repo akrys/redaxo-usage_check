@@ -6,15 +6,15 @@
  * @version       1.0 / 2015-08-08
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
+namespace FriendsOfRedaxo\UsageCheck\Modules;
 
 use Exception;
-use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
-use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
-use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
-use FriendsOfRedaxo\addon\UsageCheck\Lib\PictureYFrom;
-use FriendsOfRedaxo\addon\UsageCheck\Medium;
-use FriendsOfRedaxo\addon\UsageCheck\Permission;
+use FriendsOfRedaxo\UsageCheck\Enum\ModuleType;
+use FriendsOfRedaxo\UsageCheck\Enum\Perm;
+use FriendsOfRedaxo\UsageCheck\Lib\BaseModule;
+use FriendsOfRedaxo\UsageCheck\Lib\PictureYFrom;
+use FriendsOfRedaxo\UsageCheck\Medium;
+use FriendsOfRedaxo\UsageCheck\Permission;
 use rex_fragment;
 use rex_i18n;
 use rex_metainfo_article_handler;

@@ -9,7 +9,7 @@
  * @version       1.0 / 2016-02-14
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck\Exception;
+namespace FriendsOfRedaxo\UsageCheck\Exception;
 
 /**
  * Description of FunctionNotCallableException

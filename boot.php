@@ -1,12 +1,12 @@
 <?php
 
-/**
- * Generelle Configuration
- */
-require_once __DIR__.'/FriendsOfRedaxo/addon/UsageCheck/Config.php';
+require_once __DIR__.'/lib/Config.php'; // remove in v4
 
 /** @phpstan-ignore-next-line */
-spl_autoload_register(['FriendsOfRedaxo\\addon\\UsageCheck\\Config', 'autoload'], true, true);
+spl_autoload_register(['FriendsOfRedaxo\\UsageCheck\\Config', 'autoload'], true, true); // remove in v4
+
+// Namespace-Test old namespace
+//$x = new \FriendsOfRedaxo\addon\UsageCheck\Modules\Templates;
 
 $dir = realpath(__DIR__);
 if ($dir !== false) {

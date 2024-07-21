@@ -3,9 +3,9 @@
 /**
  * Frontend-Ausagbe für die Seite Module
  */
-use FriendsOfRedaxo\addon\UsageCheck\Addon;
-use FriendsOfRedaxo\addon\UsageCheck\Config;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Modules;
+use FriendsOfRedaxo\UsageCheck\Addon;
+use FriendsOfRedaxo\UsageCheck\Config;
+use FriendsOfRedaxo\UsageCheck\Modules\Modules;
 
 if(!isset($subpage)) {
 	throw new \Exception("this file should not be called directly.");
