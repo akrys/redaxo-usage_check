@@ -37,7 +37,7 @@ class Config
 	 * @deprecated wird nicht mehr benötigt, sobald alte Klassen mit 'addon' im Namespace nicht mehr unterstützt werden
 	 * @codeCoverageIgnore
 	 */
-	public static function autoload($name) // remove in v4
+	public static function autoload($name): void // remove in v4
 	{
 		if (stristr($name, 'FriendsOfRedaxo\\addon\\UsageCheck')) {
 			$oldName = $name;
@@ -48,7 +48,7 @@ class Config
 			$i = 0;
 			foreach ($backtrace as $key => $item) {
 				if (isset($backtrace[$key]['file']) && isset($backtrace[$key]['line'])) {
-					if(stristr($backtrace[$key]['file'], '/usage_check/')) {
+					if (stristr($backtrace[$key]['file'], '/usage_check/')) {
 						continue;
 					}
 
@@ -68,11 +68,11 @@ class Config
 
 
 		if (!stristr($name, __NAMESPACE__)) {
-			return false; // not a UsageCheck class
+			return; // not a UsageCheck class
 		}
 
 		if (class_exists($name)) {
-			return true;
+			return;
 		}
 
 		//namespace parts not in directory structure.
@@ -81,9 +81,9 @@ class Config
 		$filename = self::getBaseDir().'/'.str_replace('\\', '/', $name).'.php';
 		if (file_exists($filename)) {
 			require $filename;
-			return true;
+			return;
 		}
 //		throw new \Exception($filename.' not found');
-		return false;
+		return;
 	}
 }
