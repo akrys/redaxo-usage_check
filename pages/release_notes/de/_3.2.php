@@ -1,6 +1,6 @@
 
 <ul>
-	<li>Namespace-Anpassung an den FOR-Standard.</li>
+	<li>Namespace-Anpassung an den FOR-Standard. (<code>FriendsOfRedaxo\UsageCheck</code> statt <code>FriendsOfRedaxo\addon\UsageCheck</code>)</li>
 	<li>
 		Autoloader als Deprecated markiert.<br />
 		<small>
