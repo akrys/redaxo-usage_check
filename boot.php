@@ -2,7 +2,6 @@
 
 require_once __DIR__.'/lib/Config.php'; // remove in v4
 
-/** @phpstan-ignore-next-line */
 spl_autoload_register(['FriendsOfRedaxo\\UsageCheck\\Config', 'autoload'], true, true); // remove in v4
 
 class_alias(FriendsOfRedaxo\UsageCheck\Exception\CloneException::class, 'FriendsOfRedaxo\\addon\\UsageCheck\\Exception\\CloneException');// remove in v4
