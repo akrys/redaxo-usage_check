@@ -10,3 +10,5 @@ node_modules
 /composer.lock
 /composer.json
 /lib/Tests
+.phpunit.cache
+_docs
