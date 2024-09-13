@@ -3,7 +3,7 @@
 /**
  * Frontend-Ausagbe der Übersicht
  */
-use FriendsOfRedaxo\addon\UsageCheck\Addon;
+use FriendsOfRedaxo\UsageCheck\Addon;
 
 $title = new rex_fragment();
 $title->setVar('name', Addon::getInstance()->getName());

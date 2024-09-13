@@ -3,16 +3,15 @@
 /**
  * Datei für das Template-Modul
  *
- * @version       1.0 / 2015-08-09
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
+namespace FriendsOfRedaxo\UsageCheck\Modules;
 
-use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
-use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
-use FriendsOfRedaxo\addon\UsageCheck\Error;
-use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
-use FriendsOfRedaxo\addon\UsageCheck\Permission;
+use FriendsOfRedaxo\UsageCheck\Enum\ModuleType;
+use FriendsOfRedaxo\UsageCheck\Enum\Perm;
+use FriendsOfRedaxo\UsageCheck\Error;
+use FriendsOfRedaxo\UsageCheck\Lib\BaseModule;
+use FriendsOfRedaxo\UsageCheck\Permission;
 use rex;
 use rex_sql;
 
@@ -94,7 +93,6 @@ class Templates extends BaseModule
 			//Permission::PERM_TEMPLATE
 			return [];
 		}
-		$result = [];
 
 		$result = [];
 		$rexSQL = $this->getRexSql();

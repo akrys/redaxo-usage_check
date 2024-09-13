@@ -3,12 +3,11 @@
 /**
  * Datei für die Error-Klasse
  *
- * @version       1.0 / 2015-10-27
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck;
+namespace FriendsOfRedaxo\UsageCheck;
 
-use FriendsOfRedaxo\addon\UsageCheck\Exception\CloneException;
+use FriendsOfRedaxo\UsageCheck\Exception\CloneException;
 use Iterator;
 use rex_fragment;
 

@@ -1,17 +1,16 @@
 <?php
 
 /**
- * Datei für die Modul-Actions
+ * Datei für das Modul "Module"
  *
- * @version       1.0 / 2015-08-09
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck\Modules;
+namespace FriendsOfRedaxo\UsageCheck\Modules;
 
-use FriendsOfRedaxo\addon\UsageCheck\Enum\ModuleType;
-use FriendsOfRedaxo\addon\UsageCheck\Enum\Perm;
-use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
-use FriendsOfRedaxo\addon\UsageCheck\Permission;
+use FriendsOfRedaxo\UsageCheck\Enum\ModuleType;
+use FriendsOfRedaxo\UsageCheck\Enum\Perm;
+use FriendsOfRedaxo\UsageCheck\Lib\BaseModule;
+use FriendsOfRedaxo\UsageCheck\Permission;
 use rex_sql;
 
 /**
@@ -19,12 +18,12 @@ use rex_sql;
  *
  * @author akrys
  */
-class Actions extends BaseModule
+class Modules extends BaseModule
 {
 	/**
 	 * @var ModuleType
 	 */
-	const TYPE = ModuleType::ACTIONS;
+	const TYPE = ModuleType::MODULES;
 
 	/**
 	 * Nicht genutze Module holen
@@ -37,11 +36,13 @@ class Actions extends BaseModule
 	public function get(): array
 	{
 		if (!$this->hasPerm()) {
+			//Permission::PERM_MODUL
 			return [];
 		}
 
 		$rexSQL = $this->getRexSql();
 		$sql = $this->getSQL();
+
 		return $rexSQL->getArray($sql);
 	}
 
@@ -53,17 +54,17 @@ class Actions extends BaseModule
 	public function getDetails(int $item_id): array
 	{
 		if (!$this->hasPerm()) {
+			//Permission::PERM_MODUL
 			return [];
 		}
-		$result = [];
 
 		$rexSQL = $this->getRexSql();
 		$sql = $this->getSQL($item_id);
 		$res = $rexSQL->getArray($sql);
-
+		$result = [];
 		foreach ($res as $articleData) {
-			if (isset($articleData['usagecheck_ma_module']) && (int) $articleData['usagecheck_ma_module'] > 0) {
-				$result['action'][$articleData['usagecheck_ma_module']] = $articleData;
+			if (isset($articleData['usagecheck_s_id']) && (int) $articleData['usagecheck_s_id'] > 0) {
+				$result['modules'][$articleData['usagecheck_s_id']] = $articleData;
 			}
 		}
 		return [
@@ -82,53 +83,58 @@ class Actions extends BaseModule
 	 */
 	protected function getSQL(int $detail_id = null): string
 	{
-		$rexSQL = rex_sql::factory();
 		$additionalFields = '';
 		$where = '';
 		$whereArray = [];
-		$groupBy = 'group by a.id';
+		$groupBy = 'group by m.id';
 
+		$rexSQL = rex_sql::factory();
 		if ($detail_id) {
+			$whereArray[] = 'm.id='.$rexSQL->escape((string) $detail_id);
 			$groupBy = '';
 			$additionalFields = <<<SQL
-,ma.module_id as usagecheck_ma_module,
-m.name as usage_check_m_name
+			,s.id usagecheck_s_id,
+			s.clang_id usagecheck_s_clang_id,
+			s.ctype_id usagecheck_s_ctype_id,
+			a.id usagecheck_a_id ,
+			a.parent_id usagecheck_a_parent_id,
+			a.name usagecheck_a_name
+
 SQL;
-			$whereArray[] = 'a.id='.$rexSQL->escape((string) $detail_id);
-			$groupBy = 'group by a.id,ma.module_id';
 		} else {
-			$where = '';
 			if (!$this->showAll) {
-				$whereArray[] = 'ma.id is null';
+				$whereArray[] = 's.id is null';
 			}
 
-			$additionalFields = ', group_concat(ma.module_id) as modul';
+			$additionalFields = ', group_concat(s.id) as slice_data';
 		}
 
 		if (count($whereArray) > 0) {
-			$where = 'where '.implode(' and ', $whereArray);
+			$where .= 'where '.implode(' and ', $whereArray);
 		}
 
 		//Keine integer oder Datumswerte in einem concat!
 		//Vorallem dann nicht, wenn MySQL < 5.5 im Spiel ist.
 		// -> https://stackoverflow.com/questions/6397156/why-concat-does-not-default-to-default-charset-in-mysql/6669995#6669995
-		$actionTable = $this->getTable('action');
-		$moduleActionTable = $this->getTable('module_action');
 		$moduleTable = $this->getTable('module');
+		$articleSliceTable = $this->getTable('article_slice');
+		$articleTable = $this->getTable('article');
 
 		$sql = <<<SQL
-SELECT a.*
-$additionalFields
-FROM $actionTable a
-left join $moduleActionTable ma on ma.action_id=a.id
-left join $moduleTable m on ma.module_id=m.id or m.id is null
+SELECT m.name,
+	m.id,
+	m.createdate,
+	m.updatedate
+
+	$additionalFields
+FROM `$moduleTable` m
+left join $articleSliceTable s on s.module_id=m.id
+left join $articleTable a on s.article_id=a.id and s.clang_id=a.clang_id
 
 $where
-
 $groupBy
 
 SQL;
-
 		return $sql;
 	}
 
@@ -138,6 +144,6 @@ SQL;
 	 */
 	public function hasPerm(): bool
 	{
-		return Permission::getInstance()->check(Perm::PERM_MODUL);
+		return Permission::getInstance()->check(Perm::PERM_STRUCTURE);
 	}
 }

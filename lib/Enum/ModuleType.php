@@ -4,13 +4,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPEnum.php to edit this template
  */
-namespace FriendsOfRedaxo\addon\UsageCheck\Enum;
+namespace FriendsOfRedaxo\UsageCheck\Enum;
 
-use FriendsOfRedaxo\addon\UsageCheck\Lib\BaseModule;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Actions;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Modules;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Templates;
+use FriendsOfRedaxo\UsageCheck\Lib\BaseModule;
+use FriendsOfRedaxo\UsageCheck\Modules\Actions;
+use FriendsOfRedaxo\UsageCheck\Modules\Modules;
+use FriendsOfRedaxo\UsageCheck\Modules\Pictures;
+use FriendsOfRedaxo\UsageCheck\Modules\Templates;
 use rex_i18n;
 
 /**

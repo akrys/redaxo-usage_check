@@ -3,10 +3,9 @@
 /**
  * Datei für ...
  *
- * @version       1.0 / 2018-05-12
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck\Lib;
+namespace FriendsOfRedaxo\UsageCheck\Lib;
 
 /**
  * Description of FileSize

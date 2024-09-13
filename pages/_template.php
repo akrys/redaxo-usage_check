@@ -3,9 +3,9 @@
 /**
  * Frontend-Ausagbe für die Seite Tempalte
  */
-use FriendsOfRedaxo\addon\UsageCheck\Addon;
-use FriendsOfRedaxo\addon\UsageCheck\Config;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Templates;
+use FriendsOfRedaxo\UsageCheck\Addon;
+use FriendsOfRedaxo\UsageCheck\Config;
+use FriendsOfRedaxo\UsageCheck\Modules\Templates;
 
 if(!isset($subpage)) {
 	throw new \Exception("this file should not be called directly.");

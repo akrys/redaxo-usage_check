@@ -1,17 +1,11 @@
 <?php
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPClass.php to edit this template
- */
-namespace FriendsOfRedaxo\addon\UsageCheck\Exception;
-
 /**
  * Datei für ...
  *
- * @version       1.0 / 2024-03-24
  * @author        akrys
  */
+namespace FriendsOfRedaxo\UsageCheck\Exception;
 
 /**
  * Description of MediumNotFoundException

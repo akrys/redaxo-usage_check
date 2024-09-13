@@ -3,12 +3,11 @@
 /**
  * Datei für ...
  *
- * @version       1.0 / 2020-02-18
  * @author        akrys
  */
-namespace FriendsOfRedaxo\addon\UsageCheck;
+namespace FriendsOfRedaxo\UsageCheck;
 
-use FriendsOfRedaxo\addon\UsageCheck\Exception\CloneException;
+use FriendsOfRedaxo\UsageCheck\Exception\CloneException;
 use rex_addon;
 use rex_addon_interface;
 
