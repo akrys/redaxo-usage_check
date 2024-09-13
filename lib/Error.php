@@ -3,7 +3,6 @@
 /**
  * Datei für die Error-Klasse
  *
- * @version       1.0 / 2015-10-27
  * @author        akrys
  */
 namespace FriendsOfRedaxo\UsageCheck;

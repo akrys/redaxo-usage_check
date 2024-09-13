@@ -3,7 +3,6 @@
 /**
  * Datei für ...
  *
- * @version       1.0 / 2020-02-18
  * @author        akrys
  */
 namespace FriendsOfRedaxo\UsageCheck;

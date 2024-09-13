@@ -3,7 +3,6 @@
 /**
  * Datei für Medienmodul
  *
- * @version       1.0 / 2015-08-08
  * @author        akrys
  */
 namespace FriendsOfRedaxo\UsageCheck\Modules;

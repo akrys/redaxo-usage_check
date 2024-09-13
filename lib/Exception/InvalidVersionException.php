@@ -3,7 +3,6 @@
 /**
  * Datei für die InvalidVersionException
  *
- * @version       1.0 / 2016-07-15
  * @author        akrys
  */
 namespace FriendsOfRedaxo\UsageCheck\Exception;

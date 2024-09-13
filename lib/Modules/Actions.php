@@ -3,7 +3,6 @@
 /**
  * Datei für die Modul-Actions
  *
- * @version       1.0 / 2015-08-09
  * @author        akrys
  */
 namespace FriendsOfRedaxo\UsageCheck\Modules;

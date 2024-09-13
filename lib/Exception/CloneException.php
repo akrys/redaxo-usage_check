@@ -5,7 +5,6 @@
  *
  * Die Exception verhindert, dass Singleton-Objekte geklont werden können.
  *
- * @version       1.0 / 2015-10-27
  * @author        akrys
  */
 namespace FriendsOfRedaxo\UsageCheck\Exception;
