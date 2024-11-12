@@ -9,6 +9,7 @@ namespace FriendsOfRedaxo\UsageCheck\Modules;
 
 use FriendsOfRedaxo\UsageCheck\Enum\ModuleType;
 use FriendsOfRedaxo\UsageCheck\Enum\Perm;
+use FriendsOfRedaxo\UsageCheck\Exception\PermissionException;
 use FriendsOfRedaxo\UsageCheck\Lib\BaseModule;
 use FriendsOfRedaxo\UsageCheck\Permission;
 use rex_sql;
@@ -36,7 +37,7 @@ class Actions extends BaseModule
 	public function get(): array
 	{
 		if (!$this->hasPerm()) {
-			return [];
+			throw new PermissionException();
 		}
 
 		$rexSQL = $this->getRexSql();

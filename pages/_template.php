@@ -3,12 +3,14 @@
 /**
  * Frontend-Ausagbe für die Seite Tempalte
  */
+
 use FriendsOfRedaxo\UsageCheck\Addon;
 use FriendsOfRedaxo\UsageCheck\Config;
+use FriendsOfRedaxo\UsageCheck\Exception\PermissionException;
 use FriendsOfRedaxo\UsageCheck\Modules\Templates;
 
-if(!isset($subpage)) {
-	throw new \Exception("this file should not be called directly.");
+if (!isset($subpage)) {
+	throw new Exception("this file should not be called directly.");
 }
 
 switch (rex_get('showall', 'string', "")) {
@@ -47,18 +49,10 @@ if ($showAll) {
 if ($showInactive) {
 	$templates->showInactive($showInactive);
 }
-$items = $templates->get();
 
-if (empty($items)) {
-	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
-	$fragment = new rex_fragment([
-		'text' => $msg,
-	]);
-	$fragment = new rex_fragment([
-		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
-	]);
-	echo $fragment->parse('fragments/msg/error.php');
-} else {
+try {
+	$items = $templates->get();
+
 // <editor-fold defaultstate="collapsed" desc="Menü">
 
 	$param = [
@@ -106,7 +100,6 @@ if (empty($items)) {
 
 	$menu = new rex_fragment($params);
 
-
 	echo $menu->parse('fragments/menu/linklist.php');
 // </editor-fold>
 
@@ -115,4 +108,13 @@ if (empty($items)) {
 		'templates' => $templates,
 	]);
 	echo $fragment->parse('fragments/modules/templates.php');
+} catch (PermissionException $e) {
+	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
+	$fragment = new rex_fragment([
+		'text' => $msg,
+	]);
+	$fragment = new rex_fragment([
+		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+	]);
+	echo $fragment->parse('fragments/msg/error.php');
 }

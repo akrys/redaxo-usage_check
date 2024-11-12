@@ -3,12 +3,14 @@
 /**
  * Frontend-Ausagbe für die Seite Module
  */
+
 use FriendsOfRedaxo\UsageCheck\Addon;
 use FriendsOfRedaxo\UsageCheck\Config;
+use FriendsOfRedaxo\UsageCheck\Exception\PermissionException;
 use FriendsOfRedaxo\UsageCheck\Modules\Modules;
 
-if(!isset($subpage)) {
-	throw new \Exception("this file should not be called directly.");
+if (!isset($subpage)) {
+	throw new Exception("this file should not be called directly.");
 }
 
 $modules = new Modules();
@@ -32,18 +34,9 @@ $title->setVar('supage_title', rex_i18n::rawMsg('akrys_usagecheck_module_subpage
 $title->setVar('version', Addon::getInstance()->getVersion());
 echo rex_view::title($title->parse('fragments/title.php'));
 
-$items = $modules->get();
+try {
+	$items = $modules->get();
 
-if (empty($items)) {
-	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
-	$fragment = new rex_fragment([
-		'text' => $msg,
-	]);
-	$fragment = new rex_fragment([
-		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
-	]);
-	echo $fragment->parse('fragments/msg/error.php');
-} else {
 	$showAllParam = '&showall=true';
 	$showAllLinktext = rex_i18n::rawMsg('akrys_usagecheck_module_link_show_all');
 	if ($showAll) {
@@ -68,4 +61,14 @@ if (empty($items)) {
 		'modules' => $modules,
 	]);
 	echo $fragment->parse('fragments/modules/modules.php');
+} catch (PermissionException $e) {
+	$items = [];
+	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
+	$fragment = new rex_fragment([
+		'text' => $msg,
+	]);
+	$fragment = new rex_fragment([
+		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+	]);
+	echo $fragment->parse('fragments/msg/error.php');
 }

@@ -3,12 +3,14 @@
 /**
  * Anzeige der nicht verwendeten Bilder.
  */
+
 use FriendsOfRedaxo\UsageCheck\Addon;
 use FriendsOfRedaxo\UsageCheck\Config;
+use FriendsOfRedaxo\UsageCheck\Exception\PermissionException;
 use FriendsOfRedaxo\UsageCheck\Modules\Pictures;
 
-if(!isset($subpage)) {
-	throw new \Exception("this file should not be called directly.");
+if (!isset($subpage)) {
+	throw new Exception("this file should not be called directly.");
 }
 
 $pictures = new Pictures();
@@ -37,19 +39,9 @@ if ($fileCat) {
 	$pictures->setCategory($fileCat);
 	$catParam = '&rex_file_category='.$fileCat;
 }
+try {
+	$items = $pictures->get();
 
-$items = $pictures->get();
-
-if (empty($items)) {
-	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
-	$fragment = new rex_fragment([
-		'text' => $msg,
-	]);
-	$fragment = new rex_fragment([
-		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
-	]);
-	echo $fragment->parse('fragments/msg/error.php');
-} else {
 	$showAllLinktext = rex_i18n::rawMsg('akrys_usagecheck_images_link_show_unused');
 	$showAllParam = '';
 	if (!$showAll) {
@@ -74,4 +66,13 @@ if (empty($items)) {
 		'pictures' => $pictures,
 	]);
 	echo $fragment->parse('fragments/modules/pictures.php');
+} catch (PermissionException $e) {
+	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
+	$fragment = new rex_fragment([
+		'text' => $msg,
+	]);
+	$fragment = new rex_fragment([
+		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+	]);
+	echo $fragment->parse('fragments/msg/error.php');
 }
