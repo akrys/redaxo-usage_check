@@ -6,10 +6,11 @@
 
 use FriendsOfRedaxo\UsageCheck\Addon;
 use FriendsOfRedaxo\UsageCheck\Config;
+use FriendsOfRedaxo\UsageCheck\Exception\PermissionException;
 use FriendsOfRedaxo\UsageCheck\Modules\Actions;
 
-if(!isset($subpage)) {
-	throw new \Exception("this file should not be called directly.");
+if (!isset($subpage)) {
+	throw new Exception("this file should not be called directly.");
 }
 
 $title = new rex_fragment();
@@ -17,7 +18,6 @@ $title->setVar('name', Addon::getInstance()->getName());
 $title->setVar('supage_title', rex_i18n::rawMsg('akrys_usagecheck_action_subpagetitle'));
 $title->setVar('version', Addon::getInstance()->getVersion());
 echo rex_view::title($title->parse('fragments/title.php'));
-
 
 $actions = new Actions();
 $actions->setRexSql(rex_sql::factory());
@@ -34,18 +34,9 @@ switch (rex_get('showall', 'string', "")) {
 
 $actions->showAll($showAll);
 
-$items = $actions->get();
+try {
+	$items = $actions->get();
 
-if (empty($items)) {
-	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
-	$fragment = new rex_fragment([
-		'text' => $msg,
-	]);
-	$fragment = new rex_fragment([
-		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
-	]);
-	echo $fragment->parse('fragments/msg/error.php');
-} else {
 	$showAllParam = '&showall=true';
 	$showAllLinktext = rex_i18n::rawMsg('akrys_usagecheck_action_link_show_all');
 	if ($showAll) {
@@ -70,4 +61,13 @@ if (empty($items)) {
 		'actions' => $actions,
 	]);
 	echo $fragment->parse('fragments/modules/actions.php');
+} catch (PermissionException $e) {
+	$msg = rex_i18n::rawMsg('akrys_usagecheck_no_rights');
+	$fragment = new rex_fragment([
+		'text' => $msg,
+	]);
+	$fragment = new rex_fragment([
+		'text' => $fragment->parse('fragments/msg/tagged_msg.php'),
+	]);
+	echo $fragment->parse('fragments/msg/error.php');
 }
