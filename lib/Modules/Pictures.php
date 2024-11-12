@@ -10,6 +10,7 @@ namespace FriendsOfRedaxo\UsageCheck\Modules;
 use Exception;
 use FriendsOfRedaxo\UsageCheck\Enum\ModuleType;
 use FriendsOfRedaxo\UsageCheck\Enum\Perm;
+use FriendsOfRedaxo\UsageCheck\Exception\PermissionException;
 use FriendsOfRedaxo\UsageCheck\Lib\BaseModule;
 use FriendsOfRedaxo\UsageCheck\Lib\PictureYFrom;
 use FriendsOfRedaxo\UsageCheck\Medium;
@@ -68,7 +69,7 @@ class Pictures extends BaseModule
 	public function get(): array
 	{
 		if (!$this->hasPerm()) {
-			return [];
+			throw new PermissionException();
 		}
 
 		$rexSQL = $this->getRexSql();
@@ -585,7 +586,7 @@ SQL;
 	 * Rechte prüfen
 	 * @return bool
 	 */
-	public function hasPerm():bool
+	public function hasPerm(): bool
 	{
 		return Permission::getInstance()->check(Perm::PERM_MEDIA);
 	}

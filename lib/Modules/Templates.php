@@ -10,6 +10,7 @@ namespace FriendsOfRedaxo\UsageCheck\Modules;
 use FriendsOfRedaxo\UsageCheck\Enum\ModuleType;
 use FriendsOfRedaxo\UsageCheck\Enum\Perm;
 use FriendsOfRedaxo\UsageCheck\Error;
+use FriendsOfRedaxo\UsageCheck\Exception\PermissionException;
 use FriendsOfRedaxo\UsageCheck\Lib\BaseModule;
 use FriendsOfRedaxo\UsageCheck\Permission;
 use rex;
@@ -56,8 +57,7 @@ class Templates extends BaseModule
 		$showInactive = $this->showInactive;
 
 		if (!$this->hasPerm()) {
-			//Permission::PERM_TEMPLATE
-			return [];
+			throw new PermissionException();
 		}
 
 		$user = rex::getUser();
