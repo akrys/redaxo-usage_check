@@ -134,6 +134,7 @@ left join $articleTable a on s.article_id=a.id and s.clang_id=a.clang_id
 $where
 $groupBy
 
+order by m.name asc
 SQL;
 		return $sql;
 	}

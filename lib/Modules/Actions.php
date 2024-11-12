@@ -127,6 +127,7 @@ $where
 
 $groupBy
 
+order by a.name asc
 SQL;
 
 		return $sql;
