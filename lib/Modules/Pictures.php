@@ -256,6 +256,9 @@ SQL;
 		} else {
 			$sql .= 'where f.id = '.$this->getRexSql()->escape((string) $detail_id);
 		}
+
+		$sql .= ' order by f.title asc, f.filename';
+
 		return $sql;
 	}
 

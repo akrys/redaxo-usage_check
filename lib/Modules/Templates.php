@@ -90,7 +90,6 @@ class Templates extends BaseModule
 	public function getDetails(int $item_id): array
 	{
 		if (!$this->hasPerm()) {
-			//Permission::PERM_TEMPLATE
 			return [];
 		}
 
@@ -217,6 +216,8 @@ $where
 $groupBy
 
 $having
+
+order by t.name asc
 
 SQL;
 		return $sql;
