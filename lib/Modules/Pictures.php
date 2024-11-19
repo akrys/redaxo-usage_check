@@ -406,7 +406,7 @@ SQL;
 			$return['additionalJoins'] .= 'LEFT join rex_article as rex_article_art_meta on '.
 				'(rex_article_art_meta.id is not null and ('.$joinArtMeta.'))'.PHP_EOL;
 
-			$return['groupBy'] .= 'rex_article_art_meta.id,rex_article_cat_meta.id';
+			$return['groupBy'] .= (empty($return['groupBy']) ? '' : ',').'rex_article_art_meta.id';
 		}
 	}
 
@@ -441,6 +441,8 @@ SQL;
 		if ($joinCatMeta != '') {
 			$return['additionalJoins'] .= 'LEFT join rex_article as rex_article_cat_meta on '.
 				'(rex_article_cat_meta.id is not null and ('.$joinCatMeta.'))'.PHP_EOL;
+
+			$return['groupBy'] .= (empty($return['groupBy']) ? '' : ',').'rex_article_cat_meta.id';
 		}
 	}
 
