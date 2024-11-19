@@ -1,5 +1,5 @@
 package: usage_check
-version: '3.2.2'
+version: '3.2.3'
 author: Axel Krysztofiak
 supportpage: https://github.com/akrys/redaxo-usage_check
 #load: early
