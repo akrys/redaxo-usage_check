@@ -110,7 +110,7 @@ class PictureYFrom extends RexBase
 select f.table_name, t.name as table_out,f.name as f1, f.label as f2,f.type_name $additionalFields
 from $yformFieldTable f
 left join $yformTableTable t on t.table_name=f.table_name
-where f.type_name in ('be_media','be_medialist','mediafile','imagelist','custom_link')
+where f.type_name in ('be_media','be_media_preview','be_medialist','mediafile','imagelist','custom_link')
 SQL;
 		$yformtableExists = count($yformfield) > 0;
 		$yformfieldExists = count($yformtable) > 0;
@@ -197,6 +197,7 @@ SQL;
 				$joinCondition = 'FIND_IN_SET(f.filename, '.$tableName.'.'.$field['name'].')';
 				break;
 			case 'be_media': // Redaxo 5
+			case 'be_media_preview': // YForm Field Addon
 			case 'imagelist':
 			case 'custom_link':
 				$joinCondition = $tableName.'.'.$field['name'].' = f.filename';
