@@ -23,7 +23,7 @@ class RexBase
 	 * rexSQL instanz
 	 * @var ?rex_sql
 	 */
-	private ?rex_sql $rexSql;
+	private ?rex_sql $rexSql = null;
 
 	/**
 	 * rex Instanz

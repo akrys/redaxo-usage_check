@@ -29,7 +29,6 @@ class Permission
 	 *
 	 * @param Perm $perm eine der PERM-Konstanten
 	 * @return boolean
-	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function check(Perm $perm): bool
 	{

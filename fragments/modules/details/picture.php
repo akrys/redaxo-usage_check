@@ -3,6 +3,8 @@
 use FriendsOfRedaxo\UsageCheck\Lib\FileSize;
 use FriendsOfRedaxo\UsageCheck\Modules\Pictures;
 
+/** @var \rex_fragment $this */
+
 if (count($this->errors) > 0) {
 	$fragment = new rex_fragment(['msg' => $this->errors]);
 	echo $fragment->parse('msg/error_box.php');
@@ -25,11 +27,11 @@ if (isset($this->data['first'])) {
 		<div class="useList">
 			<ol>
 				<?php
-				$url = 'index.php?page=mediapool&subpage=detail&file_name='.$this->filename;
+				$url = 'index.php?page=mediapool&subpage=detail&file_name=' . $this->filename;
 				$linkText = rex_i18n::rawMsg('akrys_usagecheck_images_linktext_edit');
 				?>
 
-				<li><a href="<?= $url ?>" target="_blank"><?= $linkText; ?></a><br /></li>
+				<li><a href="<?= $url ?>" target="_blank"><?= $linkText; ?></a><br/></li>
 
 				<?php
 				foreach ($this->data['result'] as $type => $items) {
@@ -55,9 +57,9 @@ if (isset($this->data['first'])) {
 									$linkText = str_replace('$sliceID$', $sliceID, $linkText);
 									$linkText = str_replace('$articleName$', $articleName, $linkText);
 
-									$href = 'index.php?page=content&article_id='.$articleID.
-										'&mode=edit&slice_id='.$sliceID.'&clang='.$clang.
-										'&ctype='.$ctype.'&function=edit#slice'.$sliceID;
+									$href = 'index.php?page=content&article_id=' . $articleID .
+										'&mode=edit&slice_id=' . $sliceID . '&clang=' . $clang .
+										'&ctype=' . $ctype . '&function=edit#slice' . $sliceID;
 									?>
 
 									<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
@@ -78,10 +80,10 @@ if (isset($this->data['first'])) {
 								 * @var rex_structure_perm $structurePerm
 								 */
 								$hasPerm = $structurePerm->hasCategoryPerm($articleID);
-								$href = 'index.php?'.
-									'page=content/metainfo&'.
-									'article_id='.$articleID.'&'.
-									'clang='.$clang.'&'.
+								$href = 'index.php?' .
+									'page=content/metainfo&' .
+									'article_id=' . $articleID . '&' .
+									'clang=' . $clang . '&' .
 									'ctype=1';
 								if ($hasPerm) {
 									$linkText = $linkTextRaw;
@@ -115,8 +117,8 @@ if (isset($this->data['first'])) {
 									$linkText = $linkTextRaw;
 									$linkText = str_replace('$articleID$', $articleID, $linkText);
 									$linkText = str_replace('$articleName$', $articleName, $linkText);
-									$href = 'index.php?page=structure&category_id='.$parentID.
-										'&article_id=0&clang='.$clang.'&edit_id='.$articleID.
+									$href = 'index.php?page=structure&category_id=' . $parentID .
+										'&article_id=0&clang=' . $clang . '&edit_id=' . $articleID .
 										'&function=edit_cat&catstart=0';
 									?>
 
@@ -142,7 +144,7 @@ if (isset($this->data['first'])) {
 								if ($hasPerm) {
 									$linkText = $linkTextRaw;
 									$linkText = str_replace('$filename$', $filename, $linkText);
-									$href = "index.php?page=mediapool&subpage=detail&file_name=".$filename;
+									$href = "index.php?page=mediapool&subpage=detail&file_name=" . $filename;
 									?>
 
 									<li><a href="<?= $href; ?>"><?= $linkText; ?></a></li>
@@ -158,10 +160,10 @@ if (isset($this->data['first'])) {
 								foreach ($fields as $field => $entries) {
 									foreach ($entries as $id => $item) {
 
-										$id = $item['usagecheck_'.$table.'_id'];
+										$id = $item['usagecheck_' . $table . '_id'];
 										$hasPerm = rex::getUser()?->isAdmin() || (
-											rex::getUser()?->hasPerm('yform[]') &&
-											rex::getUser()->hasPerm('yform[table:'.$table.']')
+												rex::getUser()?->hasPerm('yform[]') &&
+												rex::getUser()->hasPerm('yform[table:' . $table . ']')
 											);
 
 										$linkText = $linkTextRaw;
@@ -169,9 +171,9 @@ if (isset($this->data['first'])) {
 										$linkText = str_replace('$tableName$', $field, $linkText);
 
 										if ($hasPerm) {
-											$href = 'index.php?page=yform/manager/data_edit&'.
-												'table_name='.$table.'&'.
-												'data_id='.$id.'&'.
+											$href = 'index.php?page=yform/manager/data_edit&' .
+												'table_name=' . $table . '&' .
+												'data_id=' . $id . '&' .
 												'func=edit';
 											?>
 
@@ -202,14 +204,14 @@ if (isset($this->data['first'])) {
 					?>
 
 					<small>
-						<br />
+						<br/>
 						<strong><?= $title ?></strong>
-						<br />
+						<br/>
 
 						<?php
 						$i = 0;
 						foreach ($initCat->getParentTree() as $category) {
-							$url = 'index.php?page=mediapool&rex_file_category='.$category->getId();
+							$url = 'index.php?page=mediapool&rex_file_category=' . $category->getId();
 							$linkText = $category->getName();
 							?>
 							<a href="<?= $url ?>"><?= $linkText ?></a>
@@ -217,7 +219,7 @@ if (isset($this->data['first'])) {
 							/
 							<?php
 						}
-						$url = 'index.php?page=mediapool&rex_file_category='.$initCat->getId();
+						$url = 'index.php?page=mediapool&rex_file_category=' . $initCat->getId();
 						$linkText = $initCat->getName();
 						?>
 						<a href="<?= $url ?>"><?= $linkText ?></a>
@@ -231,15 +233,15 @@ if (isset($this->data['first'])) {
 		<div class="detail">
 
 			<?php
-			$url = 'index.php?rex_media_type=rex_mediapool_detail&rex_media_file='.$this->data['first']['filename'];
+			$url = 'index.php?rex_media_type=rex_mediapool_detail&rex_media_file=' . $this->data['first']['filename'];
 			$fileSize = new FileSize($this->data['first']['filesize']);
 
 			if (!stristr($this->data['first']['filetype'], 'image/')) {
 				?>
 
 				<div>
-					<?= $fileSize->getSizeOut() ?><br />
-					<?= $this->data['first']['title'] ?><br />
+					<?= $fileSize->getSizeOut() ?><br/>
+					<?= $this->data['first']['title'] ?><br/>
 				</div>
 
 				<?php
@@ -253,9 +255,9 @@ if (isset($this->data['first'])) {
 				?>
 
 				<div>
-					<?= $fileSize->getSizeOut() ?><br />
-					<?= $this->data['first']['title'] ?><br />
-					<?= $this->data['first']['width'] ?> &times;<?= $this->data['first']['height'] ?><br />
+					<?= $fileSize->getSizeOut() ?><br/>
+					<?= $this->data['first']['title'] ?><br/>
+					<?= $this->data['first']['width'] ?> &times;<?= $this->data['first']['height'] ?><br/>
 				</div>
 
 				<?php
@@ -273,7 +275,7 @@ if (isset($this->data['first'])) {
 
 					<tr>
 						<th><?= $key ?></th>
-						<td<?= mb_strlen($value ?? '') > 100 ? ' class="longcontent"' : '' ?> data-length="<?= mb_strlen($value ?? '') ?>"><?= $value ?></td>
+						<td<?= mb_strlen($value ?? '') > 100 ? ' class="longcontent"' : '' ?>data-length="<?= mb_strlen($value ?? '') ?>"><?= $value ?></td>
 					</tr>
 
 					<?php
