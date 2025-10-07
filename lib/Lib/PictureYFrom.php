@@ -25,8 +25,6 @@ class PictureYFrom extends RexBase
 	 *
 	 * @param int $detail_id
 	 * @return array<string, mixed>
-	 * @SuppressWarnings(PHPMD.ElseExpression)
-	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	public function getYFormTableSQLParts(int $detail_id = null): array
 	{
@@ -141,7 +139,6 @@ SQL;
 	 * @param string $yformFieldTable
 	 * @param array<string, mixed> $dbs
 	 * @returns boolean
-	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	private function hasMultiple(string $yformFieldTable, ?array $dbs = null): bool
 	{

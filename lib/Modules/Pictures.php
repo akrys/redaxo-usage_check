@@ -26,7 +26,6 @@ use function rex_mediapool_mediaIsInUse;
  * Description of Pictures
  *
  * @author akrys
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Pictures extends BaseModule
 {
@@ -141,13 +140,10 @@ class Pictures extends BaseModule
 
 	/**
 	 * Spezifisches SQL für redaxo 5
-	 * @param int $detail_id
+	 * @param int|null $detail_id
 	 * @return string
-	 * @SuppressWarnings(PHPMD.ElseExpression)
-	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
-	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 */
-	protected function getSQL(int $detail_id = null): string
+	protected function getSQL(?int $detail_id = null): string
 	{
 		$sqlPartsYForm = $this->yform?->getYFormTableSQLParts($detail_id);
 		$sqlPartsMeta = $this->getMetaTableSQLParts($detail_id);
@@ -326,7 +322,6 @@ SQL;
 	 *
 	 * @param int $detail_id
 	 * @return array<string, mixed>
-	 * @SuppressWarnings(PHPMD.ElseExpression)
 	 */
 	private function getMetaTableSQLParts(int $detail_id = null): array
 	{
@@ -384,8 +379,6 @@ SQL;
 	 * @param array<string, mixed> &$return
 	 * @param string $joinArtMeta
 	 * @param int $detail_id
-	 * @SuppressWarnings(PHPMD.ElseExpression)
-	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	private function addArtSelectAndJoinStatements(array &$return, string $joinArtMeta, ?int $detail_id = null): void
 	{
@@ -418,8 +411,6 @@ SQL;
 	 * @param array<string, mixed> &$return
 	 * @param string $joinCatMeta
 	 * @param int $detail_id
-	 * @SuppressWarnings(PHPMD.ElseExpression)
-	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	private function addCatSelectAndJoinStatements(array &$return, string $joinCatMeta, int $detail_id = null): void
 	{
@@ -454,8 +445,6 @@ SQL;
 	 * @param array<string, mixed> &$return
 	 * @param string $joinMedMeta
 	 * @param int $detail_id
-	 * @SuppressWarnings(PHPMD.ElseExpression)
-	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	private function addMedSelectAndJoinStatements(array &$return, string $joinMedMeta, int $detail_id = null): void
 	{
@@ -506,10 +495,6 @@ SQL;
 	 * @param array<string, mixed> $item
 	 * @param array<string, mixed> $fields
 	 * @return string
-	 * @SuppressWarnings(CyclomaticComplexity)
-	 * @SuppressWarnings(NPathComplexity)
-	 * @SuppressWarnings(PHPMD.ElseExpression)
-	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	public static function showUsedInfo(array $item, array $fields): string
 	{

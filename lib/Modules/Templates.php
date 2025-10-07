@@ -50,7 +50,6 @@ class Templates extends BaseModule
 	 *
 	 * @todo bei Instanzen mit vielen Slices testen. Die Query
 	 *       riecht nach Performance-Problemen -> 	Using join buffer (Block Nested Loop)
-	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public function get(): array
 	{
@@ -156,8 +155,6 @@ class Templates extends BaseModule
 	 * SQL für Redaxo 5
 	 * @param int $detail_id
 	 * @return string
-	 * @SuppressWarnings(PHPMD.ElseExpression)
-	 * -> zu tief verschachtelt.... vllt. Funktionsauslagerung?
 	 */
 	protected function getSQL(int $detail_id = null): string
 	{

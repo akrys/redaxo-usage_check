@@ -26,13 +26,12 @@ class Medium
 	 * @param array<string, mixed> $item Idezes: category_id, filename
 	 * @return rex_media
 	 * @throws FunctionNotCallableException
-	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public static function get(array $item): rex_media
 	{
 		$user = rex::getUser();
 		/**
-		 * @var \rex_media_perm $complexPerm
+		 * @var \rex_media_perm|null $complexPerm
 		 */
 		$complexPerm = $user?->getComplexPerm('media');
 		if (!$user?->isAdmin() &&
@@ -54,10 +53,8 @@ class Medium
 	/**
 	 * Überprüfen, ob eine Datei existiert.
 	 *
-	 * @global type $REX
 	 * @param array<string, mixed> $item
 	 * @return boolean
-	 * @SuppressWarnings(PHPMD.StaticAccess)
 	 */
 	public static function exists(array $item)
 	{
