@@ -1,6 +1,6 @@
 <?php
 
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Templates;
+use FriendsOfRedaxo\UsageCheck\Modules\Templates;
 $user = rex::getUser();
 ?>
 

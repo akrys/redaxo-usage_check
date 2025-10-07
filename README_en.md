@@ -30,15 +30,6 @@ your Redaxo copy version.
 After copying the files you'll need to install and activate this addon using the Redaxo backend.
 
 ## Compatibility
-- PHP version: __5.6.11__ or later
-- tested on Redaxo versions __5.0.1__, __5.1__, __5.2__,  __5.3__,  __5.4__,  __5.5__,  __5.6__,  __5.7__
-
-## Notice on code-analyzing tools
-As of version 1.0-Beta7, I'm using some code analyzing tools such as `PHPUnit`.
-It seems to be the easiest way to write a `composer.json` and install these tools into the project. I didn't notice the
-redaxo Autoloader. It analyzes all PHP-Files, including `vendor`-directories. So, it's possible for the page to run into
-a timeout. In this case, simply you can simply delete the `vendor`-directory in this addon. If it's not present, it
-wasn't me, who killed your page ;-)
-
-The best way of testing: just do it seperatly from your redaxo installation. Basicly, these tests are ment for me. Just
-to find unused code or (SQL-)Erros.
+- PHP version: __8.1__  or later
+- tested on lagetes Redaxo version at release time (to maintain more instances of redaxo is not possible anymore due
+to a lack of time)

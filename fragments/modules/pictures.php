@@ -1,8 +1,8 @@
 <?php
 
-use FriendsOfRedaxo\addon\UsageCheck\Lib\FileSize;
-use FriendsOfRedaxo\addon\UsageCheck\Medium;
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Pictures;
+use FriendsOfRedaxo\UsageCheck\Lib\FileSize;
+use FriendsOfRedaxo\UsageCheck\Medium;
+use FriendsOfRedaxo\UsageCheck\Modules\Pictures;
 
 $user = rex::getUser();
 $mediaPerm = $user?->getComplexPerm('media');

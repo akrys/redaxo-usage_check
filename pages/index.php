@@ -1,6 +1,6 @@
 <?php
 
-use FriendsOfRedaxo\addon\UsageCheck\Error;
+use FriendsOfRedaxo\UsageCheck\Error;
 ?>
 
 <div class="usage_check base">

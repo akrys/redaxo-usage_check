@@ -3,9 +3,7 @@
 /**
  * Frontend-Ausagbe für die Seite Changelog
  */
-require_once __DIR__.'/../FriendsOfRedaxo/addon/UsageCheck/Config.php';
-
-use FriendsOfRedaxo\addon\UsageCheck\Addon;
+use FriendsOfRedaxo\UsageCheck\Addon;
 
 $title = new rex_fragment();
 $title->setVar('name', Addon::getInstance()->getName());

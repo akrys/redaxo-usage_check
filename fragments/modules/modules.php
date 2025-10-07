@@ -1,6 +1,6 @@
 <?php
 
-use FriendsOfRedaxo\addon\UsageCheck\Modules\Modules;
+use FriendsOfRedaxo\UsageCheck\Modules\Modules;
 
 $user = rex::getUser();
 ?>
